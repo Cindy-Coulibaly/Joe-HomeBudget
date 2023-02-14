@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
+using System.Data.SQLite;
+using System.Data.Common;
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -215,9 +217,16 @@ namespace Budget
         // ====================================================================
         // Add category
         // ====================================================================
-        private void Add(Category cat)
+        private void Add(Category cat, SQLiteConnection db)
         {
-            _Cats.Add(cat);
+            string text = cat.Description;
+            var type = cat.Type; // find the corect type
+
+            //_Cats.Add(cat);
+            using var cmd = new SQLiteCommand(db);
+
+            cmd.CommandText = "INSERT INTO categories(Description, TypeId) VALUES('" + text + "'," + type + ")";
+            cmd.ExecuteNonQuery();
         }
         /// <summary>
         /// Add a category into the category list.
