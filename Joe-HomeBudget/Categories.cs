@@ -7,6 +7,7 @@ using System.IO;
 using System.Xml;
 using System.Data.SQLite;
 using System.Data.Common;
+using static Budget.Category;
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -220,7 +221,7 @@ namespace Budget
         private void Add(Category cat, SQLiteConnection db)
         {
             string text = cat.Description;
-            var type = cat.Type; // find the corect type
+            CategoryType type = cat.Type; // find the corect type
 
             //_Cats.Add(cat);
             using var cmd = new SQLiteCommand(db);
@@ -228,6 +229,19 @@ namespace Budget
             cmd.CommandText = "INSERT INTO categories(Description, TypeId) VALUES('" + text + "'," + type + ")";
             cmd.ExecuteNonQuery();
         }
+
+
+        private void Update(int id, string text, CategoryType type, SQLiteConnection db)
+        {
+
+            using var cmd = new SQLiteCommand(db);
+
+            cmd.CommandText = $"UPDATE categories Set Description ='{text}', TypeId = '{type}' WHERE Id = {id}";
+            cmd.ExecuteNonQuery();
+        }
+
+
+
         /// <summary>
         /// Add a category into the category list.
         /// </summary>
