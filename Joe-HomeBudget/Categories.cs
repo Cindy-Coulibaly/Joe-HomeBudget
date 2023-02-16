@@ -212,6 +212,12 @@ namespace Budget
             Add("Income", Category.CategoryType.Income);
 
         }
+
+        /// <summary>
+        /// Deletes a category from the database based on its id if a valid id is provided.
+        /// </summary>
+        /// <param name="id"> Id of the category. </param>
+        /// <param name="db"> SQLite Database connection. </param>
         public void DeleteCategory(int id, SQLiteConnection db)
         {
             using var cmd = new SQLiteCommand(db);
