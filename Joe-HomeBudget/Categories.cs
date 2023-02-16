@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
+using System.Data.SQLite;
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -210,6 +211,16 @@ namespace Budget
             Add("Savings", Category.CategoryType.Savings);
             Add("Income", Category.CategoryType.Income);
 
+        }
+        public void DeleteCategory(int id, SQLiteConnection db)
+        {
+            using var cmd = new SQLiteCommand(db);
+
+            if(id > 0)
+            {
+                cmd.CommandText = $"DELETE FROM categories WHERE Id={id}";
+                cmd.ExecuteNonQuery();
+            }
         }
 
         // ====================================================================
