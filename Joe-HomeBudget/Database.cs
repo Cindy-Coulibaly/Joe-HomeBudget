@@ -12,7 +12,7 @@ namespace Budget
         public static SQLiteConnection dbConnection { get { return _connection; } }
         private static SQLiteConnection _connection;
 
-        public static void existingDatabase(String databaseFile)
+        public static void newDatabase(String databaseFile)
         {
             // If there was a database open before, close it and release the lock
             CloseDatabaseAndReleaseFile();
@@ -56,6 +56,15 @@ namespace Budget
                                 )";
             cmd.ExecuteNonQuery();
 
+        }
+        public static void existingDatabase(string filename)
+        {
+
+            CloseDatabaseAndReleaseFile();
+
+            // your code
+            _connection = new SQLiteConnection($"Data Source={filename};Foreign Keys=1;");
+            dbConnection.Open();
         }
 
         public static void CloseDatabaseAndReleaseFile()
