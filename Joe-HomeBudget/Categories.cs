@@ -238,11 +238,13 @@ namespace Budget
 
         private void Update(int id, string text, CategoryType type, SQLiteConnection db)
         {
-
             using var cmd = new SQLiteCommand(db);
+            if (id > 0)
+            {
+                cmd.CommandText = $"UPDATE categories Set Description ='{text}', TypeId = '{type}' WHERE Id = {id}";
+                cmd.ExecuteNonQuery();
+            }
 
-            cmd.CommandText = $"UPDATE categories Set Description ='{text}', TypeId = '{type}' WHERE Id = {id}";
-            cmd.ExecuteNonQuery();
         }
 
 
