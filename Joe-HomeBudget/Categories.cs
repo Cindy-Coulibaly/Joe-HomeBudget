@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
+using System.Data.SQLite;
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -53,6 +54,33 @@ namespace Budget
         {
             SetCategoriesToDefaults();
         }
+
+        /// <summary>
+        /// Gets a list of categories from previous database
+        /// </summary>
+        /// <param name="dbConnection"> new connection to database</param>
+        /// <param name="newDb">If false, it will retrieve contents from databases</param>
+        
+        public Categories(SQLiteConnection dbConnection, bool newDb)
+        {
+            if (!newDb)
+            {
+                RetrieveCategoriesFromDatabase(dbConnection);
+            }            
+        }
+
+        /// <summary>
+        /// Retrieve contents from the database
+        /// </summary>
+        /// <param name="dbConnection">Represents connection to database</param>
+        public int RetrieveCategoriesFromDatabase(SQLiteConnection dbConnection)
+        {
+            dbConnection.Open();
+            using var cmd = new SQLiteCommand(dbConnection);
+            cmd.CommandText = "SELECT * FROM categories";
+            return cmd.ExecuteNonQuery();
+        }
+
 
         // ====================================================================
         // get a specific category from the list where the id is the one specified
