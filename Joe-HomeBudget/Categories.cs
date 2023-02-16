@@ -224,19 +224,20 @@ namespace Budget
             _Cats.Add(cat);
         }
 
-        private void AddDB(Category cat, SQLiteConnection db)
+        public void AddDB(SQLiteConnection db, Category cat)
         {
+            int id = cat.Id;
             string text = cat.Description;
-            CategoryType type = cat.Type; // find the corect type
-
+            CategoryType type = cat.Type;
+            
             using var cmd = new SQLiteCommand(db);
 
-            cmd.CommandText = "INSERT INTO categories(Description, TypeId) VALUES('" + text + "'," + type + ")";
+            cmd.CommandText = $"INSERT INTO categories(Id, Description, TypeId) VALUES({id}, '{text}', '{type}')";
             cmd.ExecuteNonQuery();
         }
 
 
-        private void Update(int id, string text, CategoryType type, SQLiteConnection db)
+        public void Update(SQLiteConnection db, int id, string text, CategoryType type)
         {
             using var cmd = new SQLiteCommand(db);
             if (id > 0)
