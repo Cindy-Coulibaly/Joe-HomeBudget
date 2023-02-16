@@ -107,13 +107,7 @@ namespace Budget
         //    _expenses = new Expenses();
         //    ReadFromFile(budgetFileName);
         //}
-        public HomeBudget(String databaseFile, String expensesXMLFile, bool newDB = false)
-        {
-            // if database exists, and user doesn't want a new database, open existing DB
-            if (!newDB && File.Exists(databaseFile))
-            {
-                Database.existingDatabase(databaseFile);
-            }
+
 
         #region OpenNewAndSave
         // ---------------------------------------------------------------

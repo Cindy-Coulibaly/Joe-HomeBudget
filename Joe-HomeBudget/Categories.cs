@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
+using System.Data.SQLite;
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -259,7 +260,16 @@ namespace Budget
             int i = _Cats.FindIndex(x => x.Id == Id);
             _Cats.RemoveAt(i);
         }
+        public void DeleteCategory(int id, SQLiteConnection db)
+        {
+            using var cmd = new SQLiteCommand(db);
 
+            if (id > 0)
+            {
+                cmd.CommandText = $"DELETE FROM categories WHERE Id={id}";
+                cmd.ExecuteNonQuery();
+            }
+        }
         // ====================================================================
         // Return list of categories
         // Note:  make new copy of list, so user cannot modify what is part of
