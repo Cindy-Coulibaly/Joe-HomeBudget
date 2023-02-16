@@ -243,7 +243,7 @@ namespace Budget
             using var cmd = new SQLiteCommand(db);
             if (id > 0)
             {
-                cmd.CommandText = $"UPDATE categories Set Description ='{text}', TypeId = '{type}' WHERE Id = {id}";
+                cmd.CommandText = $"UPDATE categories Set Description ='{text}', TypeId = {(int)type} WHERE Id = {id}";
                 cmd.ExecuteNonQuery();
             }
 
