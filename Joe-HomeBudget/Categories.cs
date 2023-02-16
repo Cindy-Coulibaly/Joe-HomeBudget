@@ -40,7 +40,7 @@ namespace Budget
         /// <value>
         /// The file of name. 
         /// </value>
-        public String FileName { get { return _FileName; } }
+         public String FileName { get { return _FileName; } }
         /// <value>
         /// The directory of the file.
         /// </value>
@@ -218,12 +218,16 @@ namespace Budget
         // ====================================================================
         // Add category
         // ====================================================================
-        private void Add(Category cat, SQLiteConnection db)
+        private void Add(Category cat)
+        {
+            _Cats.Add(cat);
+        }
+
+        private void AddDB(Category cat, SQLiteConnection db)
         {
             string text = cat.Description;
             CategoryType type = cat.Type; // find the corect type
 
-            //_Cats.Add(cat);
             using var cmd = new SQLiteCommand(db);
 
             cmd.CommandText = "INSERT INTO categories(Description, TypeId) VALUES('" + text + "'," + type + ")";
