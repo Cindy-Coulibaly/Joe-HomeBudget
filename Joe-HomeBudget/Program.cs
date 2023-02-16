@@ -8,7 +8,7 @@ namespace Joe_HomeBudget
         static void Main(string[] args)
         {
             Console.WriteLine("Hello, World!");
-            HomeBudget budget= new HomeBudget("test.db", "test_expenses.exps", true);
+            HomeBudget budget= new HomeBudget("test.db", "test_categories.cats", true);
 
             Console.WriteLine(budget);
             budget.categories.Add("hat", Category.CategoryType.Expense);

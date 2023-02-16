@@ -129,9 +129,10 @@ namespace Budget
             //_categories = new Categories(Database.dbConnection, newDB);
 
             // create the _expenses course
+            DBCategoryType(Database.dbConnection);
             _categories = new Categories();
             _expenses = new Expenses();
-            DBCategoryType(Database.dbConnection);
+            
 
             _expenses.ReadFromFile(expensesXMLFile);
         }

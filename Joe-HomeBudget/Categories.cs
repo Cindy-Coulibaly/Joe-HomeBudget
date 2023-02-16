@@ -233,7 +233,7 @@ namespace Budget
             
             using var cmd = new SQLiteCommand(db);
 
-            cmd.CommandText = $"INSERT INTO categories(Id, Description, TypeId) VALUES({id}, '{text}', '{(int)type}')";
+            cmd.CommandText = $"INSERT INTO categories(Id, Description, TypeId) VALUES({id}, '{text}', {(int)type})";
             cmd.ExecuteNonQuery();
         }
 
@@ -272,7 +272,7 @@ namespace Budget
             }
             _Cats.Add(new Category(new_num, desc, type));
 
-            AddDB(Database.dbConnection, new Category(new_num, desc, type));
+            //AddDB(Database.dbConnection, new Category(new_num, desc, type));
 
         }
 

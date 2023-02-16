@@ -25,11 +25,11 @@ namespace Budget
 
 
             // create a table
-            cmd.CommandText = "DROP TABLE IF EXISTS  expenses;";
+            cmd.CommandText = "DROP TABLE IF EXISTS expenses;";
             cmd.ExecuteNonQuery();
-            cmd.CommandText = "DROP TABLE IF EXISTS  categories;";
+            cmd.CommandText = "DROP TABLE IF EXISTS categories;";
             cmd.ExecuteNonQuery();
-            cmd.CommandText = "DROP TABLE IF EXISTS  categoryTypes;";
+            cmd.CommandText = "DROP TABLE IF EXISTS categoryTypes;";
             cmd.ExecuteNonQuery();
             
             
@@ -39,7 +39,7 @@ namespace Budget
                                 Description TEXT);";
             cmd.ExecuteNonQuery();
 
-            cmd.CommandText = @"CREATE TABLE  categories(
+            cmd.CommandText = @"CREATE TABLE categories(
                                 Id INTEGER PRIMARY KEY,
                                 Description TEXT,
                                 TypeId INTEGER,
@@ -48,7 +48,7 @@ namespace Budget
             cmd.ExecuteNonQuery();
 
 
-            cmd.CommandText = @"CREATE TABLE  expenses(
+            cmd.CommandText = @"CREATE TABLE expenses(
                                 Id INTEGER PRIMARY KEY,
                                 Date TEXT,
                                 Description TEXT,
