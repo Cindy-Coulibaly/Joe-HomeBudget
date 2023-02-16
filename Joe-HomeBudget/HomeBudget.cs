@@ -112,7 +112,7 @@ namespace Budget
             // if database exists, and user doesn't want a new database, open existing DB
             if (!newDB && File.Exists(databaseFile))
             {
-                //Database.existingDatabase(databaseFile);
+                Database.existingDatabase(databaseFile);
             }
 
             // file did not exist, or user wants a new database, so open NEW DB
