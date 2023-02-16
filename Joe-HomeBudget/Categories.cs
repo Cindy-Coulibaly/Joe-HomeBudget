@@ -171,6 +171,8 @@ namespace Budget
             // ----------------------------------------------------------------
             _DirName = Path.GetDirectoryName(filepath);
             _FileName = Path.GetFileName(filepath);
+
+
         }
 
         // ====================================================================
