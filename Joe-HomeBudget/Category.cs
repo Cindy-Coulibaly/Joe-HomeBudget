@@ -26,15 +26,15 @@ namespace Budget
         /// <value>
         /// A key to indetify the different categories.
         /// </value>
-        public int Id { get; set; }
+        public int Id { get; }
         /// <value>
         /// The description of the category.
         /// </value>
-        public String Description { get; set; }
+        public String Description { get; }
         /// <value>
         /// The type of the category (Incore, expense, Credit, Savings).
         /// </value>
-        public CategoryType Type { get; set; }
+        public CategoryType Type { get; }
         /// <summary>
         /// The different type of Category of an item.
         /// </summary>
