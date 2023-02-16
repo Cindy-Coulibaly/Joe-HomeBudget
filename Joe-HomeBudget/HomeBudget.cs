@@ -87,11 +87,11 @@ namespace Budget
         /// <summary>
         /// Create a new list of categories and a new list of expenses.
         /// </summary>
-        public HomeBudget()
-        {
-            _categories = new Categories();
-            _expenses = new Expenses();
-        }
+        //public HomeBudget()
+        //{
+        //    _categories = new Categories();
+        //    _expenses = new Expenses();
+        //}
 
         // -------------------------------------------------------------------
         // Constructor (existing budget ... must specify file)
@@ -101,12 +101,19 @@ namespace Budget
         /// with the file you gave it.
         /// </summary>
         /// <param name="budgetFileName">The file with all your categories and expenses.</param>
-        public HomeBudget(String budgetFileName)
+        //public HomeBudget(String budgetFileName)
+        //{
+        //    _categories = new Categories();
+        //    _expenses = new Expenses();
+        //    ReadFromFile(budgetFileName);
+        //}
+        public HomeBudget(String databaseFile, String expensesXMLFile, bool newDB = false)
         {
-            _categories = new Categories();
-            _expenses = new Expenses();
-            ReadFromFile(budgetFileName);
-        }
+            // if database exists, and user doesn't want a new database, open existing DB
+            if (!newDB && File.Exists(databaseFile))
+            {
+                Database.existingDatabase(databaseFile);
+            }
 
         #region OpenNewAndSave
         // ---------------------------------------------------------------
