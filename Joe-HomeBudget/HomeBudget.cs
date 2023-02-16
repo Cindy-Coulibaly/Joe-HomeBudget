@@ -3,6 +3,9 @@
 // * Released under the GNU General Public License
 // ============================================================================
 
+using System.Data.SQLite;
+using static Budget.Category;
+
 namespace Budget
 {
     // ====================================================================
@@ -126,8 +129,29 @@ namespace Budget
             //_categories = new Categories(Database.dbConnection, newDB);
 
             // create the _expenses course
+            _categories = new Categories();
             _expenses = new Expenses();
+            DBCategoryType(Database.dbConnection);
+
             _expenses.ReadFromFile(expensesXMLFile);
+        }
+
+        private void DBCategoryType(SQLiteConnection db)
+        {
+
+            using var cmd = new SQLiteCommand(db);
+
+            cmd.CommandText = "INSERT INTO categoryTypes(Id, Description) VALUES(0, 'Income')";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categoryTypes(Id, Description) VALUES(1, 'Expense')";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categoryTypes(Id, Description) VALUES(2, 'Credit')";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categoryTypes(Id, Description) VALUES(3, 'Savings')";
+            cmd.ExecuteNonQuery();
         }
         #region OpenNewAndSave
         // ---------------------------------------------------------------

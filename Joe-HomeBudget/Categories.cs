@@ -8,6 +8,7 @@ using System.Xml;
 using System.Data.SQLite;
 using System.Data.Common;
 using static Budget.Category;
+using System.Data.Entity;
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -224,7 +225,7 @@ namespace Budget
             _Cats.Add(cat);
         }
 
-        public void AddDB(SQLiteConnection db, Category cat)
+        private void AddDB(SQLiteConnection db, Category cat)
         {
             int id = cat.Id;
             string text = cat.Description;
@@ -232,12 +233,12 @@ namespace Budget
             
             using var cmd = new SQLiteCommand(db);
 
-            cmd.CommandText = $"INSERT INTO categories(Id, Description, TypeId) VALUES({id}, '{text}', '{type}')";
+            cmd.CommandText = $"INSERT INTO categories(Id, Description, TypeId) VALUES({id}, '{text}', '{(int)type}')";
             cmd.ExecuteNonQuery();
         }
 
 
-        public void Update(SQLiteConnection db, int id, string text, CategoryType type)
+        private void Update(SQLiteConnection db, int id, string text, CategoryType type)
         {
             using var cmd = new SQLiteCommand(db);
             if (id > 0)
@@ -270,6 +271,9 @@ namespace Budget
                 new_num++;
             }
             _Cats.Add(new Category(new_num, desc, type));
+
+            AddDB(Database.dbConnection, new Category(new_num, desc, type));
+
         }
 
         // ====================================================================

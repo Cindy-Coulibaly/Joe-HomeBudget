@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -69,6 +70,7 @@ namespace Budget
         // ====================================================================
         public Category(int id, String description, CategoryType type = CategoryType.Expense)
         {
+            
             this.Id = id;
             this.Description = description;
             this.Type = type;
@@ -103,6 +105,8 @@ namespace Budget
         {
             return Description;
         }
+
+  
 
     }
 }
