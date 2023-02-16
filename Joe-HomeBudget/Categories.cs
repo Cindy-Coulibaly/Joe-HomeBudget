@@ -65,7 +65,7 @@ namespace Budget
         {
             if (!newDb)
             {
-                RetrieveCategoriesFromDatabase(dbConnection);
+               RetrieveCategoriesFromDatabase(dbConnection);
             }            
         }
 
@@ -73,12 +73,14 @@ namespace Budget
         /// Retrieve contents from the database
         /// </summary>
         /// <param name="dbConnection">Represents connection to database</param>
-        public int RetrieveCategoriesFromDatabase(SQLiteConnection dbConnection)
+        
+        public void RetrieveCategoriesFromDatabase(SQLiteConnection dbConnection)
         {
             dbConnection.Open();
             using var cmd = new SQLiteCommand(dbConnection);
-            cmd.CommandText = "SELECT * FROM categories";
-            return cmd.ExecuteNonQuery();
+            cmd.CommandText = "SELECT * FROM categories";            
+            _Cats = (List<Category>)cmd.ExecuteScalar();
+            dbConnection.Close();
         }
 
 
