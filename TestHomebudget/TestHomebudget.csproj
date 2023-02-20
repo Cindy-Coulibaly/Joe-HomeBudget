@@ -25,4 +25,8 @@
     <ProjectReference Include="..\Joe-HomeBudget\Joe-HomeBudget.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Joe-HomeBudget\Joe-HomeBudget.csproj" />
+  </ItemGroup>
+
 </Project>
