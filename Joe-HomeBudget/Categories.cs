@@ -5,6 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
+using System.Data.SQLite;
+using System.Data.Common;
+using static Budget.Category;
+using System.Data.Entity;
+using System.Data.SqlClient;
+using static System.Net.Mime.MediaTypeNames;
+using System.Reflection.PortableExecutable;
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -37,7 +44,7 @@ namespace Budget
         /// <value>
         /// The file of name. 
         /// </value>
-        public String FileName { get { return _FileName; } }
+         public String FileName { get { return _FileName; } }
         /// <value>
         /// The directory of the file.
         /// </value>
@@ -112,6 +119,7 @@ namespace Budget
             // ---------------------------------------------------------------
             _DirName = null;
             _FileName = null;
+
 
             // ---------------------------------------------------------------
             // get filepath name (throws exception if it doesn't exist)
@@ -219,6 +227,170 @@ namespace Budget
         {
             _Cats.Add(cat);
         }
+
+        //private void AddDB(Category cat)
+        //{
+        //    int id = cat.Id;
+        //    string text = cat.Description;
+        //    CategoryType type = cat.Type;
+
+        //    using var cmd = new SQLiteCommand(Database.dbConnection);
+
+        //    cmd.CommandText = $"INSERT INTO categories(Id, Description, TypeId) VALUES({id}, '{text}', {(int)type})";
+        //    cmd.ExecuteNonQuery();
+        //}
+
+        //adding directly by choosing an Id
+        public void AddCategoriesToDatabase1(Category cat)
+        {
+            int id = cat.Id;
+            string description = cat.Description;
+            CategoryType type = cat.Type;
+
+            //Database.dbConnection.Open();
+
+            //create a command search for the given id
+            using var cmdCheckId = new SQLiteCommand("SELECT Id FROM categories WHERE Id=" + id , Database.dbConnection);
+            
+
+            //take the first column of the select query
+            object firstCollumId = cmdCheckId.ExecuteScalar();
+
+            //if the category doesn't exist in the database already, then insert it;
+            if (firstCollumId == null)
+            {               
+                using var cmd = new SQLiteCommand(Database.dbConnection);
+                cmd.CommandText = $"INSERT INTO categories(Id, Description, TypeId) VALUES({id}, '{description}', {(int)type})";
+                cmd.ExecuteNonQuery();
+                using var newAddedId = new SQLiteCommand("SELECT * FROM categories WHERE Id=" + id, Database.dbConnection);
+                var rdr = newAddedId.ExecuteReader();
+                while (rdr.Read())
+                {
+                    Console.WriteLine("Category added: id: {0}, desc: {1}, type: {2}", rdr[0], rdr[1], rdr[2]);
+
+                }
+                //Database.dbConnection.Close();
+            }
+            else
+            {
+                using var newAddedId = new SQLiteCommand("SELECT Id FROM categories WHERE Id=" + id, Database.dbConnection);
+                var rdr = newAddedId.ExecuteReader();
+                while (rdr.Read())
+                {
+                    Console.WriteLine("Category already exist, id: {0}", rdr[0]);
+                }
+            }           
+        }
+        
+        //auto-increment a highest number Id
+        public void AddCategoriesToDatabase2(String desc, Category.CategoryType type)
+        {
+            Int64 id;
+            using var countCMD = new SQLiteCommand("SELECT COUNT(Id) FROM categories", Database.dbConnection);
+            object idCount = countCMD.ExecuteScalar();
+            id = (Int64)idCount;
+
+            //Database.dbConnection.Open();
+
+            //create a command search for the given id
+            using var cmdCheckId = new SQLiteCommand("SELECT Id FROM categories WHERE Id=" + id, Database.dbConnection);
+
+            //take the first column of the select query
+            object firstCollumId = cmdCheckId.ExecuteScalar();
+
+            //if the database is empty then automatically insert it, else find the highest id, and create a new one after the highest one
+            if (firstCollumId == null)
+            {
+                id++;
+                using var cmd = new SQLiteCommand(Database.dbConnection);
+                cmd.CommandText = $"INSERT INTO categories(Id, Description, TypeId) VALUES({id}, '{desc}', {(int)type})";
+                cmd.ExecuteNonQuery();
+                using var newAddedId = new SQLiteCommand("SELECT * FROM categories WHERE Id=" + id, Database.dbConnection);
+                var rdr = newAddedId.ExecuteReader();
+                while (rdr.Read())
+                {
+                    Console.WriteLine("Category added: id: {0}, desc: {1}, type: {2}", rdr[0], rdr[1], rdr[2]);
+                }
+            }
+            else
+            {
+                
+                using var maxCMD = new SQLiteCommand("SELECT MAX(Id) from categories", Database.dbConnection);
+                object highestId = maxCMD.ExecuteScalar();
+                id = (Int64)highestId;
+                id++;
+
+                using var cmd = new SQLiteCommand(Database.dbConnection);
+                cmd.CommandText = $"INSERT INTO categories(Id, Description, TypeId) VALUES({id}, '{desc}', {(int)type})";
+                cmd.ExecuteNonQuery();
+                using var newAddedId = new SQLiteCommand("SELECT * FROM categories WHERE Id=" + id, Database.dbConnection);
+                var rdr = newAddedId.ExecuteReader();
+                while (rdr.Read())
+                {
+                    Console.WriteLine("Category added: id: {0}, desc: {1}, type: {2}", rdr[0], rdr[1], rdr[2]);
+                }
+            }
+        }
+
+
+            //public void Update(int id, string text, CategoryType type)
+            //{
+            //    using var cmd = new SQLiteCommand(Database.dbConnection);
+            //    if (id > 0)
+            //    {
+            //        cmd.CommandText = $"UPDATE categories Set Description ='{text}', TypeId = {(int)type} WHERE Id = {id}";
+            //        cmd.ExecuteNonQuery();
+            //    }
+
+            //}
+
+        public void Update(int id, string desc, CategoryType type)
+        {
+            if (desc != string.Empty)
+            {
+                //create a command search for the given id
+                using var cmdCheckId = new SQLiteCommand("SELECT Id from categories WHERE Id=" + id, Database.dbConnection);
+
+                //take the first column of the select query
+                //Parse object to int because ExecuteScalar() return an object
+                object firstCollumId = cmdCheckId.ExecuteScalar();
+
+                //if the id doesn't exist then insert to database
+                if (firstCollumId != null)
+                {
+                    using var beforeUpdatedId = new SQLiteCommand("SELECT * FROM categories WHERE Id=" + id, Database.dbConnection);
+                    var rdr = beforeUpdatedId.ExecuteReader();
+                    while (rdr.Read())
+                    {
+                        Console.WriteLine("Category id {0} before the update: desc: {1}, type: {2}", rdr[0], rdr[1], rdr[2]);
+                    }
+
+
+                    using var cmd = new SQLiteCommand(Database.dbConnection);
+                    cmd.CommandText = $"UPDATE categories Set Description ='{desc}', TypeId = {(int)type} WHERE Id = {id}";
+                    cmd.ExecuteNonQuery();
+
+                    using var updatedId = new SQLiteCommand("SELECT * FROM categories WHERE Id=" + id, Database.dbConnection);
+                    rdr = updatedId.ExecuteReader();
+                    while (rdr.Read())
+                    {
+                        Console.WriteLine("Category id {0} after the update: desc: {1}, type: {2}", rdr[0], rdr[1], rdr[2]);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Category doesn't exist");
+                }
+            }
+            else
+            {
+                Console.WriteLine("No description provided");
+            }
+            
+        }
+
+
+
         /// <summary>
         /// Add a category into the category list.
         /// </summary>
@@ -239,6 +411,8 @@ namespace Budget
                 new_num++;
             }
             _Cats.Add(new Category(new_num, desc, type));
+            //AddCategoriesToDatabase1(_Cats.Last());
+
         }
 
         // ====================================================================
@@ -257,7 +431,7 @@ namespace Budget
         public void Delete(int Id)
         {
             int i = _Cats.FindIndex(x => x.Id == Id);
-            _Cats.RemoveAt(i);
+            if (i != -1) { _Cats.RemoveAt(i); };
         }
 
         // ====================================================================
@@ -320,7 +494,7 @@ namespace Budget
                             type = Category.CategoryType.Credit;
                             break;
                         default:
-                            type = Category.CategoryType.Expense;
+                            type = Category.CategoryType.Savings;
                             break;
                     }
                     this.Add(new Category(int.Parse(id), desc, type));

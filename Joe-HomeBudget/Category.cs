@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,15 +27,15 @@ namespace Budget
         /// <value>
         /// A key to indetify the different categories.
         /// </value>
-        public int Id { get; }
+        public int Id { get; set; }
         /// <value>
         /// The description of the category.
         /// </value>
-        public String Description { get; }
+        public String Description { get; set; }
         /// <value>
         /// The type of the category (Incore, expense, Credit, Savings).
         /// </value>
-        public CategoryType Type { get; }
+        public CategoryType Type { get;  set;}
         /// <summary>
         /// The different type of Category of an item.
         /// </summary>
@@ -69,6 +70,7 @@ namespace Budget
         // ====================================================================
         public Category(int id, String description, CategoryType type = CategoryType.Expense)
         {
+            
             this.Id = id;
             this.Description = description;
             this.Type = type;
@@ -103,6 +105,8 @@ namespace Budget
         {
             return Description;
         }
+
+  
 
     }
 }
