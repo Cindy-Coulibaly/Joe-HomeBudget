@@ -250,7 +250,7 @@ namespace Budget
             //Database.dbConnection.Open();
 
             //create a command search for the given id
-            using var cmdCheckId = new SQLiteCommand("SELECT Id FROM categories WHERE Id='" + id + "'", Database.dbConnection);
+            using var cmdCheckId = new SQLiteCommand("SELECT Id FROM categories WHERE Id=" + id , Database.dbConnection);
             
 
             //take the first column of the select query
@@ -262,17 +262,18 @@ namespace Budget
                 using var cmd = new SQLiteCommand(Database.dbConnection);
                 cmd.CommandText = $"INSERT INTO categories(Id, Description, TypeId) VALUES({id}, '{description}', {(int)type})";
                 cmd.ExecuteNonQuery();
-                using var newAddedId = new SQLiteCommand("SELECT * FROM categories where Id='" + id + "'", Database.dbConnection);
+                using var newAddedId = new SQLiteCommand("SELECT * FROM categories WHERE Id=" + id, Database.dbConnection);
                 var rdr = newAddedId.ExecuteReader();
                 while (rdr.Read())
                 {
                     Console.WriteLine("Category added: id: {0}, desc: {1}, type: {2}", rdr[0], rdr[1], rdr[2]);
+
                 }
                 //Database.dbConnection.Close();
             }
             else
             {
-                using var newAddedId = new SQLiteCommand("SELECT Id FROM categories where Id='" + id + "'", Database.dbConnection);
+                using var newAddedId = new SQLiteCommand("SELECT Id FROM categories WHERE Id=" + id, Database.dbConnection);
                 var rdr = newAddedId.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -292,7 +293,7 @@ namespace Budget
             //Database.dbConnection.Open();
 
             //create a command search for the given id
-            using var cmdCheckId = new SQLiteCommand("SELECT Id FROM categories where Id='" + id + "'", Database.dbConnection);
+            using var cmdCheckId = new SQLiteCommand("SELECT Id FROM categories WHERE Id=" + id, Database.dbConnection);
 
             //take the first column of the select query
             object firstCollumId = cmdCheckId.ExecuteScalar();
@@ -304,7 +305,7 @@ namespace Budget
                 using var cmd = new SQLiteCommand(Database.dbConnection);
                 cmd.CommandText = $"INSERT INTO categories(Id, Description, TypeId) VALUES({id}, '{desc}', {(int)type})";
                 cmd.ExecuteNonQuery();
-                using var newAddedId = new SQLiteCommand("SELECT * FROM categories where Id='" + id + "'", Database.dbConnection);
+                using var newAddedId = new SQLiteCommand("SELECT * FROM categories WHERE Id=" + id, Database.dbConnection);
                 var rdr = newAddedId.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -322,7 +323,7 @@ namespace Budget
                 using var cmd = new SQLiteCommand(Database.dbConnection);
                 cmd.CommandText = $"INSERT INTO categories(Id, Description, TypeId) VALUES({id}, '{desc}', {(int)type})";
                 cmd.ExecuteNonQuery();
-                using var newAddedId = new SQLiteCommand("SELECT * FROM categories where Id='" + id + "'", Database.dbConnection);
+                using var newAddedId = new SQLiteCommand("SELECT * FROM categories WHERE Id=" + id, Database.dbConnection);
                 var rdr = newAddedId.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -345,39 +346,47 @@ namespace Budget
 
         public void Update(int id, string desc, CategoryType type)
         {
-            //create a command search for the given id
-            using var cmdCheckId = new SQLiteCommand("SELECT Id from categories where Id='" + id + "'", Database.dbConnection);
-
-            //take the first column of the select query
-            //Parse object to int because ExecuteScalar() return an object
-            object firstCollumId = cmdCheckId.ExecuteScalar();
-
-            //if the id doesn't exist then insert to database
-            if (firstCollumId != null)
+            if (desc != string.Empty)
             {
-                using var beforeUpdatedId = new SQLiteCommand("SELECT * FROM categories where Id='" + id + "'", Database.dbConnection);
-                var rdr = beforeUpdatedId.ExecuteReader();
-                while (rdr.Read())
+                //create a command search for the given id
+                using var cmdCheckId = new SQLiteCommand("SELECT Id from categories WHERE Id=" + id, Database.dbConnection);
+
+                //take the first column of the select query
+                //Parse object to int because ExecuteScalar() return an object
+                object firstCollumId = cmdCheckId.ExecuteScalar();
+
+                //if the id doesn't exist then insert to database
+                if (firstCollumId != null)
                 {
-                    Console.WriteLine("Category id {0} before the update: desc: {1}, type: {2}", rdr[0], rdr[1], rdr[2]);
+                    using var beforeUpdatedId = new SQLiteCommand("SELECT * FROM categories WHERE Id=" + id, Database.dbConnection);
+                    var rdr = beforeUpdatedId.ExecuteReader();
+                    while (rdr.Read())
+                    {
+                        Console.WriteLine("Category id {0} before the update: desc: {1}, type: {2}", rdr[0], rdr[1], rdr[2]);
+                    }
+
+
+                    using var cmd = new SQLiteCommand(Database.dbConnection);
+                    cmd.CommandText = $"UPDATE categories Set Description ='{desc}', TypeId = {(int)type} WHERE Id = {id}";
+                    cmd.ExecuteNonQuery();
+
+                    using var updatedId = new SQLiteCommand("SELECT * FROM categories WHERE Id=" + id, Database.dbConnection);
+                    rdr = updatedId.ExecuteReader();
+                    while (rdr.Read())
+                    {
+                        Console.WriteLine("Category id {0} after the update: desc: {1}, type: {2}", rdr[0], rdr[1], rdr[2]);
+                    }
                 }
-
-
-                using var cmd = new SQLiteCommand(Database.dbConnection);
-                cmd.CommandText = $"UPDATE categories Set Description ='{desc}', TypeId = {(int)type} WHERE Id = {id}";
-                cmd.ExecuteNonQuery();
-
-                using var updatedId = new SQLiteCommand("SELECT * FROM categories where Id='" + id + "'", Database.dbConnection);
-                rdr = updatedId.ExecuteReader();
-                while (rdr.Read())
+                else
                 {
-                    Console.WriteLine("Category id {0} after the update: desc: {1}, type: {2}", rdr[0], rdr[1], rdr[2]);
+                    Console.WriteLine("Category doesn't exist");
                 }
             }
             else
             {
-                Console.WriteLine("Category doesn't exist");
-            }          
+                Console.WriteLine("No description provided");
+            }
+            
         }
 
 
