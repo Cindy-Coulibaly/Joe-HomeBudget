@@ -258,12 +258,13 @@ namespace BudgetCodeTests
             budget.categories.DeleteCategory(Id);
 
 
-            using var categoriesData = new SQLiteCommand("SELECT * FROM categories WHERE Id=" + Id, Database.dbConnection);
-            var rdr = categoriesData.ExecuteReader();
+            using var cmdCheckId = new SQLiteCommand("SELECT Id from categories WHERE Id=" + Id, Database.dbConnection);
+
+            object firstCollumId = cmdCheckId.ExecuteScalar();
 
 
             // Assert
-            Assert.Equal(categoriesData, null);
+            Assert.Equal(null, firstCollumId);
 
         }
 
