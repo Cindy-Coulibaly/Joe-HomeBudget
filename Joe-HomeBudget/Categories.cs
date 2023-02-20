@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
 using System.Data.SQLite;
+using System.Data.Common;
+using static Budget.Category;
+using System.Data.Entity;
+using System.Data.SqlClient;
+using static System.Net.Mime.MediaTypeNames;
+using System.Reflection.PortableExecutable;
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -53,6 +59,19 @@ namespace Budget
         public Categories()
         {
             SetCategoriesToDefaults();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dbConnection"> Connection to database. </param>
+        /// <param name="newDB"> </param>
+        public Categories(SQLiteConnection dbConnection, bool newDB)
+        {
+            if (newDB)
+            {
+
+            }
         }
 
         // ====================================================================
