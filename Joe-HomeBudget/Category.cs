@@ -89,6 +89,9 @@ namespace Budget
             this.Description = category.Description;
             this.Type = category.Type;
         }
+
+        
+
         // ====================================================================
         /// <summary>
         /// Show the description of a given category.

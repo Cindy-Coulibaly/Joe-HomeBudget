@@ -13,6 +13,7 @@ using System.Data.SqlClient;
 using static System.Net.Mime.MediaTypeNames;
 using System.Reflection.PortableExecutable;
 
+
 // ============================================================================
 // (c) Sandy Bultena 2018
 // * Released under the GNU General Public License
@@ -60,6 +61,35 @@ namespace Budget
         {
             SetCategoriesToDefaults();
         }
+
+        /// <summary>
+        /// Gets a list of categories from previous database
+        /// </summary>
+        /// <param name="dbConnection"> new connection to database</param>
+        /// <param name="newDb">If false, it will retrieve contents from databases</param>
+        
+        public Categories(SQLiteConnection dbConnection, bool newDb)
+        {
+            if (!newDb)
+            {
+               RetrieveCategoriesFromDatabase(dbConnection);
+            }            
+        }
+
+        /// <summary>
+        /// Retrieve contents from the database
+        /// </summary>
+        /// <param name="dbConnection">Represents connection to database</param>
+        
+        public void RetrieveCategoriesFromDatabase(SQLiteConnection dbConnection)
+        {
+            dbConnection.Open();
+            using var cmd = new SQLiteCommand(dbConnection);
+            cmd.CommandText = "SELECT * FROM categories";            
+            _Cats = (List<Category>)cmd.ExecuteScalar();
+            dbConnection.Close();
+        }
+
 
         // ====================================================================
         // get a specific category from the list where the id is the one specified
@@ -179,6 +209,8 @@ namespace Budget
             // ----------------------------------------------------------------
             _DirName = Path.GetDirectoryName(filepath);
             _FileName = Path.GetFileName(filepath);
+
+
         }
 
         // ====================================================================

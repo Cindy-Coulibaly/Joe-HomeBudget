@@ -22,8 +22,6 @@ namespace Budget
             dbConnection.Open();
             using var cmd = new SQLiteCommand(dbConnection);
 
-
-
             // create a table
             cmd.CommandText = "DROP TABLE IF EXISTS expenses;";
             cmd.ExecuteNonQuery();
@@ -31,8 +29,6 @@ namespace Budget
             cmd.ExecuteNonQuery();
             cmd.CommandText = "DROP TABLE IF EXISTS categoryTypes;";
             cmd.ExecuteNonQuery();
-            
-            
 
             cmd.CommandText = @"CREATE TABLE categoryTypes(
                                 Id INTEGER PRIMARY KEY,
