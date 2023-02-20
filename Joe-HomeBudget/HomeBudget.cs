@@ -90,11 +90,11 @@ namespace Budget
         /// <summary>
         /// Create a new list of categories and a new list of expenses.
         /// </summary>
-        //public HomeBudget()
-        //{
-        //    _categories = new Categories();
-        //    _expenses = new Expenses();
-        //}
+        public HomeBudget()
+        {
+            _categories = new Categories();
+            _expenses = new Expenses();
+        }
 
         // -------------------------------------------------------------------
         // Constructor (existing budget ... must specify file)
@@ -104,12 +104,12 @@ namespace Budget
         /// with the file you gave it.
         /// </summary>
         /// <param name="budgetFileName">The file with all your categories and expenses.</param>
-        //public HomeBudget(String budgetFileName)
-        //{
-        //    _categories = new Categories();
-        //    _expenses = new Expenses();
-        //    ReadFromFile(budgetFileName);
-        //}
+        public HomeBudget(String budgetFileName)
+        {
+            _categories = new Categories();
+            _expenses = new Expenses();
+            ReadFromFile(budgetFileName);
+        }
 
         /// <summary>
         /// HomeBudget only gets created if user specifies a database file.

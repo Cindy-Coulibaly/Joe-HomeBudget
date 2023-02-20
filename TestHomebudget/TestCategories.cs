@@ -243,6 +243,29 @@ namespace BudgetCodeTests
             }
 
         }
+        [Fact]
+        public void CategoriesMethodDelete()
+        {
+            // Arrange
+            String dir = GetSolutionDir();
+            HomeBudget budget = new HomeBudget("test.db", "./test_expenses.exps", true);
+            string oldDesc = "oldDesc";
+            int Id = 1;
+
+
+            // Act
+            budget.categories.AddCategoriesToDatabase1(new Category(Id, oldDesc, Category.CategoryType.Expense));
+            budget.categories.DeleteCategory(Id);
+
+
+            using var categoriesData = new SQLiteCommand("SELECT * FROM categories WHERE Id=" + Id, Database.dbConnection);
+            var rdr = categoriesData.ExecuteReader();
+
+
+            // Assert
+            Assert.Equal(categoriesData, null);
+
+        }
 
         // ========================================================================
 
