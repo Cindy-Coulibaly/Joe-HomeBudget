@@ -3,6 +3,9 @@
 // * Released under the GNU General Public License
 // ============================================================================
 
+using System.Data.SQLite;
+using static Budget.Category;
+
 namespace Budget
 {
     // ====================================================================
@@ -109,6 +112,51 @@ namespace Budget
         //}
 
 
+        public HomeBudget(String databaseFile, String expensesXMLFile, bool newDB = false)
+        {
+            // if database exists, and user doesn't want a new database, open existing DB
+            if (!newDB && File.Exists(databaseFile))
+            {
+                Database.existingDatabase(databaseFile);
+            }
+
+            // file did not exist, or user wants a new database, so open NEW DB
+            else
+            {
+                Database.newDatabase(databaseFile);
+                newDB = true;
+            }
+
+            // create the category object
+            _categories = new Categories(Database.dbConnection, newDB);
+
+            // create the _expenses course
+
+            DBCategoryType(Database.dbConnection);
+            _categories = new Categories();
+            _expenses = new Expenses();
+
+            //_expenses.ReadFromFile(expensesXMLFile);
+        }
+
+        private void DBCategoryType(SQLiteConnection db)
+        {
+
+            using var cmd = new SQLiteCommand(db);
+
+            cmd.CommandText = "INSERT INTO categoryTypes(Id, Description) VALUES(0, 'Income')";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categoryTypes(Id, Description) VALUES(1, 'Expense')";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categoryTypes(Id, Description) VALUES(2, 'Credit')";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categoryTypes(Id, Description) VALUES(3, 'Savings')";
+            cmd.ExecuteNonQuery();
+
+        }
         #region OpenNewAndSave
         // ---------------------------------------------------------------
         // Read
@@ -155,6 +203,7 @@ namespace Budget
                 // read the expenses and categories from their respective files
                 _categories.ReadFromFile(folder + "\\" + filenames[0]);
                 _expenses.ReadFromFile(folder + "\\" + filenames[1]);
+                                             
 
                 // Save information about budget file
                 _DirName = Path.GetDirectoryName(budgetFileName);

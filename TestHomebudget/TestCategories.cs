@@ -3,6 +3,8 @@ using Xunit;
 using System.IO;
 using System.Collections.Generic;
 using Budget;
+using System.Data.SQLite;
+using System.Runtime.Intrinsics.Arm;
 
 namespace BudgetCodeTests
 {
@@ -170,6 +172,150 @@ namespace BudgetCodeTests
         }
 
         // ========================================================================
+
+        [Fact]
+        public void CategoriesMethod_AddtoDatabase1()
+        {
+            // Arrange
+            String dir = GetSolutionDir();
+            HomeBudget budget = new HomeBudget("test.db", "./test_expenses.exps", true);
+            string newdesc = "newdesc";
+            int newid = 1;
+            Int64 expense = 1; // Expense number
+
+
+            // Act
+            budget.categories.AddCategoriesToDatabase1(new Category(newid, newdesc, Category.CategoryType.Expense));
+
+            Int64 id;
+            using var countCMD = new SQLiteCommand("SELECT COUNT(Id) FROM categories", Database.dbConnection);
+            object idCount = countCMD.ExecuteScalar();
+            id = (Int64)idCount;
+
+
+            using var categoriesData = new SQLiteCommand("SELECT * FROM categories where Id='" + newid + "'", Database.dbConnection);
+            var rdr = categoriesData.ExecuteReader();
+
+
+            // Assert
+            Assert.Equal(newid, id);
+            while (rdr.Read())
+            {
+                Assert.Equal(newdesc, rdr[1]);
+                Assert.Equal(expense, rdr[2]);
+            }
+            
+
+        }
+
+        // ========================================================================
+
+        [Fact]
+        public void CategoriesMethod_Update()
+        {
+            // Arrange
+            String dir = GetSolutionDir();
+            HomeBudget budget = new HomeBudget("test.db", "./test_expenses.exps", true);
+            string oldDesc = "oldDesc";
+            string newdesc = "newdesc";
+            int oldId = 1;
+            int newid = 1;
+            Int64 expense = 1; // Expense number
+            Int64 saving = 3; // Expense number
+
+
+            // Act
+            budget.categories.AddCategoriesToDatabase1(new Category(oldId, oldDesc, Category.CategoryType.Expense));
+            budget.categories.Update(newid, newdesc, Category.CategoryType.Savings);
+
+
+            using var categoriesData = new SQLiteCommand("SELECT * FROM categories WHERE Id=" + newid, Database.dbConnection);
+            var rdr = categoriesData.ExecuteReader();
+
+
+            // Assert
+            Assert.Equal(oldId, newid);
+
+            while (rdr.Read())
+            {
+                Assert.Equal(newdesc, rdr[1]);
+                Assert.Equal(saving, rdr[2]);
+            }
+
+        }
+
+        // ========================================================================
+
+        [Fact]
+        public void CategoriesMethod_Update_InvalidIDDoesntCrash()
+        {
+            // Arrange
+            String dir = GetSolutionDir();
+            HomeBudget budget = new HomeBudget("test.db", "./test_expenses.exps", true);
+            string oldDesc = "oldDesc";
+            string newdesc = "newdesc";
+            int oldId = 1;
+            int newid = 2;
+            Int64 expense = 1; // Expense number
+
+            // Act
+            budget.categories.AddCategoriesToDatabase1(new Category(oldId, oldDesc, Category.CategoryType.Expense));
+            budget.categories.Update(newid, newdesc, Category.CategoryType.Savings);
+
+            using var categoriesData = new SQLiteCommand("SELECT * FROM categories WHERE Id=" + 1, Database.dbConnection);
+            var rdr = categoriesData.ExecuteReader();
+
+            try
+            {
+                while (rdr.Read())
+                {
+                    Assert.Equal((Int64)oldId, rdr[0]);
+                    Assert.Equal(oldDesc, rdr[1]);
+                    Assert.Equal(expense, rdr[2]);
+                }
+            }
+            catch
+            {
+                Assert.True(false, "Invalid ID causes Delete to break");
+            }
+
+        }
+
+        // ========================================================================
+
+        [Fact]
+        public void CategoriesMethod_Update_InvalidDescDoesntUpdate()
+        {
+            // Arrange
+            String dir = GetSolutionDir();
+            HomeBudget budget = new HomeBudget("test.db", "./test_expenses.exps", true);
+            string oldDesc = "oldDesc";
+            string newdesc = "";
+            int oldId = 1;
+            int newid = 2;
+            Int64 expense = 1; // Expense number
+
+
+            // Act
+            budget.categories.AddCategoriesToDatabase1(new Category(oldId, oldDesc, Category.CategoryType.Expense));
+            budget.categories.Update(newid, newdesc, Category.CategoryType.Savings);
+
+            using var categoriesData = new SQLiteCommand("SELECT * FROM categories where Id='" + newid + "'", Database.dbConnection);
+            var rdr = categoriesData.ExecuteReader();
+
+
+            // Assert
+
+            while (rdr.Read())
+            {
+                Assert.Equal(oldId, rdr[0]);
+                Assert.Equal(oldDesc, rdr[1]);
+                Assert.Equal(expense, rdr[2]);
+            }
+        }
+
+        // ========================================================================
+
 
         [Fact]
         public void CategoriesMethod_Delete()

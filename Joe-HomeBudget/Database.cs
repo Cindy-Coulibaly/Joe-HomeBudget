@@ -18,33 +18,31 @@ namespace Budget
             CloseDatabaseAndReleaseFile();
             // your code
 
-            _connection = new SQLiteConnection($"Data Source={databaseFile};Foreign Keys=1;");
+            _connection = new SQLiteConnection(@$"URI=file:{databaseFile};Foreign Keys=1;");
             dbConnection.Open();
             using var cmd = new SQLiteCommand(dbConnection);
 
-
-
             // create a table
-            cmd.CommandText = "DROP TABLE IF EXISTS  categoryTypes";
+            cmd.CommandText = "DROP TABLE IF EXISTS expenses;";
             cmd.ExecuteNonQuery();
-            cmd.CommandText = "DROP TABLE IF EXISTS  categories";
+            cmd.CommandText = "DROP TABLE IF EXISTS categories;";
             cmd.ExecuteNonQuery();
-            cmd.CommandText = "DROP TABLE IF EXISTS  expenses";
-            cmd.ExecuteNonQuery();
+            cmd.CommandText = "DROP TABLE IF EXISTS categoryTypes;";
+           
+           cmd.ExecuteNonQuery();
 
             cmd.CommandText = @"CREATE TABLE categoryTypes(
                                 Id INTEGER PRIMARY KEY,
-                                Description TEXT)";
+                               Description TEXT);";
             cmd.ExecuteNonQuery();
 
-            cmd.CommandText = @"CREATE TABLE  categories(
+            cmd.CommandText = @"CREATE TABLE categories(
                                 Id INTEGER PRIMARY KEY,
                                 Description TEXT,
                                 TypeId INTEGER,
                                 FOREIGN KEY(TypeId) REFERENCES categoryTypes(Id)
-                                )";
+                                );";
             cmd.ExecuteNonQuery();
-
 
             cmd.CommandText = @"CREATE TABLE  expenses(
                                 Id INTEGER PRIMARY KEY,
@@ -53,7 +51,7 @@ namespace Budget
                                 Amount DOUBLE,
                                 CategoryId INTEGER,
                                 FOREIGN KEY(CategoryId) REFERENCES categories(Id)
-                                )";
+                                );";
             cmd.ExecuteNonQuery();
 
         }
@@ -63,7 +61,7 @@ namespace Budget
             CloseDatabaseAndReleaseFile();
 
             // your code
-            _connection = new SQLiteConnection($"Data Source={filename};Foreign Keys=1;");
+            _connection = new SQLiteConnection(@$"URI=file:{filename};Foreign Keys=1;");
             dbConnection.Open();
         }
 
