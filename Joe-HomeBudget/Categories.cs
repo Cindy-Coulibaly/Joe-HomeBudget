@@ -72,7 +72,11 @@ namespace Budget
             if (!newDb)
             {
                RetrieveCategoriesFromDatabase(dbConnection);
-            }            
+            }
+            else
+            {
+                SetCategoriesToDefaults();
+            }
         }
 
         /// <summary>
