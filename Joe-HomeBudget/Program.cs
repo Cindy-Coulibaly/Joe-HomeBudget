@@ -22,6 +22,8 @@ namespace Joe_HomeBudget
             budget.categories.AddCategoriesToDatabase2("f", Category.CategoryType.Expense);
             budget.categories.Update(4, "g", Category.CategoryType.Savings);
             budget.categories.Update(10, "h", Category.CategoryType.Savings);
+            budget.categories.DeleteCategory(2);
+            budget.categories.DeleteCategory(2);
             Console.WriteLine("\nDid it!");
 
         }
