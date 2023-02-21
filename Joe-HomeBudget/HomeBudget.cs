@@ -124,7 +124,7 @@ namespace Budget
             {
                 Database.newDatabase(databaseFile);
                 newDB = true;
-                DBCategoryType(Database.dbConnection);
+                //DBCategoryType(Database.dbConnection); //---------------------------------------------GO BACK
             }
 
             // create the category object
@@ -506,14 +506,14 @@ namespace Budget
                 }
 
                 // keep track of running totals
-                total = total + queryResult.Amount;
+                total = total + queryResult.Amount; // look back----------------------------------------------------
                 items.Add(new BudgetItem
                 {
                     CategoryID = queryResult.CatId,
                     ExpenseID = queryResult.ExpId,
                     ShortDescription = queryResult.Description,
                     Date = queryResult.Date,
-                    Amount = queryResult.Amount,
+                    Amount = + queryResult.Amount, // look back-----------------------------------------------------
                     Category = queryResult.Category,
                     Balance = total
                 });

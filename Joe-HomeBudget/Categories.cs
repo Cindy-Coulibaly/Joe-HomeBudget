@@ -60,6 +60,7 @@ namespace Budget
         public Categories()
         {
             SetCategoriesToDefaults();
+            //DBCategoryType(Database.dbConnection);// try it
         }
 
         /// <summary>
@@ -72,20 +73,51 @@ namespace Budget
         {
             if (!newDb)
             {
+
                RetrieveCategoriesFromDatabase(dbConnection);
             }
             else
             {
+                DBCategoryType(Database.dbConnection);
                 //If there is new database then automatically set it to default
-                SetCategoriesToDefaults(); 
+                SetCategoriesToDefaults();
+
             }
         }
+
+
+
+        private void DBCategoryType(SQLiteConnection db)
+        {
+
+            using var cmd = new SQLiteCommand(db);
+
+            cmd.CommandText = "INSERT INTO categoryTypes(Id,Description) VALUES(1, 'Income')";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categoryTypes(Id,Description) VALUES(2, 'Expense')";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categoryTypes(Id,Description) VALUES(3, 'Credit')";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO categoryTypes(Id,Description) VALUES(4, 'Savings')";
+            cmd.ExecuteNonQuery();
+
+        }
+
+
+
+
+
+
+
 
         /// <summary>
         /// Retrieve contents from the database
         /// </summary>
         /// <param name="dbConnection">Represents connection to database</param>
-        
+
         public void RetrieveCategoriesFromDatabase(SQLiteConnection dbConnection)
         {
             //dbConnection.Open();
@@ -387,7 +419,7 @@ namespace Budget
             if (firstCollumId == null)
             {
                 using var cmd = new SQLiteCommand(Database.dbConnection);
-                cmd.CommandText = $"INSERT INTO categories(Id, Description, TypeId) VALUES({id}, '{desc}', {(int)type})";
+                cmd.CommandText = $"INSERT INTO categories(Id, Description, TypeId) VALUES({id}, '{desc}', {(int)type + 1})";
                 cmd.ExecuteNonQuery();
                 using var newAddedId = new SQLiteCommand("SELECT * FROM categories WHERE Id=" + id, Database.dbConnection);
                 var rdr = newAddedId.ExecuteReader();
@@ -449,7 +481,7 @@ namespace Budget
 
                     //update
                     using var cmd = new SQLiteCommand(Database.dbConnection);
-                    cmd.CommandText = $"UPDATE categories Set Description ='{desc}', TypeId = {(int)type} WHERE Id = {id}";
+                    cmd.CommandText = $"UPDATE categories Set Description ='{desc}', TypeId = {(int)type + 1} WHERE Id = {id}";
                     cmd.ExecuteNonQuery();
 
                     //Output data after update
@@ -518,7 +550,7 @@ namespace Budget
             }
             _Cats.Add(new Category(new_num, desc, type));
 
-            //AddCategoriesToDatabase3(new_num, desc, type);
+            AddCategoriesToDatabase3(new_num, desc, type);
 
         }
 
@@ -538,7 +570,7 @@ namespace Budget
         public void Delete(int Id)
         {
             int i = _Cats.FindIndex(x => x.Id == Id);
-            if (i != -1) { _Cats.RemoveAt(i); };
+            if (i != -1) { _Cats.RemoveAt(i); }; // modified that too
         }
 
         // ====================================================================
@@ -601,7 +633,7 @@ namespace Budget
                             type = Category.CategoryType.Credit;
                             break;
                         default:
-                            type = Category.CategoryType.Savings;
+                            type = Category.CategoryType.Savings; // Changed
                             break;
                     }
                     this.Add(new Category(int.Parse(id), desc, type));
