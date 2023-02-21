@@ -270,10 +270,6 @@ namespace Budget
                 }
 
         }
-        public void CheckIdValid(int id)
-        {
-
-        }
 
         // ====================================================================
         // Add category
