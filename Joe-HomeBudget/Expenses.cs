@@ -86,8 +86,6 @@ namespace Budget
             // ----------------------------------------------------------------
             _DirName = Path.GetDirectoryName(filepath);
             _FileName = Path.GetFileName(filepath);
-
-
         }
 
         // ====================================================================
@@ -196,7 +194,7 @@ namespace Budget
         public void Delete(int Id)
         {
             int i = _Expenses.FindIndex(x => x.Id == Id);
-            _Expenses.RemoveAt(i);
+            if (i != -1) { _Expenses.RemoveAt(i); } // will only delete if valid id
 
         }
 
