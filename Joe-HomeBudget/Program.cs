@@ -8,7 +8,7 @@ namespace Joe_HomeBudget
         static void Main(string[] args)
         {
             Console.WriteLine("Hello, World!");
-            HomeBudget budget= new HomeBudget("test.db", "./test_expenses.exps", true);
+            HomeBudget budget= new HomeBudget("test.db", "test_expenses.exps", true);
 
             //Console.WriteLine(budget);
 
@@ -20,8 +20,8 @@ namespace Joe_HomeBudget
             budget.categories.AddCategoriesToDatabase1(new Category(2, "d", Category.CategoryType.Expense));//check duplicate
             budget.categories.AddCategoriesToDatabase2("e", Category.CategoryType.Expense); // should be 4 since 3 has been added
             budget.categories.AddCategoriesToDatabase2("f", Category.CategoryType.Expense);
-            budget.categories.Update(4, "g", Category.CategoryType.Savings);
-            budget.categories.Update(10, "h", Category.CategoryType.Savings);
+            budget.categories.UpdateInDatabase(4, "g", Category.CategoryType.Savings);
+            budget.categories.UpdateInDatabase(10, "h", Category.CategoryType.Savings);
             Console.WriteLine("\nDid it!");
 
         }

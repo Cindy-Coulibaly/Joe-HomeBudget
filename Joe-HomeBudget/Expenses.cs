@@ -310,7 +310,7 @@ namespace Budget
 
                     // child attributes (date, description, amount, category)
                     XmlElement d = doc.CreateElement("Date");
-                    XmlText dText = doc.CreateTextNode(exp.Date.ToString("M/dd/yyyy hh:mm:ss tt"));
+                    XmlText dText = doc.CreateTextNode(exp.Date.ToString("yyyy-MM-dd")); // changed hh:mm:ss tt/ M/dd/yyyy
                     ele.AppendChild(d);
                     d.AppendChild(dText);
 
