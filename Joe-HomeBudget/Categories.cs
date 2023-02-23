@@ -298,7 +298,43 @@ namespace Budget
             Add("Income", Category.CategoryType.Income);
 
         }
+        /// <summary>
+        /// Deletes a category from the database based on its id if a valid id is provided.
+        /// </summary>
+        /// <param name="id"> Id of the category. </param>
+        /// <param name="db"> SQLite Database connection. </param>
+        public void DeleteCategory(int id)
+        {
+            //create a command search for the given id
+            using var cmdCheckId = new SQLiteCommand("SELECT Id from categories WHERE Id=" + id, Database.dbConnection);
 
+            //take the first column of the select query
+            //Parse object to int because ExecuteScalar() return an object
+            object firstCollumId = cmdCheckId.ExecuteScalar();
+
+            //if the id doesn't exist then insert to database
+            if (firstCollumId != null)
+            {
+                using var beforeDeletedId = new SQLiteCommand("SELECT * FROM categories WHERE Id=" + id, Database.dbConnection);
+                var rdr = beforeDeletedId.ExecuteReader();
+                while (rdr.Read())
+                {
+                    Console.WriteLine("Category Id {0} before the delete: desc: {1}, type: {2}", rdr[0], rdr[1], rdr[2]);
+                }
+
+
+                using var cmd = new SQLiteCommand(Database.dbConnection);
+                cmd.CommandText = "DELETE FROM categories WHERE Id=" + id;
+                cmd.ExecuteNonQuery();
+
+                Console.WriteLine("Successfully deleted from Id=" + id);
+            }
+            else
+            {
+                Console.WriteLine("Category doesn't exist");
+            }
+
+        }
         // ====================================================================
         // Add category
         // ====================================================================
