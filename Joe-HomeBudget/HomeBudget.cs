@@ -124,18 +124,19 @@ namespace Budget
             {
                 Database.newDatabase(databaseFile);
                 newDB = true;
+                //DBCategoryType(Database.dbConnection); //---------------------------------------------GO BACK
             }
 
             // create the category object
-            _categories = new Categories(Database.dbConnection, newDB);
+            //_categories = new Categories(Database.dbConnection, newDB);
 
             // create the _expenses course
 
-            DBCategoryType(Database.dbConnection);
+           
             _categories = new Categories();
             _expenses = new Expenses();
 
-            //_expenses.ReadFromFile(expensesXMLFile);
+            _expenses.ReadFromFile(expensesXMLFile);
         }
 
         private void DBCategoryType(SQLiteConnection db)
@@ -505,14 +506,14 @@ namespace Budget
                 }
 
                 // keep track of running totals
-                total = total - queryResult.Amount;
+                total = total + queryResult.Amount; // look back----------------------------------------------------
                 items.Add(new BudgetItem
                 {
                     CategoryID = queryResult.CatId,
                     ExpenseID = queryResult.ExpId,
                     ShortDescription = queryResult.Description,
                     Date = queryResult.Date,
-                    Amount = -queryResult.Amount,
+                    Amount = + queryResult.Amount, // look back-----------------------------------------------------
                     Category = queryResult.Category,
                     Balance = total
                 });
