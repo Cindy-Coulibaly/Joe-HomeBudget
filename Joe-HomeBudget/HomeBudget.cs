@@ -128,7 +128,7 @@ namespace Budget
             }
 
             // create the category object
-            //_categories = new Categories(Database.dbConnection, newDB);
+            _categories = new Categories(Database.dbConnection, newDB);
 
             // create the _expenses course
 

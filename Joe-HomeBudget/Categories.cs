@@ -73,7 +73,6 @@ namespace Budget
         {
             if (!newDb)
             {
-
                RetrieveCategoriesFromDatabase(dbConnection);
             }
             else
@@ -81,7 +80,6 @@ namespace Budget
                 DBCategoryType(Database.dbConnection);
                 //If there is new database then automatically set it to default
                 SetCategoriesToDefaults();
-
             }
         }
 
