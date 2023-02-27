@@ -345,7 +345,7 @@ namespace Budget
         #region Add to database
 
         //add without creating category list
-        public void AddCategoriesToDatabase(int id, String desc, Category.CategoryType type)
+        public void AddCategoriesToDatabaseOld(int id, String desc, Category.CategoryType type)
         {
 
 
@@ -377,6 +377,55 @@ namespace Budget
                 while (rdr.Read())
                 {
                     Console.WriteLine("Category already exist, id: {0}", rdr[0]);
+                }
+            }
+        }
+
+        public void AddCategoriesToDatabaseNew(String desc, Category.CategoryType type)
+        {
+            Int64 id;
+            using var countCMD = new SQLiteCommand("SELECT COUNT(Id) FROM categories", Database.dbConnection);
+            object idCount = countCMD.ExecuteScalar();
+            id = (Int64)idCount;
+
+            //Database.dbConnection.Open();
+
+            //create a command search for the given id
+            using var cmdCheckId = new SQLiteCommand("SELECT Id FROM categories WHERE Id=" + id, Database.dbConnection);
+
+            //take the first column of the select query
+            object firstCollumId = cmdCheckId.ExecuteScalar();
+
+            //if the database is empty then automatically insert it, else find the highest id, and create a new one after the highest one
+            if (firstCollumId == null)
+            {
+                id++;
+                using var cmd = new SQLiteCommand(Database.dbConnection);
+                cmd.CommandText = $"INSERT INTO categories(Id, Description, TypeId) VALUES({id}, '{desc}', {(int)type + 1})";
+                cmd.ExecuteNonQuery();
+                using var newAddedId = new SQLiteCommand("SELECT * FROM categories WHERE Id=" + id, Database.dbConnection);
+                var rdr = newAddedId.ExecuteReader();
+                while (rdr.Read())
+                {
+                    Console.WriteLine("Category added: id: {0}, desc: {1}, type: {2}", rdr[0], rdr[1], rdr[2]);
+                }
+            }
+            else
+            {
+
+                using var maxCMD = new SQLiteCommand("SELECT MAX(Id) from categories", Database.dbConnection);
+                object highestId = maxCMD.ExecuteScalar();
+                id = (Int64)highestId;
+                id++;
+
+                using var cmd = new SQLiteCommand(Database.dbConnection);
+                cmd.CommandText = $"INSERT INTO categories(Id, Description, TypeId) VALUES({id}, '{desc}', {(int)type + 1})";
+                cmd.ExecuteNonQuery();
+                using var newAddedId = new SQLiteCommand("SELECT * FROM categories WHERE Id=" + id, Database.dbConnection);
+                var rdr = newAddedId.ExecuteReader();
+                while (rdr.Read())
+                {
+                    Console.WriteLine("Category added: id: {0}, desc: {1}, type: {2}", rdr[0], rdr[1], rdr[2]);
                 }
             }
         }
@@ -490,7 +539,7 @@ namespace Budget
             }
             _Cats.Add(new Category(new_num, desc, type));
 
-            AddCategoriesToDatabase(new_num, desc, type);
+            AddCategoriesToDatabaseNew(desc, type);
 
         }
 
