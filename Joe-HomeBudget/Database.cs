@@ -12,17 +12,18 @@ namespace Budget
         public static SQLiteConnection dbConnection { get { return _connection; } }
         private static SQLiteConnection _connection;
 
+        /// <summary>
+        /// Create a database if there is no database
+        /// </summary>
+        /// <param name="databaseFile">The file where you can create the database</param>
         public static void newDatabase(String databaseFile)
         {
-            // If there was a database open before, close it and release the lock
             CloseDatabaseAndReleaseFile();
-            // your code
 
             _connection = new SQLiteConnection(@$"URI=file:{databaseFile};Foreign Keys=1;");
             dbConnection.Open();
             using var cmd = new SQLiteCommand(dbConnection);
 
-            // create a table
             cmd.CommandText = "DROP TABLE IF EXISTS expenses;";
             cmd.ExecuteNonQuery();
             cmd.CommandText = "DROP TABLE IF EXISTS categories;";
@@ -43,7 +44,6 @@ namespace Budget
                                 );";
             cmd.ExecuteNonQuery();
 
-
             cmd.CommandText = @"CREATE TABLE expenses(
                                 Id INTEGER PRIMARY KEY,
                                 Date TEXT,
@@ -54,30 +54,20 @@ namespace Budget
                                 );";
             cmd.ExecuteNonQuery();
 
-            //cmd.CommandText = "INSERT INTO categoryTypes(Id, Description) VALUES(0, 'Income')";
-            //cmd.ExecuteNonQuery();
-
-            //cmd.CommandText = "INSERT INTO categoryTypes(Id, Description) VALUES(1, 'Expense')";
-            //cmd.ExecuteNonQuery();
-
-            //cmd.CommandText = "INSERT INTO categoryTypes(Id, Description) VALUES(2, 'Credit')";
-            //cmd.ExecuteNonQuery();
-
-            //cmd.CommandText = "INSERT INTO categoryTypes(Id, Description) VALUES(3, 'Savings')";
-            //cmd.ExecuteNonQuery();
-
         }
+        /// <summary>
+        /// Create a connection to an existing database
+        /// </summary>
+        /// <param name="filename"> The filename of the database</param>
         public static void existingDatabase(string filename)
         {
-
             CloseDatabaseAndReleaseFile();
 
-            // your code
             _connection = new SQLiteConnection(@$"URI=file:{filename};Foreign Keys=1;");
             dbConnection.Open();
         }
 
-        public static void CloseDatabaseAndReleaseFile()
+        private static void CloseDatabaseAndReleaseFile()
         {
             if (dbConnection != null)
             {
