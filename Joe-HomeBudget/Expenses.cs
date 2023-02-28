@@ -7,6 +7,7 @@ using System.IO;
 using System.Xml;
 using static Budget.Category;
 using System.Data.SQLite;
+using System.Globalization;
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -178,6 +179,14 @@ namespace Budget
 
         }
 
+        /// <summary>
+        /// Updates the expense in the database according to its id.
+        /// </summary>
+        /// <param name="id"> Id of the expense. </param>
+        /// <param name="date"> Date when the expense was done. </param>
+        /// <param name="category"> Category of the expense. </param>
+        /// <param name="amount"> Amount of the expense. </param>
+        /// <param name="description"> Description of the expense. </param>
         public void Update(int id, DateTime date, int category, Double amount, String description)
         {
             if (description != string.Empty)
@@ -196,19 +205,21 @@ namespace Budget
                     var rdr = beforeUpdatedId.ExecuteReader();
                     while (rdr.Read())
                     {
-                        Console.WriteLine("Expense id {0} before the update: date: {1}, category: {2}, amount: {3}, desc: {4}", rdr[0], rdr[1], rdr[2], rdr[3], rdr[4]);
+                        Console.WriteLine("Expense id {0} before the update: date: {1}, category: {2}, amount: {3}, desc: {4}", rdr[0], (string)rdr[1], rdr[2], rdr[3], rdr[4]);
                     }
 
+                    DateTime newDatetime = DateTime.ParseExact(date,
+                    "yyyy-MM-dd", CultureInfo.InvariantCulture);
 
                     using var cmd = new SQLiteCommand(Database.dbConnection);
-                    cmd.CommandText = $"UPDATE expenses Set Description ='{description}', Date = {date}, Category = {category}, Amount = {amount} WHERE Id = {id}";
+                    cmd.CommandText = $"UPDATE expenses Set Description ='{description}', Date = {newDatetime}, Category = {category}, Amount = {amount} WHERE Id = {id}";
                     cmd.ExecuteNonQuery();
 
                     using var updatedId = new SQLiteCommand("SELECT * FROM expenses WHERE Id=" + id, Database.dbConnection);
                     rdr = updatedId.ExecuteReader();
                     while (rdr.Read())
                     {
-                        Console.WriteLine("Expense id {0} after the update: date: {1}, category: {2}, amount: {3}, desc: {4}", rdr[0], rdr[1], rdr[2], rdr[3], rdr[4]);
+                        Console.WriteLine("Expense id {0} after the update: date: {1}, category: {2}, amount: {3}, desc: {4}", rdr[0], (string)rdr[1], rdr[2], rdr[3], rdr[4]);
                     }
                 }
                 else
@@ -242,6 +253,38 @@ namespace Budget
         {
             int i = _Expenses.FindIndex(x => x.Id == Id);
             if (i != -1) { _Expenses.RemoveAt(i); } // will only delete if valid id
+
+        }
+        public void DeleteExpenses(int id)
+        {
+            //create a command search for the given id
+            using var cmdCheckId = new SQLiteCommand("SELECT Id from expenses WHERE Id=" + id, Database.dbConnection);
+
+            //take the first column of the select query
+            //Parse object to int because ExecuteScalar() return an object
+            object firstCollumId = cmdCheckId.ExecuteScalar();
+
+            //if the id doesn't exist then insert to database
+            if (firstCollumId != null)
+            {
+                using var beforeDeletedId = new SQLiteCommand("SELECT * FROM expenses WHERE Id=" + id, Database.dbConnection);
+                var rdr = beforeDeletedId.ExecuteReader();
+                while (rdr.Read())
+                {
+                    Console.WriteLine("Expense Id {0} before the delete: date: {1}, category: {2}, amount: {3}, desc: {4}", rdr[0], (string)rdr[1], rdr[2], rdr[3], rdr[4]);
+                }
+
+
+                using var cmd = new SQLiteCommand(Database.dbConnection);
+                cmd.CommandText = "DELETE FROM expenses WHERE Id=" + id;
+                cmd.ExecuteNonQuery();
+
+                Console.WriteLine("Successfully deleted from Id=" + id);
+            }
+            else
+            {
+                Console.WriteLine("Expense doesn't exist");
+            }
 
         }
 
