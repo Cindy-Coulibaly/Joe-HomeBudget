@@ -84,7 +84,6 @@ namespace Budget
         }
 
 
-
         private void DBCategoryType(SQLiteConnection db)
         {
 
@@ -101,7 +100,6 @@ namespace Budget
 
             cmd.CommandText = "INSERT INTO categoryTypes(Id,Description) VALUES(4, 'Savings')";
             cmd.ExecuteNonQuery();
-
         }
 
         /// <summary>

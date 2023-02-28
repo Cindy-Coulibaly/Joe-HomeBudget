@@ -134,7 +134,7 @@ namespace Budget
            
             _categories = new Categories();
             _expenses = new Expenses();
-
+            
             _expenses.RetrieveExpenses(Database.dbConnection);
             //_expenses.ReadFromFile(expensesXMLFile);
         }
