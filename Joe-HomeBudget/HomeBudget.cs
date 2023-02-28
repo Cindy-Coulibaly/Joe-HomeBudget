@@ -84,33 +84,16 @@ namespace Budget
         /// </value>
         public Expenses expenses { get { return _expenses; } }
 
-        // -------------------------------------------------------------------
-        // Constructor (new... default categories, no expenses)
-        // -------------------------------------------------------------------
         /// <summary>
-        /// Create a new list of categories and a new list of expenses.
+        /// Creates a database for homebudget if a dabase doesn't exist, which as an expenses table, a categories table and a categoryType table,
+        /// it will also set a connection to the database, else if there is already a database it will just create a connection
         /// </summary>
-        public HomeBudget()
-        {
-            _categories = new Categories();
-            _expenses = new Expenses();
-        }
-
+        /// <param name="databaseFile">The file where your database is, or where you want to store it</param>
+        /// <param name="expensesXMLFile"></param>
+        /// <param name="newDB">The bolean to see if there is already a database in the databaseFile</param>
         // -------------------------------------------------------------------
-        // Constructor (existing budget ... must specify file)
+        // Constructor (existing database, it will create a connection, else, create a new database and a connection)
         // -------------------------------------------------------------------
-        /// <summary>
-        /// Create a new list of categories and a new list of expenses and will populate them 
-        /// with the file you gave it.
-        /// </summary>
-        /// <param name="budgetFileName">The file with all your categories and expenses.</param>
-        public HomeBudget(String budgetFileName)
-        {
-            _categories = new Categories();
-            _expenses = new Expenses();
-            ReadFromFile(budgetFileName);
-        }
-
         public HomeBudget(String databaseFile, String expensesXMLFile, bool newDB = false)
         {
             // if database exists, and user doesn't want a new database, open existing DB
@@ -139,24 +122,6 @@ namespace Budget
             _expenses.ReadFromFile(expensesXMLFile);
         }
 
-        private void DBCategoryType(SQLiteConnection db)
-        {
-
-            using var cmd = new SQLiteCommand(db);
-
-            cmd.CommandText = "INSERT INTO categoryTypes(Id, Description) VALUES(0, 'Income')";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "INSERT INTO categoryTypes(Id, Description) VALUES(1, 'Expense')";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "INSERT INTO categoryTypes(Id, Description) VALUES(2, 'Credit')";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "INSERT INTO categoryTypes(Id, Description) VALUES(3, 'Savings')";
-            cmd.ExecuteNonQuery();
-
-        }
         #region OpenNewAndSave
         // ---------------------------------------------------------------
         // Read

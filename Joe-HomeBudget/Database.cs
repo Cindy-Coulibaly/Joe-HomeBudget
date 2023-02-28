@@ -67,7 +67,7 @@ namespace Budget
             dbConnection.Open();
         }
 
-        private static void CloseDatabaseAndReleaseFile()
+        public static void CloseDatabaseAndReleaseFile()
         {
             if (dbConnection != null)
             {
