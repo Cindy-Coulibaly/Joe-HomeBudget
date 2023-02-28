@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
+using static Budget.Category;
+using System.Data.SQLite;
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -176,6 +178,51 @@ namespace Budget
 
         }
 
+        public void Update(int id, DateTime date, int category, Double amount, String description)
+        {
+            if (description != string.Empty)
+            {
+                //create a command search for the given id
+                using var cmdCheckId = new SQLiteCommand("SELECT Id from expenses WHERE Id=" + id, Database.dbConnection);
+
+                //take the first column of the select query
+                //Parse object to int because ExecuteScalar() return an object
+                object firstCollumId = cmdCheckId.ExecuteScalar();
+
+                //if the id doesn't exist then insert to database
+                if (firstCollumId != null)
+                {
+                    using var beforeUpdatedId = new SQLiteCommand("SELECT * FROM expenses WHERE Id=" + id, Database.dbConnection);
+                    var rdr = beforeUpdatedId.ExecuteReader();
+                    while (rdr.Read())
+                    {
+                        Console.WriteLine("Expense id {0} before the update: date: {1}, category: {2}, amount: {3}, desc: {4}", rdr[0], rdr[1], rdr[2], rdr[3], rdr[4]);
+                    }
+
+
+                    using var cmd = new SQLiteCommand(Database.dbConnection);
+                    cmd.CommandText = $"UPDATE expenses Set Description ='{description}', Date = {date}, Category = {category}, Amount = {amount} WHERE Id = {id}";
+                    cmd.ExecuteNonQuery();
+
+                    using var updatedId = new SQLiteCommand("SELECT * FROM expenses WHERE Id=" + id, Database.dbConnection);
+                    rdr = updatedId.ExecuteReader();
+                    while (rdr.Read())
+                    {
+                        Console.WriteLine("Expense id {0} after the update: date: {1}, category: {2}, amount: {3}, desc: {4}", rdr[0], rdr[1], rdr[2], rdr[3], rdr[4]);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Expense doesn't exist");
+                }
+            }
+            else
+            {
+                Console.WriteLine("No description provided");
+            }
+
+        }
+
         // ====================================================================
         // Delete expense
         /// <summary>
@@ -197,6 +244,7 @@ namespace Budget
             if (i != -1) { _Expenses.RemoveAt(i); } // will only delete if valid id
 
         }
+
 
         // ====================================================================
         // Return list of expenses
