@@ -131,12 +131,12 @@ namespace Budget
             _categories = new Categories(Database.dbConnection, newDB);
 
             // create the _expenses course
-
            
             _categories = new Categories();
             _expenses = new Expenses();
 
-            _expenses.ReadFromFile(expensesXMLFile);
+            _expenses.RetrieveExpenses(Database.dbConnection);
+            //_expenses.ReadFromFile(expensesXMLFile);
         }
 
         private void DBCategoryType(SQLiteConnection db)

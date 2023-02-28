@@ -23,7 +23,6 @@ namespace Joe_HomeBudget
             //budget.categories.UpdateInDatabase(4, "g", Category.CategoryType.Savings);
             //budget.categories.UpdateInDatabase(10, "h", Category.CategoryType.Savings);
             Console.WriteLine("\nDid it!");
-
         }
     }
 }

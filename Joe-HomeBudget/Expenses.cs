@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
+using System.Collections;
+using System.Data.Common;
+using System.Data.SQLite;
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -227,6 +230,18 @@ namespace Budget
             return newList;
         }
 
+        /// <summary>
+        /// Method retrieving all expenses
+        /// </summary>
+        /// <returns>A list of expenses</returns>
+        public List<Expense> RetrieveExpenses(SQLiteConnection dbConnection)
+        {
+            //Connect to the database
+            using var cmd = new SQLiteCommand(dbConnection);
+            cmd.CommandText = "SELECT * FROM categories ORDER BY Id ASC";
+            return _Expenses;
+        }
+
 
         // ====================================================================
         // read from an XML file and add categories to our categories list
@@ -340,7 +355,6 @@ namespace Budget
                 throw new Exception("SaveToFileException: Reading XML " + e.Message);
             }
         }
-
     }
 }
 
