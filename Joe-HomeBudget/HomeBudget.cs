@@ -864,11 +864,41 @@ namespace Budget
         // ============================================================================
         public List<BudgetItemsByCategory> GeBudgetItemsByCategory(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID)
         {
+            // connection
+
 
             // -----------------------------------------------------------------------
             // get all items first
             // -----------------------------------------------------------------------
-            List<BudgetItem> items = GetBudgetItems(Start, End, FilterFlag, CategoryID);
+            // have to wait for Yensan to do it to test it
+            List<BudgetItem> items = GetBudgetItems(Start, End, FilterFlag, CategoryID); // might want to remove this
+
+            //--------------------------------------------------------------------------
+            //change the dates format to a string
+            //--------------------------------------------------------------------------
+            DateTime realStart = Start ?? new DateTime(1900, 1, 1); // might change it because the date is changed in GDB
+            DateTime realEnd = End ?? new DateTime(2500, 1, 1);
+
+            string start=realStart.ToString("yyyy-MM-dd");
+            string end=realEnd.ToString("yyyy-MM-dd");
+
+            //get all the items using the database
+            var cmd = new SQLiteCommand(Database.dbConnection);
+
+            // the group by is in case the filter is false, we still want to group it by category id
+
+            cmd.CommandText = "SELECT CategoryId FROM expenses " +
+                "WHERE CategoryId=@CategoryID AND " +
+                "Date<=@end " +
+                "AND Date>=@start" +
+                "GROUP BY CategoryId" +
+                "ORDER BY CategoryId";
+
+            cmd.Parameters.AddWithValue("@CategoryID", CategoryID);
+            cmd.Parameters.AddWithValue("@start", start);
+            cmd.Parameters.AddWithValue("@end",end);
+
+            cmd.ExecuteNonQuery();
 
             // -----------------------------------------------------------------------
             // Group by Category
