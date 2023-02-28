@@ -168,7 +168,7 @@ namespace Budget
         /// </example>
 
         //add without creating expense list
-        public void AddExpensesToDatabase(int Id, DateTime date, Double amount, String description,int categoryId)
+        public void AddExpensesToDatabase(int Id, DateTime date, String description,Double amount,int categoryId)
         {
             //cmd.CommandText = @"CREATE TABLE expenses(
             //                    Id INTEGER PRIMARY KEY,
@@ -180,6 +180,7 @@ namespace Budget
             //                    );";
 
 
+           
             //create a command search for the given id
             using var cmdCheckId = new SQLiteCommand("SELECT Id FROM expenses WHERE Id=" + Id, Database.dbConnection);
 
@@ -187,13 +188,13 @@ namespace Budget
             //take the first column of the select query
             object firstCollumId = cmdCheckId.ExecuteScalar();
 
-            //if the category doesn't exist in the database already, then insert it;
+            //if the expense doesn't exist in the database already, then insert it;
             if (firstCollumId == null)
             {
                 using var cmd = new SQLiteCommand(Database.dbConnection);
-                cmd.CommandText = $"INSERT INTO expenses(Id, Date, Description,Amount,CategoryId) VALUES({Id}, '{date}', {description},{amount},{categoryId})";
+                cmd.CommandText = $"INSERT INTO expenses(Id, Date, Description,Amount,CategoryId) VALUES({Id}, '{date}','{description}',{amount},{categoryId})";
                 cmd.ExecuteNonQuery();
-                using var newAddedId = new SQLiteCommand("SELECT * FROM expenses WHERE Id=" + categoryId +"ORDER BY Id ASC", Database.dbConnection);
+                using var newAddedId = new SQLiteCommand("SELECT * FROM expenses WHERE Id=" + Id + " ORDER BY Id ASC", Database.dbConnection);
                 var rdr = newAddedId.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -202,7 +203,7 @@ namespace Budget
             }
             else
             {
-                using var newAddedId = new SQLiteCommand("SELECT Id FROM expenses WHERE Id=" + categoryId, Database.dbConnection);
+                using var newAddedId = new SQLiteCommand("SELECT Id FROM expenses WHERE Id=" + Id + " ORDER BY Id ASC", Database.dbConnection);
                 var rdr = newAddedId.ExecuteReader();
                 while (rdr.Read())
                 {
