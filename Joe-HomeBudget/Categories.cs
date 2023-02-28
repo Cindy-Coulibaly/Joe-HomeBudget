@@ -12,6 +12,7 @@ using System.Data.Entity;
 using System.Data.SqlClient;
 using static System.Net.Mime.MediaTypeNames;
 using System.Reflection.PortableExecutable;
+using System.Data;
 
 
 // ============================================================================
@@ -35,7 +36,7 @@ namespace Budget
     public class Categories
     {
         private static String DefaultFileName = "budgetCategories.txt";
-        private List<Category> _Cats = new List<Category>();
+        //private List<Category> _Cats = new List<Category>();
         private string _FileName;
         private string _DirName;
 
@@ -121,18 +122,34 @@ namespace Budget
             //dbConnection.Open();
 
             //get the objects category data directly from the database and insert it into the list
-            using var cmd = new SQLiteCommand(dbConnection);
+            //using var cmd = new SQLiteCommand(dbConnection);
 
-            cmd.CommandText = "SELECT * FROM categories";
-            using var newAddedId = new SQLiteCommand("SELECT * FROM categories", dbConnection);
-            var rdr = newAddedId.ExecuteReader();
-            while (rdr.Read())
-            {              
-                _Cats.Add(new Category((int)(long)rdr[0], (string)rdr[1], (CategoryType)(int)(long)rdr[2]));
-            }
+            //cmd.CommandText = "SELECT * FROM categories";
+            //using var newAddedId = new SQLiteCommand("SELECT * FROM categories", dbConnection);
+            //var rdr = newAddedId.ExecuteReader();
+            //while (rdr.Read())
+            //{              
+            //    _Cats.Add(new Category((int)(long)rdr[0], (string)rdr[1], (CategoryType)(int)(long)rdr[2]));
+            //}
 
             //_Cats = (List<Category>)cmd.ExecuteScalar(); ------------------------CHANGED, CAN NOT PARSE A LIST
             //dbConnection.Close();
+
+
+            //using var cmd = new SQLiteCommand(dbConnection);
+            //using var cmd2 = new SQLiteCommand(Database.dbConnection);
+
+
+
+            //using var newAddedId = new SQLiteCommand("SELECT * FROM categories", dbConnection);
+            //var rdr = newAddedId.ExecuteReader();
+            //while (rdr.Read())
+            //{
+            //    cmd2.CommandText = $"INSERT INTO categories(Id, Description, TypeId) VALUES({rdr[0]}, '{rdr[1]}', {rdr[2]})";
+            //    cmd2.ExecuteNonQuery();
+            //}
+
+            List();
         }
 
 
@@ -155,11 +172,18 @@ namespace Budget
         // ====================================================================
         public Category GetCategoryFromId(int i)
         {
-            Category c = _Cats.Find(x => x.Id == i);
+            //Category c = _Cats.Find(x => x.Id == i);
+            //if (c == null)
+            //{
+            //    throw new Exception("Cannot find category with id " + i.ToString());
+            //}
+
+            List<Category> newList = List();
+            Category c = newList.Find(x => x.Id == i);
             if (c == null)
-            {
-                throw new Exception("Cannot find category with id " + i.ToString());
-            }
+                {
+                    throw new Exception("Cannot find category with id " + i.ToString());
+                }
             return c;
         }
 
@@ -186,7 +210,7 @@ namespace Budget
             // ---------------------------------------------------------------
             // reading from file resets all the current categories,
             // ---------------------------------------------------------------
-            _Cats.Clear();
+            //_Cats.Clear();---------------------------------------------------------------------------------------------------------------changed
 
             // ---------------------------------------------------------------
             // reset default dir/filename to null 
@@ -223,40 +247,40 @@ namespace Budget
         /// </example>
         /// <param name="filepath">The filepath of the file you want to write the category list too.</param>
         // ====================================================================
-        public void SaveToFile(String filepath = null)
-        {
-            // ---------------------------------------------------------------
-            // if file path not specified, set to last read file
-            // ---------------------------------------------------------------
-            if (filepath == null && DirName != null && FileName != null)
-            {
-                filepath = DirName + "\\" + FileName;
-            }
+        //public void SaveToFile(String filepath = null)
+        //{
+        //    // ---------------------------------------------------------------
+        //    // if file path not specified, set to last read file
+        //    // ---------------------------------------------------------------
+        //    if (filepath == null && DirName != null && FileName != null)
+        //    {
+        //        filepath = DirName + "\\" + FileName;
+        //    }
 
-            // ---------------------------------------------------------------
-            // just in case filepath doesn't exist, reset path info
-            // ---------------------------------------------------------------
-            _DirName = null;
-            _FileName = null;
+        //    // ---------------------------------------------------------------
+        //    // just in case filepath doesn't exist, reset path info
+        //    // ---------------------------------------------------------------
+        //    _DirName = null;
+        //    _FileName = null;
 
-            // ---------------------------------------------------------------
-            // get filepath name (throws exception if it doesn't exist)
-            // ---------------------------------------------------------------
-            filepath = BudgetFiles.VerifyWriteToFileName(filepath, DefaultFileName);
+        //    // ---------------------------------------------------------------
+        //    // get filepath name (throws exception if it doesn't exist)
+        //    // ---------------------------------------------------------------
+        //    filepath = BudgetFiles.VerifyWriteToFileName(filepath, DefaultFileName);
 
-            // ---------------------------------------------------------------
-            // save as XML
-            // ---------------------------------------------------------------
-            _WriteXMLFile(filepath);
+        //    // ---------------------------------------------------------------
+        //    // save as XML
+        //    // ---------------------------------------------------------------
+        //    _WriteXMLFile(filepath);
 
-            // ----------------------------------------------------------------
-            // save filename info for later use
-            // ----------------------------------------------------------------
-            _DirName = Path.GetDirectoryName(filepath);
-            _FileName = Path.GetFileName(filepath);
+        //    // ----------------------------------------------------------------
+        //    // save filename info for later use
+        //    // ----------------------------------------------------------------
+        //    _DirName = Path.GetDirectoryName(filepath);
+        //    _FileName = Path.GetFileName(filepath);
 
 
-        }
+        //}
 
         // ====================================================================
         // set categories to default
@@ -273,7 +297,12 @@ namespace Budget
             // ---------------------------------------------------------------
             // reset any current categories,
             // ---------------------------------------------------------------
-            _Cats.Clear();
+            //_Cats.Clear();
+
+            using var cmd = new SQLiteCommand(Database.dbConnection);
+            cmd.CommandText = "DELETE FROM categories";
+            cmd.ExecuteNonQuery();
+
 
             // ---------------------------------------------------------------
             // Add Defaults
@@ -338,7 +367,8 @@ namespace Budget
         // ====================================================================
         private void Add(Category cat)
         {
-            _Cats.Add(cat);
+            //_Cats.Add(cat);-------------------------------------------------------------------------------------------CHANGED (NOT USED, LIST)
+
         }
 
 
@@ -509,11 +539,11 @@ namespace Budget
         /// <param name="type">The type of the category updated to the list.</param>
         public void UpdateProperties(int Id, string desc, CategoryType type)
         {
-            int i = _Cats.FindIndex(x => x.Id == Id);
-            if (i != -1) 
-            {
-                _Cats.Insert(i, new Category(Id, desc, type)); 
-            };
+            //int i = _Cats.FindIndex(x => x.Id == Id);
+            //if (i != -1) 
+            //{
+            //    _Cats.Insert(i, new Category(Id, desc, type));-------------------------------------------------------------------------------------------CHANGED (NOT USED, LIST)
+            //};
 
             UpdateInDatabase(Id, desc, type); //update to database
         }
@@ -531,13 +561,13 @@ namespace Budget
         /// <param name="type">The type of the category added into the list.</param>
         public void Add(String desc, Category.CategoryType type)
         {
-            int new_num = 1;
-            if (_Cats.Count > 0)
-            {
-                new_num = (from c in _Cats select c.Id).Max();
-                new_num++;
-            }
-            _Cats.Add(new Category(new_num, desc, type));
+            //int new_num = 1;
+            //if (_Cats.Count > 0)
+            //{
+            //    new_num = (from c in _Cats select c.Id).Max();
+            //    new_num++;
+            //}
+            //_Cats.Add(new Category(new_num, desc, type));
 
             AddCategoriesToDatabaseNew(desc, type);
 
@@ -558,8 +588,8 @@ namespace Budget
         // ====================================================================
         public void Delete(int Id)
         {
-            int i = _Cats.FindIndex(x => x.Id == Id);
-            if (i != -1) { _Cats.RemoveAt(i); }; // modified that too
+            //int i = _Cats.FindIndex(x => x.Id == Id); //-------------------------------------------------------------------------------------------CHANGED (NOT USED, LIST)
+            //if (i != -1) { _Cats.RemoveAt(i); }; // modified that too
             DeleteCategory(Id);
         }
 
@@ -582,11 +612,24 @@ namespace Budget
         // ====================================================================
         public List<Category> List()
         {
+            //List<Category> newList = new List<Category>();
+            //foreach (Category category in _Cats)
+            //{
+            //    newList.Add(new Category(category));
+            //}
+            //return newList;
+
             List<Category> newList = new List<Category>();
-            foreach (Category category in _Cats)
+            using var cmd = new SQLiteCommand(Database.dbConnection);
+
+            cmd.CommandText = "SELECT * FROM categories";
+            using var newAddedId = new SQLiteCommand("SELECT * FROM categories", (Database.dbConnection));
+            var rdr = newAddedId.ExecuteReader();
+            while (rdr.Read())
             {
-                newList.Add(new Category(category));
+                newList.Add(new Category((int)(long)rdr[0], (string)rdr[1], (CategoryType)(int)(long)rdr[2] - 1)); // added -1 to fix test
             }
+
             return newList;
         }
 
@@ -641,41 +684,41 @@ namespace Budget
         // ====================================================================
         // write all categories in our list to XML file
         // ====================================================================
-        private void _WriteXMLFile(String filepath)
-        {
-            try
-            {
-                // create top level element of categories
-                XmlDocument doc = new XmlDocument();
-                doc.LoadXml("<Categories></Categories>");
+        //private void _WriteXMLFile(String filepath)
+        //{
+        //    try
+        //    {
+        //        // create top level element of categories
+        //        XmlDocument doc = new XmlDocument();
+        //        doc.LoadXml("<Categories></Categories>");
 
-                // foreach Category, create an new xml element
-                foreach (Category cat in _Cats)
-                {
-                    XmlElement ele = doc.CreateElement("Category");
-                    XmlAttribute attr = doc.CreateAttribute("ID");
-                    attr.Value = cat.Id.ToString();
-                    ele.SetAttributeNode(attr);
-                    XmlAttribute type = doc.CreateAttribute("type");
-                    type.Value = cat.Type.ToString();
-                    ele.SetAttributeNode(type);
+        //        // foreach Category, create an new xml element
+        //        foreach (Category cat in _Cats)
+        //        {
+        //            XmlElement ele = doc.CreateElement("Category");
+        //            XmlAttribute attr = doc.CreateAttribute("ID");
+        //            attr.Value = cat.Id.ToString();
+        //            ele.SetAttributeNode(attr);
+        //            XmlAttribute type = doc.CreateAttribute("type");
+        //            type.Value = cat.Type.ToString();
+        //            ele.SetAttributeNode(type);
 
-                    XmlText text = doc.CreateTextNode(cat.Description);
-                    doc.DocumentElement.AppendChild(ele);
-                    doc.DocumentElement.LastChild.AppendChild(text);
+        //            XmlText text = doc.CreateTextNode(cat.Description);
+        //            doc.DocumentElement.AppendChild(ele);
+        //            doc.DocumentElement.LastChild.AppendChild(text);
 
-                }
+        //        }
 
-                // write the xml to FilePath
-                doc.Save(filepath);
+        //        // write the xml to FilePath
+        //        doc.Save(filepath);
 
-            }
-            catch (Exception e)
-            {
-                throw new Exception("_WriteXMLFile: Reading XML " + e.Message);
-            }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        throw new Exception("_WriteXMLFile: Reading XML " + e.Message);
+        //    }
 
-        }
+        //}
 
     }
 }
