@@ -305,9 +305,6 @@ namespace Budget
         #endregion OpenNewAndSave
 
         #region GetList
-
-
-
         // ============================================================================
         // Get all expenses list
         // NOTE: VERY IMPORTANT... budget amount is the negative of the expense amount
