@@ -104,13 +104,6 @@ namespace Budget
 
         }
 
-
-
-
-
-
-
-
         /// <summary>
         /// Retrieve contents from the database
         /// </summary>

@@ -8,6 +8,7 @@ using System.Xml;
 using System.Collections;
 using System.Data.Common;
 using System.Data.SQLite;
+using static Budget.Category;
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -237,8 +238,15 @@ namespace Budget
         public List<Expense> RetrieveExpenses(SQLiteConnection dbConnection)
         {
             //Connect to the database
-            using var cmd = new SQLiteCommand(dbConnection);
-            cmd.CommandText = "SELECT * FROM categories ORDER BY Id ASC";
+            using var cmd = new SQLiteCommand(dbConnection);            
+            using var retrieveExpenses = new SQLiteCommand("SELECT * FROM expenses ORDER BY Id ASC", dbConnection);
+            var rdr = retrieveExpenses.ExecuteReader();            
+            
+            //Order by Id           
+            while (rdr.Read())
+            {
+                _Expenses.Add(new Expense((int)(long)rdr[0], Convert.ToDateTime(rdr[1]), (int)rdr[2], (double)rdr[3], (string)rdr[4]));
+            }
             return _Expenses;
         }
 
