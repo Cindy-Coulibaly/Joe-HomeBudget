@@ -24,8 +24,8 @@ namespace Budget
 {
     // ====================================================================
     /// <summary>
-    /// Create a list of category,also it will take
-    /// an input file that has category and will populate it in a list, it can also
+    /// Create a database of categories,also it will take
+    /// an input file that as categories and will populate it in the database table, it can also
     /// write the category list in a given file.
     /// </summary>
     // CLASS: categories
@@ -78,7 +78,9 @@ namespace Budget
             {
                 DBCategoryType(Database.dbConnection);
 
+
                 //If there is new database then automatically set it to default
+
                 SetCategoriesToDefaults();
             }
         }
