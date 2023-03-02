@@ -36,7 +36,6 @@ namespace Budget
     public class Categories
     {
         private static String DefaultFileName = "budgetCategories.txt";
-        //private List<Category> _Cats = new List<Category>();
         private string _FileName;
         private string _DirName;
 
@@ -61,7 +60,6 @@ namespace Budget
         public Categories()
         {
             SetCategoriesToDefaults();
-            //DBCategoryType(Database.dbConnection);// try it
         }
 
         /// <summary>
@@ -79,12 +77,11 @@ namespace Budget
             else
             {
                 DBCategoryType(Database.dbConnection);
+
                 //If there is new database then automatically set it to default
                 SetCategoriesToDefaults();
             }
         }
-
-
 
         private void DBCategoryType(SQLiteConnection db)
         {
@@ -105,13 +102,6 @@ namespace Budget
 
         }
 
-
-
-
-
-
-
-
         /// <summary>
         /// Retrieve contents from the database
         /// </summary>
@@ -119,39 +109,8 @@ namespace Budget
 
         public void RetrieveCategoriesFromDatabase(SQLiteConnection dbConnection)
         {
-            //dbConnection.Open();
-
-            //get the objects category data directly from the database and insert it into the list
-            //using var cmd = new SQLiteCommand(dbConnection);
-
-            //cmd.CommandText = "SELECT * FROM categories";
-            //using var newAddedId = new SQLiteCommand("SELECT * FROM categories", dbConnection);
-            //var rdr = newAddedId.ExecuteReader();
-            //while (rdr.Read())
-            //{              
-            //    _Cats.Add(new Category((int)(long)rdr[0], (string)rdr[1], (CategoryType)(int)(long)rdr[2]));
-            //}
-
-            //_Cats = (List<Category>)cmd.ExecuteScalar(); ------------------------CHANGED, CAN NOT PARSE A LIST
-            //dbConnection.Close();
-
-
-            //using var cmd = new SQLiteCommand(dbConnection);
-            //using var cmd2 = new SQLiteCommand(Database.dbConnection);
-
-
-
-            //using var newAddedId = new SQLiteCommand("SELECT * FROM categories", dbConnection);
-            //var rdr = newAddedId.ExecuteReader();
-            //while (rdr.Read())
-            //{
-            //    cmd2.CommandText = $"INSERT INTO categories(Id, Description, TypeId) VALUES({rdr[0]}, '{rdr[1]}', {rdr[2]})";
-            //    cmd2.ExecuteNonQuery();
-            //}
-
             List();
         }
-
 
         // ====================================================================
         // get a specific category from the list where the id is the one specified
@@ -234,55 +193,6 @@ namespace Budget
         }
 
         // ====================================================================
-        // save to a file
-        // if filepath is not specified, read/save in AppData file
-        /// <summary>
-        /// Save the category list into a file, if the file exists.
-        /// </summary>
-        /// <example>
-        /// <code>
-        /// Categories cat = new Categories();
-        /// cat.SaveToFile("./file.txt");
-        /// </code>
-        /// </example>
-        /// <param name="filepath">The filepath of the file you want to write the category list too.</param>
-        // ====================================================================
-        //public void SaveToFile(String filepath = null)
-        //{
-        //    // ---------------------------------------------------------------
-        //    // if file path not specified, set to last read file
-        //    // ---------------------------------------------------------------
-        //    if (filepath == null && DirName != null && FileName != null)
-        //    {
-        //        filepath = DirName + "\\" + FileName;
-        //    }
-
-        //    // ---------------------------------------------------------------
-        //    // just in case filepath doesn't exist, reset path info
-        //    // ---------------------------------------------------------------
-        //    _DirName = null;
-        //    _FileName = null;
-
-        //    // ---------------------------------------------------------------
-        //    // get filepath name (throws exception if it doesn't exist)
-        //    // ---------------------------------------------------------------
-        //    filepath = BudgetFiles.VerifyWriteToFileName(filepath, DefaultFileName);
-
-        //    // ---------------------------------------------------------------
-        //    // save as XML
-        //    // ---------------------------------------------------------------
-        //    _WriteXMLFile(filepath);
-
-        //    // ----------------------------------------------------------------
-        //    // save filename info for later use
-        //    // ----------------------------------------------------------------
-        //    _DirName = Path.GetDirectoryName(filepath);
-        //    _FileName = Path.GetFileName(filepath);
-
-
-        //}
-
-        // ====================================================================
         // set categories to default
         /// <summary>
         /// Sets the category list some default value.
@@ -297,12 +207,10 @@ namespace Budget
             // ---------------------------------------------------------------
             // reset any current categories,
             // ---------------------------------------------------------------
-            //_Cats.Clear();
 
             using var cmd = new SQLiteCommand(Database.dbConnection);
             cmd.CommandText = "DELETE FROM categories";
             cmd.ExecuteNonQuery();
-
 
             // ---------------------------------------------------------------
             // Add Defaults
@@ -373,45 +281,8 @@ namespace Budget
 
 
         #region Add to database
-
-        //add without creating category list
-        public void AddCategoriesToDatabaseOld(int id, String desc, Category.CategoryType type)
-        {
-
-
-            //create a command search for the given id
-            using var cmdCheckId = new SQLiteCommand("SELECT Id FROM categories WHERE Id=" + id, Database.dbConnection);
-
-
-            //take the first column of the select query
-            object firstCollumId = cmdCheckId.ExecuteScalar();
-
-            //if the category doesn't exist in the database already, then insert it;
-            if (firstCollumId == null)
-            {
-                using var cmd = new SQLiteCommand(Database.dbConnection);
-                cmd.CommandText = $"INSERT INTO categories(Id, Description, TypeId) VALUES({id}, '{desc}', {(int)type + 1})";
-                cmd.ExecuteNonQuery();
-                using var newAddedId = new SQLiteCommand("SELECT * FROM categories WHERE Id=" + id, Database.dbConnection);
-                var rdr = newAddedId.ExecuteReader();
-                while (rdr.Read())
-                {
-                    Console.WriteLine("Category added: id: {0}, desc: {1}, type: {2}", rdr[0], rdr[1], rdr[2]);
-
-                }
-            }
-            else
-            {
-                using var newAddedId = new SQLiteCommand("SELECT Id FROM categories WHERE Id=" + id, Database.dbConnection);
-                var rdr = newAddedId.ExecuteReader();
-                while (rdr.Read())
-                {
-                    Console.WriteLine("Category already exist, id: {0}", rdr[0]);
-                }
-            }
-        }
-
-        public void AddCategoriesToDatabaseNew(String desc, Category.CategoryType type)
+     
+        public void AddCategoriesToDatabase(String desc, Category.CategoryType type)
         {
             Int64 id;
             using var countCMD = new SQLiteCommand("SELECT COUNT(Id) FROM categories", Database.dbConnection);
@@ -549,28 +420,19 @@ namespace Budget
         }
 
         /// <summary>
-        /// Add a category into the category list.
+        /// Add a category into the database.
         /// </summary>
         /// <example>
         /// <code>
-        /// Categories listCats=new Categories();
-        /// listCats.Add("jam",Category.CategoryType.Expense);
+        /// Categories cats= new Categories();
+        /// cats.Add("jam",Category.CategoryType.Expense);
         /// </code>
         /// </example>
         /// <param name="desc">The description of the category being added.</param>
         /// <param name="type">The type of the category added into the list.</param>
         public void Add(String desc, Category.CategoryType type)
         {
-            //int new_num = 1;
-            //if (_Cats.Count > 0)
-            //{
-            //    new_num = (from c in _Cats select c.Id).Max();
-            //    new_num++;
-            //}
-            //_Cats.Add(new Category(new_num, desc, type));
-
-            AddCategoriesToDatabaseNew(desc, type);
-
+            AddCategoriesToDatabase(desc, type);
         }
 
         // ====================================================================
@@ -612,13 +474,6 @@ namespace Budget
         // ====================================================================
         public List<Category> List()
         {
-            //List<Category> newList = new List<Category>();
-            //foreach (Category category in _Cats)
-            //{
-            //    newList.Add(new Category(category));
-            //}
-            //return newList;
-
             List<Category> newList = new List<Category>();
             using var cmd = new SQLiteCommand(Database.dbConnection);
 
@@ -679,47 +534,6 @@ namespace Budget
             }
 
         }
-
-
-        // ====================================================================
-        // write all categories in our list to XML file
-        // ====================================================================
-        //private void _WriteXMLFile(String filepath)
-        //{
-        //    try
-        //    {
-        //        // create top level element of categories
-        //        XmlDocument doc = new XmlDocument();
-        //        doc.LoadXml("<Categories></Categories>");
-
-        //        // foreach Category, create an new xml element
-        //        foreach (Category cat in _Cats)
-        //        {
-        //            XmlElement ele = doc.CreateElement("Category");
-        //            XmlAttribute attr = doc.CreateAttribute("ID");
-        //            attr.Value = cat.Id.ToString();
-        //            ele.SetAttributeNode(attr);
-        //            XmlAttribute type = doc.CreateAttribute("type");
-        //            type.Value = cat.Type.ToString();
-        //            ele.SetAttributeNode(type);
-
-        //            XmlText text = doc.CreateTextNode(cat.Description);
-        //            doc.DocumentElement.AppendChild(ele);
-        //            doc.DocumentElement.LastChild.AppendChild(text);
-
-        //        }
-
-        //        // write the xml to FilePath
-        //        doc.Save(filepath);
-
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw new Exception("_WriteXMLFile: Reading XML " + e.Message);
-        //    }
-
-        //}
-
     }
 }
 
