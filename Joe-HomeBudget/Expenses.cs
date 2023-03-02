@@ -10,6 +10,7 @@ using System.Data.Common;
 using System.Data.SQLite;
 using static Budget.Category;
 using static System.Net.Mime.MediaTypeNames;
+using System.Data;
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -179,7 +180,6 @@ namespace Budget
             //                    FOREIGN KEY(CategoryId) REFERENCES categories(Id)
             //                    );";
 
-
            
             //create a command search for the given id
             using var cmdCheckId = new SQLiteCommand("SELECT Id FROM expenses WHERE Id=" + Id, Database.dbConnection);
@@ -256,10 +256,15 @@ namespace Budget
         public List<Expense> List()
         {
             List<Expense> newList = new List<Expense>();
-            foreach (Expense expense in _Expenses)
+            using var cmd = new SQLiteCommand(Database.dbConnection);
+            using var retrieveExpenses = new SQLiteCommand("SELECT * FROM expenses ORDER BY Id", Database.dbConnection);
+            var rdr = retrieveExpenses.ExecuteReader();
+            
+            //Order by Id           
+            while (rdr.Read())
             {
-                newList.Add(new Expense(expense));
-            }
+                newList.Add(new Expense((int)(long)rdr[0], Convert.ToDateTime(rdr[1]), (int)rdr[2], (double)rdr[3], (string)rdr[4]));
+            }                        
             return newList;
         }
 
@@ -267,21 +272,25 @@ namespace Budget
         /// Method retrieving all expenses
         /// </summary>
         /// <returns>A list of expenses</returns>
-        public List<Expense> RetrieveExpenses(SQLiteConnection dbConnection)
+        public void RetrieveExpenses()
         {
-            //Connect to the database
-            using var cmd = new SQLiteCommand(dbConnection);          
-            List<Expense> list = List();
-            using var retrieveExpenses = new SQLiteCommand("SELECT * FROM expenses ORDER BY Id", dbConnection);           
-            var rdr = retrieveExpenses.ExecuteReader();           
+            ////Connect to the database
 
-            //Order by Id           
-            while (rdr.Read())
-            {
-                list.Add(new Expense((int)(long)rdr[0], Convert.ToDateTime(rdr[1]), (int)rdr[2], (double)rdr[3], (string)rdr[4]));
-            }
-            return list;
+            //List<Expense> list = List();
+            //using var cmd = new SQLiteCommand(dbConnection); 
+            //using var retrieveExpenses = new SQLiteCommand("SELECT * FROM expenses ORDER BY Id", dbConnection);           
+            //var rdr = retrieveExpenses.ExecuteReader();           
+
+            ////Order by Id           
+            //while (rdr.Read())
+            //{
+            //    list.Add(new Expense((int)(long)rdr[0], Convert.ToDateTime(rdr[1]), (int)rdr[2], (double)rdr[3], (string)rdr[4]));
+            //}
+            //return list;
+
+            List();
         }
+
 
         // ====================================================================
         // read from an XML file and add categories to our categories list

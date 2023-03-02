@@ -116,12 +116,14 @@ namespace Budget
 
             cmd.CommandText = "SELECT * FROM categories";
             using var newAddedId = new SQLiteCommand("SELECT * FROM categories", dbConnection);
-            var rdr = newAddedId.ExecuteReader();
+            var rdr = newAddedId.ExecuteReader();     
+            
             while (rdr.Read())
             {              
                 _Cats.Add(new Category((int)(long)rdr[0], (string)rdr[1], (CategoryType)(int)(long)rdr[2]));
             }
 
+            List();
             //_Cats = (List<Category>)cmd.ExecuteScalar(); ------------------------CHANGED, CAN NOT PARSE A LIST
             //dbConnection.Close();
         }
@@ -338,7 +340,6 @@ namespace Budget
         //add without creating category list
         public void AddCategoriesToDatabase(int id, String desc, Category.CategoryType type)
         {
-
 
             //create a command search for the given id
             using var cmdCheckId = new SQLiteCommand("SELECT Id FROM categories WHERE Id=" + id, Database.dbConnection);
