@@ -210,9 +210,6 @@ namespace Budget
                         Console.WriteLine("Expense id {0} before the update: date: {1}, category: {2}, amount: {3}, desc: {4}", rdr[0], (string)rdr[1], rdr[2], rdr[3], rdr[4]);
                     }
 
-                    DateTime newDatetime = DateTime.ParseExact(date,
-                    "yyyy-MM-dd", CultureInfo.InvariantCulture);
-
                     using var cmd = new SQLiteCommand(Database.dbConnection);
                     cmd.CommandText = $"UPDATE expenses Set Description ='@description', Date = @date, Category = @category, Amount = @amount WHERE Id = @id";
                     cmd.Parameters.AddWithValue("@description", description);
@@ -263,10 +260,15 @@ namespace Budget
             if (i != -1) { _Expenses.RemoveAt(i); } // will only delete if valid id
 
         }
-        public void DeleteExpenses(int id)
+        /// <summary>
+        /// Deletes expense from the database.
+        /// </summary>
+        /// <param name="id"> Id of the expense to delete. </param>
+        public void DeleteExpense(int id)
         {
             //create a command search for the given id
-            using var cmdCheckId = new SQLiteCommand("SELECT Id from expenses WHERE Id=" + id, Database.dbConnection);
+            using var cmdCheckId = new SQLiteCommand("SELECT Id from expenses WHERE Id=" + "@id", Database.dbConnection);
+            cmdCheckId.Parameters.AddWithValue("@id", id);
 
             //take the first column of the select query
             //Parse object to int because ExecuteScalar() return an object
@@ -275,7 +277,8 @@ namespace Budget
             //if the id doesn't exist then insert to database
             if (firstCollumId != null)
             {
-                using var beforeDeletedId = new SQLiteCommand("SELECT * FROM expenses WHERE Id=" + id, Database.dbConnection);
+                using var beforeDeletedId = new SQLiteCommand("SELECT * FROM expenses WHERE Id=" + "@id", Database.dbConnection);
+                beforeDeletedId.Parameters.AddWithValue("@id", id);
                 var rdr = beforeDeletedId.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -284,7 +287,8 @@ namespace Budget
 
 
                 using var cmd = new SQLiteCommand(Database.dbConnection);
-                cmd.CommandText = "DELETE FROM expenses WHERE Id=" + id;
+                cmd.CommandText = "DELETE FROM expenses WHERE Id=" + "@id";
+                cmd.Parameters.AddWithValue("@id", id);
                 cmd.ExecuteNonQuery();
 
                 Console.WriteLine("Successfully deleted from Id=" + id);
