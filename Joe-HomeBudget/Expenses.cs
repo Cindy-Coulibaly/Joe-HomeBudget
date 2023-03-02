@@ -192,7 +192,8 @@ namespace Budget
             if (description != string.Empty)
             {
                 //create a command search for the given id
-                using var cmdCheckId = new SQLiteCommand("SELECT Id from expenses WHERE Id=" + id, Database.dbConnection);
+                using var cmdCheckId = new SQLiteCommand("SELECT Id from expenses WHERE Id=" + "@id", Database.dbConnection);
+                cmdCheckId.Parameters.AddWithValue("@id", id);
 
                 //take the first column of the select query
                 //Parse object to int because ExecuteScalar() return an object
@@ -201,7 +202,8 @@ namespace Budget
                 //if the id doesn't exist then insert to database
                 if (firstCollumId != null)
                 {
-                    using var beforeUpdatedId = new SQLiteCommand("SELECT * FROM expenses WHERE Id=" + id, Database.dbConnection);
+                    using var beforeUpdatedId = new SQLiteCommand("SELECT * FROM expenses WHERE Id=" + "@id", Database.dbConnection);
+                    cmdCheckId.Parameters.AddWithValue("@id", id);
                     var rdr = beforeUpdatedId.ExecuteReader();
                     while (rdr.Read())
                     {
@@ -212,10 +214,16 @@ namespace Budget
                     "yyyy-MM-dd", CultureInfo.InvariantCulture);
 
                     using var cmd = new SQLiteCommand(Database.dbConnection);
-                    cmd.CommandText = $"UPDATE expenses Set Description ='{description}', Date = {newDatetime}, Category = {category}, Amount = {amount} WHERE Id = {id}";
+                    cmd.CommandText = $"UPDATE expenses Set Description ='@description', Date = @date, Category = @category, Amount = @amount WHERE Id = @id";
+                    cmd.Parameters.AddWithValue("@description", description);
+                    cmd.Parameters.AddWithValue("@date", date);
+                    cmd.Parameters.AddWithValue("@category", category);
+                    cmd.Parameters.AddWithValue("@amount", amount);
+                    cmd.Parameters.AddWithValue("@id", id);
                     cmd.ExecuteNonQuery();
 
-                    using var updatedId = new SQLiteCommand("SELECT * FROM expenses WHERE Id=" + id, Database.dbConnection);
+                    using var updatedId = new SQLiteCommand("SELECT * FROM expenses WHERE Id=" + "@id", Database.dbConnection);
+                    updatedId.Parameters.AddWithValue("@id", id);
                     rdr = updatedId.ExecuteReader();
                     while (rdr.Read())
                     {
