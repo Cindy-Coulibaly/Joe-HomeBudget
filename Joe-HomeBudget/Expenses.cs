@@ -244,10 +244,15 @@ namespace Budget
 
         }
 
-        public void DeleteCategory(int id)
+        /// <summary>
+        /// Deletes expense from the database.
+        /// </summary>
+        /// <param name="id"> Id of the expense to delete. </param>
+        public void DeleteExpense(int id)
         {
             //create a command search for the given id
-            using var cmdCheckId = new SQLiteCommand("SELECT Id from expenses WHERE Id=" + id, Database.dbConnection);
+            using var cmdCheckId = new SQLiteCommand("SELECT Id from expenses WHERE Id=" + "@id", Database.dbConnection);
+            cmdCheckId.Parameters.AddWithValue("@id", id);
 
             //take the first column of the select query
             //Parse object to int because ExecuteScalar() return an object
@@ -256,7 +261,8 @@ namespace Budget
             //if the id doesn't exist then insert to database
             if (firstCollumId != null)
             {
-                using var beforeDeletedId = new SQLiteCommand("SELECT * FROM expenses WHERE Id=" + id, Database.dbConnection);
+                using var beforeDeletedId = new SQLiteCommand("SELECT * FROM expenses WHERE Id=" + "@id", Database.dbConnection);
+                beforeDeletedId.Parameters.AddWithValue("@id", id);
                 var rdr = beforeDeletedId.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -265,7 +271,8 @@ namespace Budget
 
 
                 using var cmd = new SQLiteCommand(Database.dbConnection);
-                cmd.CommandText = "DELETE FROM expenses WHERE Id=" + id;
+                cmd.CommandText = "DELETE FROM expenses WHERE Id=" + "@id";
+                cmd.Parameters.AddWithValue("@id", id);
                 cmd.ExecuteNonQuery();
 
                 Console.WriteLine("Successfully deleted from Id=" + id);
