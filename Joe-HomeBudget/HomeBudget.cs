@@ -104,12 +104,12 @@ namespace Budget
         /// with the file you gave it.
         /// </summary>
         /// <param name="budgetFileName">The file with all your categories and expenses.</param>
-        public HomeBudget(String budgetFileName)
-        {
-            _categories = new Categories();
-            _expenses = new Expenses();
-            ReadFromFile(budgetFileName);
-        }
+        //public HomeBudget(String budgetFileName)
+        //{
+        //    _categories = new Categories();
+        //    _expenses = new Expenses();
+        //    ReadFromFile(budgetFileName);
+        //}
 
         public HomeBudget(String databaseFile, String expensesXMLFile, bool newDB = false)
         {
@@ -131,12 +131,13 @@ namespace Budget
             _categories = new Categories(Database.dbConnection, newDB);
 
             // create the _expenses course
-
            
             _categories = new Categories();
             _expenses = new Expenses();
 
-            _expenses.ReadFromFile(expensesXMLFile);
+            _expenses.RetrieveExpenses();
+            
+            //_expenses.ReadFromFile(expensesXMLFile);
         }
 
         private void DBCategoryType(SQLiteConnection db)
@@ -295,48 +296,48 @@ namespace Budget
         /// </example>
         /// <param name="filepath">The file path of the file that you want the app to read from.</param>
         // ====================================================================
-        public void SaveToFile(String filepath)
-        {
+        //public void SaveToFile(String filepath)
+        //{
 
-            // ---------------------------------------------------------------
-            // just in case filepath doesn't exist, reset path info
-            // ---------------------------------------------------------------
-            _DirName = null;
-            _FileName = null;
+        //    // ---------------------------------------------------------------
+        //    // just in case filepath doesn't exist, reset path info
+        //    // ---------------------------------------------------------------
+        //    _DirName = null;
+        //    _FileName = null;
 
-            // ---------------------------------------------------------------
-            // get filepath name (throws exception if we can't write to the file)
-            // ---------------------------------------------------------------
-            filepath = BudgetFiles.VerifyWriteToFileName(filepath, "");
+        //    // ---------------------------------------------------------------
+        //    // get filepath name (throws exception if we can't write to the file)
+        //    // ---------------------------------------------------------------
+        //    filepath = BudgetFiles.VerifyWriteToFileName(filepath, "");
 
-            String path = Path.GetDirectoryName(Path.GetFullPath(filepath));
-            String file = Path.GetFileNameWithoutExtension(filepath);
-            String ext = Path.GetExtension(filepath);
+        //    String path = Path.GetDirectoryName(Path.GetFullPath(filepath));
+        //    String file = Path.GetFileNameWithoutExtension(filepath);
+        //    String ext = Path.GetExtension(filepath);
 
-            // ---------------------------------------------------------------
-            // construct file names for expenses and categories
-            // ---------------------------------------------------------------
-            String expensepath = path + "\\" + file + "_expenses" + ".exps";
-            String categorypath = path + "\\" + file + "_categories" + ".cats";
+        //    // ---------------------------------------------------------------
+        //    // construct file names for expenses and categories
+        //    // ---------------------------------------------------------------
+        //    String expensepath = path + "\\" + file + "_expenses" + ".exps";
+        //    String categorypath = path + "\\" + file + "_categories" + ".cats";
 
-            // ---------------------------------------------------------------
-            // save the expenses and categories into their own files
-            // ---------------------------------------------------------------
-            _expenses.SaveToFile(expensepath);
-            _categories.SaveToFile(categorypath);
+        //    // ---------------------------------------------------------------
+        //    // save the expenses and categories into their own files
+        //    // ---------------------------------------------------------------
+        //    _expenses.SaveToFile(expensepath);
+        //    _categories.SaveToFile(categorypath);
 
-            // ---------------------------------------------------------------
-            // save filenames of expenses and categories to budget file
-            // ---------------------------------------------------------------
-            string[] files = { Path.GetFileName(categorypath), Path.GetFileName(expensepath) };
-            System.IO.File.WriteAllLines(filepath, files);
+        //    // ---------------------------------------------------------------
+        //    // save filenames of expenses and categories to budget file
+        //    // ---------------------------------------------------------------
+        //    string[] files = { Path.GetFileName(categorypath), Path.GetFileName(expensepath) };
+        //    System.IO.File.WriteAllLines(filepath, files);
 
-            // ----------------------------------------------------------------
-            // save filename info for later use
-            // ----------------------------------------------------------------
-            _DirName = path;
-            _FileName = Path.GetFileName(filepath);
-        }
+        //    // ----------------------------------------------------------------
+        //    // save filename info for later use
+        //    // ----------------------------------------------------------------
+        //    _DirName = path;
+        //    _FileName = Path.GetFileName(filepath);
+        //}
         #endregion OpenNewAndSave
 
         #region GetList
