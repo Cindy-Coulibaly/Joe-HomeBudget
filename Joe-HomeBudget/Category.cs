@@ -108,9 +108,6 @@ namespace Budget
         {
             return Description;
         }
-
-  
-
     }
 }
 

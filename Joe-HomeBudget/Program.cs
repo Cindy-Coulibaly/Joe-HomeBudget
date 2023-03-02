@@ -12,6 +12,8 @@ namespace Joe_HomeBudget
 
             //Console.WriteLine(budget);
 
+
+            budget.expenses.AddExpensesToDatabase(1, DateTime.Parse("10/12/2022"), "Clothing", 10.12, 3);
             //budget.categories.Add("hat", Category.CategoryType.Expense);
             //budget.categories.AddCategoriesToDatabase2("z", Category.CategoryType.Expense);
             //budget.categories.AddCategoriesToDatabase1(new Category(2, "a", Category.CategoryType.Expense));
@@ -23,7 +25,6 @@ namespace Joe_HomeBudget
             //budget.categories.UpdateInDatabase(4, "g", Category.CategoryType.Savings);
             //budget.categories.UpdateInDatabase(10, "h", Category.CategoryType.Savings);
             Console.WriteLine("\nDid it!");
-
         }
     }
 }

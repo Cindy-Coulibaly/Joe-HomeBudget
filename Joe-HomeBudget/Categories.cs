@@ -99,7 +99,6 @@ namespace Budget
 
             cmd.CommandText = "INSERT INTO categoryTypes(Id,Description) VALUES(4, 'Savings')";
             cmd.ExecuteNonQuery();
-
         }
 
         /// <summary>
@@ -288,8 +287,6 @@ namespace Budget
             using var countCMD = new SQLiteCommand("SELECT COUNT(Id) FROM categories", Database.dbConnection);
             object idCount = countCMD.ExecuteScalar();
             id = (Int64)idCount;
-
-            //Database.dbConnection.Open();
 
             //create a command search for the given id
             using var cmdCheckId = new SQLiteCommand("SELECT Id FROM categories WHERE Id=" + id, Database.dbConnection);

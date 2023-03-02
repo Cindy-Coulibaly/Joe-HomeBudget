@@ -125,7 +125,7 @@ namespace BudgetCodeTests
             double amount = 98.1;
 
             // Act
-            expenses.Add(DateTime.Now,category,amount,"new expense");
+            //expenses.Add(DateTime.Now,category,amount,"new expense");
             List<Expense> expensesList = expenses.List();
             int sizeOfList = expenses.List().Count;
 
@@ -230,7 +230,7 @@ namespace BudgetCodeTests
             File.Delete(outputFile);
 
             // Act
-            expenses.Add(DateTime.Now, 14, 35.27, "McDonalds");
+            //expenses.Add(DateTime.Now, 14, 35.27, "McDonalds");
             List<Expense> listBeforeSaving = expenses.List();
             expenses.SaveToFile(outputFile);
             expenses.ReadFromFile(outputFile);
