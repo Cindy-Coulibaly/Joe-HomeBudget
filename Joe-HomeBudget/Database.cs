@@ -54,18 +54,6 @@ namespace Budget
                                 );";
             cmd.ExecuteNonQuery();
 
-            //cmd.CommandText = "INSERT INTO categoryTypes(Id, Description) VALUES(0, 'Income')";
-            //cmd.ExecuteNonQuery();
-
-            //cmd.CommandText = "INSERT INTO categoryTypes(Id, Description) VALUES(1, 'Expense')";
-            //cmd.ExecuteNonQuery();
-
-            //cmd.CommandText = "INSERT INTO categoryTypes(Id, Description) VALUES(2, 'Credit')";
-            //cmd.ExecuteNonQuery();
-
-            //cmd.CommandText = "INSERT INTO categoryTypes(Id, Description) VALUES(3, 'Savings')";
-            //cmd.ExecuteNonQuery();
-
         }
         public static void existingDatabase(string filename)
         {
