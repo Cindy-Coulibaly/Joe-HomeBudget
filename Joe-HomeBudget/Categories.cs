@@ -250,7 +250,7 @@ namespace Budget
             //if the id doesn't exist then insert to database
             if (firstCollumId != null)
             {
-                using var beforeDeletedId = new SQLiteCommand("SELECT * FROM categories WHERE Id=" + id, Database.dbConnection);
+                using var beforeDeletedId = new SQLiteCommand("SELECT Id, Description, TypeId FROM categories WHERE Id=" + id, Database.dbConnection);
                 var rdr = beforeDeletedId.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -304,7 +304,7 @@ namespace Budget
                 using var cmd = new SQLiteCommand(Database.dbConnection);
                 cmd.CommandText = $"INSERT INTO categories(Id, Description, TypeId) VALUES({id}, '{desc}', {(int)type + 1})";
                 cmd.ExecuteNonQuery();
-                using var newAddedId = new SQLiteCommand("SELECT * FROM categories WHERE Id=" + id, Database.dbConnection);
+                using var newAddedId = new SQLiteCommand("SELECT Id, Description, TypeId FROM categories WHERE Id=" + id, Database.dbConnection);
                 var rdr = newAddedId.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -322,7 +322,7 @@ namespace Budget
                 using var cmd = new SQLiteCommand(Database.dbConnection);
                 cmd.CommandText = $"INSERT INTO categories(Id, Description, TypeId) VALUES({id}, '{desc}', {(int)type + 1})";
                 cmd.ExecuteNonQuery();
-                using var newAddedId = new SQLiteCommand("SELECT * FROM categories WHERE Id=" + id, Database.dbConnection);
+                using var newAddedId = new SQLiteCommand("SELECT Id, Description, TypeId FROM categories WHERE Id=" + id, Database.dbConnection);
                 var rdr = newAddedId.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -362,7 +362,7 @@ namespace Budget
                 if (firstCollumId != null)
                 {
                     //Output data before update
-                    using var beforeUpdatedId = new SQLiteCommand("SELECT * FROM categories WHERE Id=" + id, Database.dbConnection);
+                    using var beforeUpdatedId = new SQLiteCommand("SELECT Id, Description, TypeId FROM categories WHERE Id=" + id, Database.dbConnection);
                     var rdr = beforeUpdatedId.ExecuteReader();
                     while (rdr.Read())
                     {
@@ -375,7 +375,7 @@ namespace Budget
                     cmd.ExecuteNonQuery();
 
                     //Output data after update
-                    using var updatedId = new SQLiteCommand("SELECT * FROM categories WHERE Id=" + id, Database.dbConnection);
+                    using var updatedId = new SQLiteCommand("SELECT Id, Description, TypeId FROM categories WHERE Id=" + id, Database.dbConnection);
                     rdr = updatedId.ExecuteReader();
                     while (rdr.Read())
                     {
@@ -410,12 +410,6 @@ namespace Budget
         /// <param name="type">The type of the category updated to the list.</param>
         public void UpdateProperties(int Id, string desc, CategoryType type)
         {
-            //int i = _Cats.FindIndex(x => x.Id == Id);
-            //if (i != -1) 
-            //{
-            //    _Cats.Insert(i, new Category(Id, desc, type));-------------------------------------------------------------------------------------------CHANGED (NOT USED, LIST)
-            //};
-
             UpdateInDatabase(Id, desc, type); //update to database
         }
 
@@ -450,8 +444,6 @@ namespace Budget
         // ====================================================================
         public void Delete(int Id)
         {
-            //int i = _Cats.FindIndex(x => x.Id == Id); //-------------------------------------------------------------------------------------------CHANGED (NOT USED, LIST)
-            //if (i != -1) { _Cats.RemoveAt(i); }; // modified that too
             DeleteCategory(Id);
         }
 
@@ -475,10 +467,8 @@ namespace Budget
         public List<Category> List()
         {
             List<Category> newList = new List<Category>();
-            using var cmd = new SQLiteCommand(Database.dbConnection);
 
-            cmd.CommandText = "SELECT * FROM categories";
-            using var newAddedId = new SQLiteCommand("SELECT * FROM categories", (Database.dbConnection));
+            using var newAddedId = new SQLiteCommand("SELECT Id, Description, TypeId FROM categories", (Database.dbConnection));
             var rdr = newAddedId.ExecuteReader();
             while (rdr.Read())
             {
