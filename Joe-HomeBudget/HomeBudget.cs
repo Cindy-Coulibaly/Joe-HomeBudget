@@ -4,6 +4,7 @@
 // ============================================================================
 
 using System.Data.SQLite;
+using System.Globalization;
 using static Budget.Category;
 
 namespace Budget
@@ -483,8 +484,65 @@ namespace Budget
             // ------------------------------------------------------------------------
             // return joined list within time frame
             // ------------------------------------------------------------------------
+
+            ////format the date (default only so far) -----------TO ADD: format the given date
+            //Start = Start ?? DateTime.ParseExact("1900-01-01",
+            //     "yyyy-MM-dd", CultureInfor.InvariantCulture);
+            //End = End ?? DateTime.ParseExact("2500-01-01",
+            //     "yyyy-MM-dd", CultureInfor.InvariantCulture);
+
             Start = Start ?? new DateTime(1900, 1, 1);
             End = End ?? new DateTime(2500, 1, 1);
+
+            //using var cmd = new SQLiteCommand(Database.dbConnection);
+
+            //if (!FilterFlag)
+            //{
+
+            //    cmd.CommandText = $"SELECT c.Id, e.Id, e.Data, c.Description, e.Description, e.Amount, SUM(e.Amount) " +
+            //        $"FROM categories as c " +
+            //        $"JOIN expenses as e ON e.Category = c.Id " +
+            //        $"WHERE e.Date >= @Start && e.Date <= @End " +
+            //        $"ORDER BY e.Date";
+
+            //    //add binding here
+
+            //    cmd.ExecuteNonQuery();
+            //}
+            //else
+            //{   
+            //    //with filterflag on
+            //    cmd.CommandText = $"SELECT c.Id, e.Id, e.Data, c.Description, e.Description, e.Amount, SUM(e.Amount) " +
+            //        $"FROM categories as c " +
+            //        $"JOIN expenses as e ON e.Category = c.Id " +
+            //        $"WHERE (e.Date >= @Start && e.Date <= @End) && c.Id = @Id " + // add specify id
+            //        $"ORDER BY e.Date"; 
+
+            //    //add binding here
+
+            //    cmd.ExecuteNonQuery();
+            //}
+
+            //List<BudgetItem> items2 = new List<BudgetItem>();
+            //var rdr = cmd.ExecuteReader();
+            //while (rdr.Read())
+            //{
+            //    items2.Add(new BudgetItem
+            //    {
+            //        CategoryID = (int)(long)rdr[0],
+            //        ExpenseID = (int)(long)rdr[1],
+            //        ShortDescription = (string)rdr[2],
+            //        Date = (DateTime)rdr[3],
+            //        Amount = + (double)(long)rdr[4], // look back-----------------------------------------------------
+            //        Category = (string)rdr[5],
+            //        Balance = (double)(long)rdr[6]
+            //    }); // added -1 to fix test
+
+            //}
+
+
+
+
 
             var query = from c in _categories.List()
                         join e in _expenses.List() on c.Id equals e.Category
