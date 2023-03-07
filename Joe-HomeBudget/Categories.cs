@@ -63,7 +63,7 @@ namespace Budget
         }
 
         /// <summary>
-        /// Gets a list of categories from previous database
+        /// Gets a list of categories from previous database or set it with default categories if it a new database
         /// </summary>
         /// <param name="dbConnection"> new connection to database</param>
         /// <param name="newDb">If false, it will retrieve contents from databases</param>
@@ -78,7 +78,6 @@ namespace Budget
             {
                 DBCategoryType(Database.dbConnection);
 
-                //If there is new database then automatically set it to default
                 SetCategoriesToDefaults();
             }
         }
@@ -115,7 +114,7 @@ namespace Budget
         // ====================================================================
         // get a specific category from the list where the id is the one specified
         /// <summary>
-        /// Get a specific category from the list where the id is the one specified.
+        /// Get a specific category from the database where the id is the one specified.
         /// </summary>
         /// <example>
         /// <code>
@@ -131,12 +130,6 @@ namespace Budget
         // ====================================================================
         public Category GetCategoryFromId(int i)
         {
-            //Category c = _Cats.Find(x => x.Id == i);
-            //if (c == null)
-            //{
-            //    throw new Exception("Cannot find category with id " + i.ToString());
-            //}
-
             List<Category> newList = List();
             Category c = newList.Find(x => x.Id == i);
             if (c == null)
@@ -247,7 +240,7 @@ namespace Budget
             //Parse object to int because ExecuteScalar() return an object
             object firstCollumId = cmdCheckId.ExecuteScalar();
 
-            //if the id doesn't exist then insert to database
+            //if the id doesn't exist then Delete the Id
             if (firstCollumId != null)
             {
                 using var beforeDeletedId = new SQLiteCommand("SELECT Id, Description, TypeId FROM categories WHERE Id=" + id, Database.dbConnection);
@@ -259,7 +252,8 @@ namespace Budget
 
 
                 using var cmd = new SQLiteCommand(Database.dbConnection);
-                cmd.CommandText = "DELETE FROM categories WHERE Id=" + id;
+                cmd.CommandText = "DELETE FROM categories WHERE Id= @Id";
+                cmd.Parameters.AddWithValue("@Id", id);
                 cmd.ExecuteNonQuery();
 
                 Console.WriteLine("Successfully deleted from Id=" + id);
@@ -288,8 +282,6 @@ namespace Budget
             using var countCMD = new SQLiteCommand("SELECT COUNT(Id) FROM categories", Database.dbConnection);
             object idCount = countCMD.ExecuteScalar();
             id = (Int64)idCount;
-
-            //Database.dbConnection.Open();
 
             //create a command search for the given id
             using var cmdCheckId = new SQLiteCommand("SELECT Id FROM categories WHERE Id=" + id, Database.dbConnection);
@@ -320,7 +312,10 @@ namespace Budget
                 id++;
 
                 using var cmd = new SQLiteCommand(Database.dbConnection);
-                cmd.CommandText = $"INSERT INTO categories(Id, Description, TypeId) VALUES({id}, '{desc}', {(int)type + 1})";
+                cmd.CommandText = $"INSERT INTO categories(Id, Description, TypeId) VALUES(@Id, @Description, @Type)";
+                cmd.Parameters.AddWithValue("@Description", desc);
+                cmd.Parameters.AddWithValue("@Type", (int)type + 1);
+                cmd.Parameters.AddWithValue("@Id", id);
                 cmd.ExecuteNonQuery();
                 using var newAddedId = new SQLiteCommand("SELECT Id, Description, TypeId FROM categories WHERE Id=" + id, Database.dbConnection);
                 var rdr = newAddedId.ExecuteReader();
@@ -371,7 +366,10 @@ namespace Budget
 
                     //update
                     using var cmd = new SQLiteCommand(Database.dbConnection);
-                    cmd.CommandText = $"UPDATE categories Set Description ='{desc}', TypeId = {(int)type + 1} WHERE Id = {id}";
+                    cmd.CommandText = $"UPDATE categories Set Description = @Description, TypeId = @Type WHERE Id = @Id";
+                    cmd.Parameters.AddWithValue("@Description", desc);
+                    cmd.Parameters.AddWithValue("@Type", (int)type + 1);
+                    cmd.Parameters.AddWithValue("@Id", id);
                     cmd.ExecuteNonQuery();
 
                     //Output data after update
