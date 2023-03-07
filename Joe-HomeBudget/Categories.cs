@@ -270,6 +270,7 @@ namespace Budget
         private void Add(Category cat)
         {
             //_Cats.Add(cat);-------------------------------------------------------------------------------------------CHANGED (NOT USED, LIST)
+            AddCategoriesToDatabaseWithCategory(cat);
 
         }
 
@@ -294,7 +295,10 @@ namespace Budget
             {
                 id++;
                 using var cmd = new SQLiteCommand(Database.dbConnection);
-                cmd.CommandText = $"INSERT INTO categories(Id, Description, TypeId) VALUES({id}, '{desc}', {(int)type + 1})";
+                cmd.CommandText = $"INSERT INTO categories(Id, Description, TypeId) VALUES(@Id, @Description, @Type)";
+                cmd.Parameters.AddWithValue("@Description", desc);
+                cmd.Parameters.AddWithValue("@Type", (int)type + 1);
+                cmd.Parameters.AddWithValue("@Id", id);
                 cmd.ExecuteNonQuery();
                 using var newAddedId = new SQLiteCommand("SELECT Id, Description, TypeId FROM categories WHERE Id=" + id, Database.dbConnection);
                 var rdr = newAddedId.ExecuteReader();
@@ -322,6 +326,47 @@ namespace Budget
                 while (rdr.Read())
                 {
                     Console.WriteLine("Category added: id: {0}, desc: {1}, type: {2}", rdr[0], rdr[1], rdr[2]);
+                }
+            }
+        }
+
+        /// add by creating category list
+        public void AddCategoriesToDatabaseWithCategory(Category cat)
+        {
+            int id = cat.Id;
+            string desc = cat.Description;
+            CategoryType type = cat.Type;
+
+            //create a command search for the given id
+            using var cmdCheckId = new SQLiteCommand("SELECT Id FROM categories WHERE Id=" + id, Database.dbConnection);
+
+
+            //take the first column of the select query
+            object firstCollumId = cmdCheckId.ExecuteScalar();
+
+            //if the category doesn't exist in the database already, then insert it;
+            if (firstCollumId == null)
+            {
+                using var cmd = new SQLiteCommand(Database.dbConnection);
+                cmd.CommandText = $"INSERT INTO categories(Id, Description, TypeId) VALUES(@Id, @Description, @Type)";
+                cmd.Parameters.AddWithValue("@Description", desc);
+                cmd.Parameters.AddWithValue("@Type", (int)type + 1);
+                cmd.Parameters.AddWithValue("@Id", id);
+                using var newAddedId = new SQLiteCommand("SELECT * FROM categories WHERE Id=" + id, Database.dbConnection);
+                var rdr = newAddedId.ExecuteReader();
+                while (rdr.Read())
+                {
+                    Console.WriteLine("Category added: id: {0}, desc: {1}, type: {2}", rdr[0], rdr[1], rdr[2]);
+
+                }
+            }
+            else
+            {
+                using var newAddedId = new SQLiteCommand("SELECT Id FROM categories WHERE Id=" + id, Database.dbConnection);
+                var rdr = newAddedId.ExecuteReader();
+                while (rdr.Read())
+                {
+                    Console.WriteLine("Category already exist, id: {0}", rdr[0]);
                 }
             }
         }
