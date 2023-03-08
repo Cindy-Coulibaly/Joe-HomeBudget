@@ -506,6 +506,8 @@ namespace Budget
                     $"ORDER BY e.Date";
 
                 //add binding here
+                cmd.Parameters.AddWithValue("@Start", Start);
+                cmd.Parameters.AddWithValue("@End", End);
 
                 cmd.ExecuteNonQuery();
             }
@@ -516,9 +518,12 @@ namespace Budget
                     $"FROM categories as c " +
                     $"JOIN expenses as e ON e.Category = c.Id " +
                     $"WHERE (e.Date >= @Start && e.Date <= @End) && c.Id = @Id " + // add specify id
-                    $"ORDER BY e.Date"; 
+                    $"ORDER BY e.Date";
 
                 //add binding here
+                cmd.Parameters.AddWithValue("@Start", Start);
+                cmd.Parameters.AddWithValue("@End", End);
+                cmd.Parameters.AddWithValue("@Id", CategoryID);
 
                 cmd.ExecuteNonQuery();
             }
