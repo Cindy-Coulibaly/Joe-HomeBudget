@@ -487,12 +487,12 @@ namespace Budget
 
             //format the date (default only so far) -----------TO ADD: format the given date
             Start = Start ?? DateTime.ParseExact("1900-01-01",
-                 "yyyy-MM-dd", CultureInfor.InvariantCulture);
+                 "yyyy-MM-dd", CultureInfo.InvariantCulture);
             End = End ?? DateTime.ParseExact("2500-01-01",
-                 "yyyy-MM-dd", CultureInfor.InvariantCulture);
+                 "yyyy-MM-dd", CultureInfo.InvariantCulture);
 
-            Start = Start ?? new DateTime(1900, 1, 1);
-            End = End ?? new DateTime(2500, 1, 1);
+            //Start = Start ?? new DateTime(1900, 1, 1);
+            //End = End ?? new DateTime(2500, 1, 1);
 
             using var cmd = new SQLiteCommand(Database.dbConnection);
 
@@ -542,7 +542,6 @@ namespace Budget
                     Category = (string)rdr[5],
                     Balance = (double)(long)rdr[6]
                 }); // added -1 to fix test
-
             }
 
 
