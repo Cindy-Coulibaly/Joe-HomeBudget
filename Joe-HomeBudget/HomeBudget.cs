@@ -886,13 +886,36 @@ namespace Budget
             var cmd = new SQLiteCommand(Database.dbConnection);
 
             // the group by is in case the filter is false, we still want to group it by category id
+            if (FilterFlag)
+            {
+                // if the filter is true
+                cmd.CommandText = "SELECT E.*,SumT.Total, C.Description " +
+                    "FROM (" +
+                        "SELECT CategoryId, SUM(Amount) AS Total " +
+                        "FROM Expenses " +
+                        "WHERE Date<@end AND Date>@start " +
+                        "GROUP BY CategoryId" +
+                        ") AS SumT " +
+                    "INNER JOIN expenses AS E ON E.CategoryId=SumT.CategoryId " +
+                    "JOIN categories AS C on E.categoryId=C.Id " +
+                    "WHERE E.Date<@start AND E.Date>@end AND E.CategoryId=@CategoryID " +
+                    "ORDER BY C.Description;";
+            }
+            else
+            {
+                cmd.CommandText = "SELECT E.*,SumT.Total, C.Description " +
+                    "FROM (" +
+                        "SELECT CategoryId, SUM(Amount) AS Total " +
+                        "FROM Expenses " +
+                        "WHERE Date<@end AND Date>@start " +
+                        "GROUP BY CategoryId" +
+                        ") AS SumT " +
+                    "INNER JOIN expenses AS E ON E.CategoryId=SumT.CategoryId " +
+                    "JOIN categories AS C on E.categoryId=C.Id " +
+                    "WHERE E.Date<@start AND E.Date>@end " +
+                    "ORDER BY C.Description;";
 
-            cmd.CommandText = "SELECT CategoryId FROM expenses " +
-                "WHERE CategoryId=@CategoryID AND " +
-                "Date<=@end " +
-                "AND Date>=@start" +
-                "GROUP BY CategoryId" +
-                "ORDER BY CategoryId";
+            }
 
             cmd.Parameters.AddWithValue("@CategoryID", CategoryID);
             cmd.Parameters.AddWithValue("@start", start);
