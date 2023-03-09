@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
+using System.Data.SQLite;
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -174,6 +175,40 @@ namespace Budget
 
             _Expenses.Add(new Expense(new_id, date, category, amount, description));
 
+        }
+
+        //add without creating expense list
+        private void AddExpensesToDatabase(int Id, DateTime date, String description, Double amount, int categoryId)
+        {
+            //create a command search for the given id
+            using var cmdCheckId = new SQLiteCommand("SELECT Id FROM expenses WHERE Id=" + Id, Database.dbConnection);
+
+
+            //take the first column of the select query
+            object firstCollumId = cmdCheckId.ExecuteScalar();
+
+            //if the expense doesn't exist in the database already, then insert it;
+            if (firstCollumId == null)
+            {
+                using var cmd = new SQLiteCommand(Database.dbConnection);
+                cmd.CommandText = $"INSERT INTO expenses(Id, Date, Description,Amount,CategoryId) VALUES({Id}, '{date}','{description}',{amount},{categoryId})";
+                cmd.ExecuteNonQuery();
+                using var newAddedId = new SQLiteCommand("SELECT * FROM expenses WHERE Id=" + Id + " ORDER BY Id ASC", Database.dbConnection);
+                var rdr = newAddedId.ExecuteReader();
+                while (rdr.Read())
+                {
+                    Console.WriteLine("Expense added: id: {0}, date: {1}, description: {2},amount: {3},categoryId: {4}", rdr[0], rdr[1], rdr[2], rdr[3], rdr[4]);
+                }
+            }
+            else
+            {
+                using var newAddedId = new SQLiteCommand("SELECT Id FROM expenses WHERE Id=" + Id + " ORDER BY Id ASC", Database.dbConnection);
+                var rdr = newAddedId.ExecuteReader();
+                while (rdr.Read())
+                {
+                    Console.WriteLine("Expense already exist, id: {0}", rdr[0]);
+                }
+            }
         }
 
         // ====================================================================
