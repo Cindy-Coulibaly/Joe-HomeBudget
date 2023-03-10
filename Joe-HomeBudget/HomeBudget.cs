@@ -889,7 +889,7 @@ namespace Budget
             if (FilterFlag)
             {
                 // if the filter is true
-                cmd.CommandText = "SELECT E.*,SumT.Total, C.Description " +
+                cmd.CommandText = "SELECT E.*,SumT.Total, C.Description AS Category" +
                     "FROM (" +
                         "SELECT CategoryId, SUM(Amount) AS Total " +
                         "FROM Expenses " +
@@ -900,10 +900,12 @@ namespace Budget
                     "JOIN categories AS C on E.categoryId=C.Id " +
                     "WHERE E.Date<@start AND E.Date>@end AND E.CategoryId=@CategoryID " +
                     "ORDER BY C.Description;";
+
+                cmd.Parameters.AddWithValue("@CategoryID", CategoryID);
             }
             else
             {
-                cmd.CommandText = "SELECT E.*,SumT.Total, C.Description " +
+                cmd.CommandText = "SELECT E.*,SumT.Total, C.Description AS Category " +
                     "FROM (" +
                         "SELECT CategoryId, SUM(Amount) AS Total " +
                         "FROM Expenses " +
@@ -917,42 +919,68 @@ namespace Budget
 
             }
 
-            cmd.Parameters.AddWithValue("@CategoryID", CategoryID);
             cmd.Parameters.AddWithValue("@start", start);
             cmd.Parameters.AddWithValue("@end",end);
 
             cmd.ExecuteNonQuery();
 
-            // -----------------------------------------------------------------------
-            // Group by Category
-            // -----------------------------------------------------------------------
-            var GroupedByCategory = items.GroupBy(c => c.Category);
+            var listBugetItemsByCategory = new List<BudgetItemsByCategory>();
 
-            // -----------------------------------------------------------------------
-            // create new list
-            // -----------------------------------------------------------------------
-            var summary = new List<BudgetItemsByCategory>();
-            foreach (var CategoryGroup in GroupedByCategory.OrderBy(g => g.Key))
+            var rdr = cmd.ExecuteReader();
+
+            int previousCategory=0;
+            List <BudgetItem> listOfBudget;
+
+            while (rdr.Read())
             {
-                // calculate total for this category, and create list of details
-                double total = 0;
-                var details = new List<BudgetItem>();
-                foreach (var item in CategoryGroup)
-                {
-                    total = total + item.Amount;
-                    details.Add(item);
-                }
 
-                // Add new BudgetItemsByCategory to our list
-                summary.Add(new BudgetItemsByCategory
+                if(previousCategory!= (int)rdr["CategoryId"])
                 {
-                    Category = CategoryGroup.Key,
-                    Details = details,
-                    Total = total
-                });
+                    listOfBudget = GetBudgetItems(Start, End, FilterFlag, (int)rdr[4]);
+
+                    listBugetItemsByCategory.Add(new BudgetItemsByCategory
+                    {
+                        Category = (String)rdr[6],
+                        Details=listOfBudget,
+                        Total = (Double)rdr[5]
+
+                    });
+                }
+                previousCategory = (int)rdr[4];
+
+
             }
 
-            return summary;
+            //// -----------------------------------------------------------------------
+            //// Group by Category
+            //// -----------------------------------------------------------------------
+            //var GroupedByCategory = items.GroupBy(c => c.Category);
+
+            //// -----------------------------------------------------------------------
+            //// create new list
+            //// -----------------------------------------------------------------------
+            //var summary = new List<BudgetItemsByCategory>();
+            //foreach (var CategoryGroup in GroupedByCategory.OrderBy(g => g.Key))
+            //{
+            //    // calculate total for this category, and create list of details
+            //    double total = 0;
+            //    var details = new List<BudgetItem>();
+            //    foreach (var item in CategoryGroup)
+            //    {
+            //        total = total + item.Amount;
+            //        details.Add(item);
+            //    }
+
+            //    // Add new BudgetItemsByCategory to our list
+            //    summary.Add(new BudgetItemsByCategory
+            //    {
+            //        Category = CategoryGroup.Key,
+            //        Details = details,
+            //        Total = total
+            //    });
+            //}
+
+            return listBugetItemsByCategory;
         }
 
 
