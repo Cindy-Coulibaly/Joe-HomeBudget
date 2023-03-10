@@ -16,7 +16,6 @@ namespace Budget
         {
             // If there was a database open before, close it and release the lock
             CloseDatabaseAndReleaseFile();
-            // your code
 
             _connection = new SQLiteConnection(@$"URI=file:{databaseFile};Foreign Keys=1;");
             dbConnection.Open();
@@ -60,7 +59,6 @@ namespace Budget
 
             CloseDatabaseAndReleaseFile();
 
-            // your code
             _connection = new SQLiteConnection(@$"URI=file:{filename};Foreign Keys=1;");
             dbConnection.Open();
         }

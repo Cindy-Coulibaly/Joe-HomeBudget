@@ -113,7 +113,7 @@ namespace Budget
 
         public HomeBudget(String databaseFile, String expensesXMLFile, bool newDB = false)
         {
-            // if database exists, and user doesn't want a new database, open existing DB
+            // if database exists, and user doe sn't want a new database, open existing DB
             if (!newDB && File.Exists(databaseFile))
             {
                 Database.existingDatabase(databaseFile);
@@ -122,17 +122,14 @@ namespace Budget
             // file did not exist, or user wants a new database, so open NEW DB
             else
             {
-                Database.newDatabase(databaseFile);
+                Database.newDatabase(databaseFile);      
                 newDB = true;
-                //DBCategoryType(Database.dbConnection); //---------------------------------------------GO BACK
             }
 
             // create the category object
             _categories = new Categories(Database.dbConnection, newDB);
 
-            // create the _expenses course
-
-           
+            // create the _expenses course         
             _categories = new Categories();
             _expenses = new Expenses();
 
