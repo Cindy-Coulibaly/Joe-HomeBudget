@@ -547,7 +547,7 @@ namespace Budget
             if (!FilterFlag)
             {
 
-                cmd.CommandText = $"SELECT c.Id, e.Id, e.Data, c.Description, e.Description, e.Amount, SUM(e.Amount) " +
+                cmd.CommandText = $"SELECT c.Id, e.Id, e.Date, c.Description, e.Description, e.Amount " +
                     $"FROM categories as c " +
                     $"JOIN expenses as e ON e.Category = c.Id " +
                     $"WHERE e.Date >= @Start && e.Date <= @End " +
@@ -562,7 +562,7 @@ namespace Budget
             else
             {
                 //with filterflag on
-                cmd.CommandText = $"SELECT c.Id, e.Id, e.Data, c.Description, e.Description, e.Amount, SUM(e.Amount) " +
+                cmd.CommandText = $"SELECT c.Id, e.Id, e.Date, c.Description, e.Description, e.Amount " +
                     $"FROM categories as c " +
                     $"JOIN expenses as e ON e.Category = c.Id " +
                     $"WHERE (e.Date >= @Start && e.Date <= @End) && c.Id = @Id " + // add specify id
