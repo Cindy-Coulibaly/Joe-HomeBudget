@@ -136,24 +136,6 @@ namespace Budget
             _expenses.ReadFromFile(expensesXMLFile);
         }
 
-        private void DBCategoryType(SQLiteConnection db)
-        {
-
-            using var cmd = new SQLiteCommand(db);
-
-            cmd.CommandText = "INSERT INTO categoryTypes(Id, Description) VALUES(0, 'Income')";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "INSERT INTO categoryTypes(Id, Description) VALUES(1, 'Expense')";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "INSERT INTO categoryTypes(Id, Description) VALUES(2, 'Credit')";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "INSERT INTO categoryTypes(Id, Description) VALUES(3, 'Savings')";
-            cmd.ExecuteNonQuery();
-
-        }
         #region OpenNewAndSave
         // ---------------------------------------------------------------
         // Read

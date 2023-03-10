@@ -246,7 +246,7 @@ namespace Budget
         /// </summary>
         /// <param name="id"> Id of the category. </param>
         /// <param name="db"> SQLite Database connection. </param>
-        public void DeleteCategory(int id)
+        private void DeleteCategory(int id)
         {
             //create a command search for the given id
             using var cmdCheckId = new SQLiteCommand("SELECT Id from categories WHERE Id=" + id, Database.dbConnection);
@@ -278,7 +278,7 @@ namespace Budget
 
         }
  
-        public void AddCategoriesToDatabase(String desc, Category.CategoryType type)
+        private void AddCategoriesToDatabase(String desc, Category.CategoryType type)
         {
             Int64 id;
             using var countCMD = new SQLiteCommand("SELECT COUNT(Id) FROM categories", Database.dbConnection);
@@ -332,7 +332,7 @@ namespace Budget
         /// <param name="Id">The Id of the category being updated to the database.</param>
         /// <param name="desc">The description of the category being updated database.</param>
         /// <param name="type">The type of the category updated to the database.</param>
-        public void UpdateInDatabase(int id, string desc, CategoryType type) //----------------------Change to private once done
+        private void UpdateInDatabase(int id, string desc, CategoryType type) //----------------------Change to private once done
         {
             //Must provide desciprtion
             if (desc != string.Empty)
