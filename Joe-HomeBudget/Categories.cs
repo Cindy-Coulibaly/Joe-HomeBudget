@@ -275,14 +275,13 @@ namespace Budget
         private void Add(Category cat)
         {
             //_Cats.Add(cat);-------------------------------------------------------------------------------------------CHANGED (NOT USED, LIST)
-
         }
  
         private void AddCategoriesToDatabase(String desc, Category.CategoryType type)
         {
             Int64 id;
-            using var countCMD = new SQLiteCommand("SELECT COUNT(Id) FROM categories", Database.dbConnection);
-            object idCount = countCMD.ExecuteScalar();
+            using var countIdCMD = new SQLiteCommand("SELECT COUNT(Id) FROM categories", Database.dbConnection);
+            object idCount = countIdCMD.ExecuteScalar();
             id = (Int64)idCount;
 
             //create a command search for the given id
@@ -305,8 +304,8 @@ namespace Budget
             else
             {
 
-                using var maxCMD = new SQLiteCommand("SELECT MAX(Id) from categories", Database.dbConnection);
-                object highestId = maxCMD.ExecuteScalar();
+                using var highestIdCMD = new SQLiteCommand("SELECT MAX(Id) from categories", Database.dbConnection);
+                object highestId = highestIdCMD.ExecuteScalar();
                 id = (Int64)highestId;
                 id++;
 

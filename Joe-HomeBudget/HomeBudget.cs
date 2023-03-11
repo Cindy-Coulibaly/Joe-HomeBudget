@@ -116,7 +116,16 @@ namespace Budget
             // if database exists, and user doe sn't want a new database, open existing DB
             if (!newDB && File.Exists(databaseFile))
             {
-                Database.existingDatabase(databaseFile);
+                try { Database.existingDatabase(databaseFile); }
+                catch (ConnectionException e)
+                {
+                    Console.WriteLine(e.Message + ":" + e.ConnectString);
+                }
+                // catches all other exceptions
+                catch (Exception e)
+                {
+                    Console.WriteLine("Unknown error:" + e.Message);
+                }
             }
 
             // file did not exist, or user wants a new database, so open NEW DB
