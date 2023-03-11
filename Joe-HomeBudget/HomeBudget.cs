@@ -577,9 +577,11 @@ namespace Budget
             }
 
             List<BudgetItem> items = new List<BudgetItem>();
+            Double total = 0;
             var rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
+                total = total + (double)(long)rdr[4];
                 //DateTime date = DateTime.Parse((string)rdr[3]);
                 //DateTime date = DateTime.ParseExact((string)rdr[1], "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
                 items.Add(new BudgetItem
@@ -589,9 +591,9 @@ namespace Budget
                     ExpenseID = (int)(long)rdr[1],
                     ShortDescription = (string)rdr[2],
                     Date = DateTime.Parse((string)rdr[3]),
-                    Amount = (double)(long)rdr[4],
+                    Amount = + (double)(long)rdr[4],
                     Category = (string)rdr[5],
-                    Balance = (double)(long)rdr[6]
+                    Balance = total
                 });
             }
 
