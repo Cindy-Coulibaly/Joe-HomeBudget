@@ -6,6 +6,22 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
 
+public class UserInputErrors : Exception
+{
+    public string InputErrorString { get; } // extra info
+
+    public UserInputErrors() { }         // standard constructor
+
+    public UserInputErrors(string message) // calls 'Exception(message)'
+        : base(message) { }
+
+    public UserInputErrors(string message, string inputErrorString)
+        : this(message)
+    {
+        InputErrorString = inputErrorString;
+    }
+}
+
 // ============================================================================
 // (c) Sandy Bultena 2018
 // * Released under the GNU General Public License
@@ -87,6 +103,7 @@ namespace Budget
             _DirName = Path.GetDirectoryName(filepath);
             _FileName = Path.GetFileName(filepath);
         }
+
 
         // ====================================================================
         // save to a file
@@ -175,6 +192,81 @@ namespace Budget
             _Expenses.Add(new Expense(new_id, date, category, amount, description));
 
         }
+        public void UpdateExpense(int id, DateTime date, int category, Double amount, String description)
+        {
+            try
+            {
+                UpdateExpenseToDatabase(id,date,category,amount,description);
+            }
+            catch (UserInputErrors e)
+            {
+                Console.WriteLine(e.Message + ": " + e.InputErrorString);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Unknown error: " + e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Updates the expense in the database according to its id.
+        /// </summary>
+        /// <param name="id"> Id of the expense. </param>
+        /// <param name="date"> Date when the expense was done. </param>
+        /// <param name="category"> Category of the expense. </param>
+        /// <param name="amount"> Amount of the expense. </param>
+        /// <param name="description"> Description of the expense. </param>
+        public void UpdateExpenseToDatabase(int id, DateTime date, int category, Double amount, String description)
+        {
+            if (description != string.Empty)
+            {
+                string stringDate = date.ToString("yyyy-MM-dd");
+
+                //create a command search for the given id
+                using var cmdCheckId = new SQLiteCommand("SELECT Id from expenses WHERE Id=" + "@id", Database.dbConnection);
+                cmdCheckId.Parameters.AddWithValue("@id", id);
+
+                //take the first column of the select query
+                //Parse object to int because ExecuteScalar() return an object
+                object firstCollumId = cmdCheckId.ExecuteScalar();
+
+                //if the id doesn't exist then insert to database
+                if (firstCollumId != null)
+                {
+
+                    using var cmd = new SQLiteCommand(Database.dbConnection);
+                    cmd.CommandText = $"UPDATE expenses Set Description = @description, Date = @date, Category = @category, Amount = @amount WHERE Id = @id";
+                    cmd.Parameters.AddWithValue("@description", description);
+                    cmd.Parameters.AddWithValue("@date", stringDate);
+                    cmd.Parameters.AddWithValue("@category", category);
+                    cmd.Parameters.AddWithValue("@amount", amount);
+                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.ExecuteNonQuery();
+                }
+                else
+                {
+                    throw new UserInputErrors("Expense doesn't exist");
+                }
+            }
+            else
+            {
+                throw new UserInputErrors("No description provided");
+            }
+
+
+
+        }
+
+        public Expense GetExpenseFromId(int i)
+        {
+            List<Expense> newList = List();
+            Expense c = newList.Find(x => x.Id == i);
+            if (c == null)
+            {
+                throw new Exception("Cannot find category with id " + i.ToString());
+            }
+            return c;
+        }
 
         // ====================================================================
         // Delete expense
@@ -196,7 +288,52 @@ namespace Budget
             int i = _Expenses.FindIndex(x => x.Id == Id);
             if (i != -1) { _Expenses.RemoveAt(i); } // will only delete if valid id
 
+            try 
+            {
+                DeleteExpense(Id);
+            }
+            catch(UserInputErrors e)
+            {
+                Console.WriteLine(e.Message + ": " + e.InputErrorString);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("Unknown error: " + e.Message);
+            }
+
         }
+        /// <summary>
+        /// Deletes expense from the database.
+        /// </summary>
+        /// <param name="id"> Id of the expense to delete. </param>
+        public void DeleteExpense(int id)
+        {
+            //create a command search for the given id
+            using var cmdCheckId = new SQLiteCommand("SELECT Id from expenses WHERE Id=" + "@id", Database.dbConnection);
+            cmdCheckId.Parameters.AddWithValue("@id", id);
+
+            //take the first column of the select query
+            //Parse object to int because ExecuteScalar() return an object
+            object firstCollumId = cmdCheckId.ExecuteScalar();
+
+            //if the id doesn't exist then insert to database
+            if (firstCollumId != null)
+            {
+
+                using var cmd = new SQLiteCommand(Database.dbConnection);
+                cmd.CommandText = "DELETE FROM expenses WHERE Id=" + "@id";
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.ExecuteNonQuery();
+
+                Console.WriteLine("Successfully deleted from Id=" + id);
+            }
+            else
+            {
+                throw new UserInputErrors("Expense doesn't exist");
+            }
+
+        }
+
 
         // ====================================================================
         // Return list of expenses

@@ -3,6 +3,7 @@ using Xunit;
 using System.IO;
 using System.Collections.Generic;
 using Budget;
+using System.Data.SQLite;
 
 namespace BudgetCodeTests
 {
@@ -25,7 +26,7 @@ namespace BudgetCodeTests
             // Act
             Expenses expenses = new Expenses();
 
-            // Assert
+            // Assert 
             Assert.IsType<Expenses>(expenses);
 
             Assert.True(typeof(Expenses).GetProperty("FileName").CanWrite == false);
@@ -139,22 +140,27 @@ namespace BudgetCodeTests
         // ========================================================================
 
         [Fact]
-        public void ExpensesMethod_Delete()
+        public void ExpenseMethod_Delete()
         {
             // Arrange
-            String dir = TestConstants.GetSolutionDir();
+            String folder = TestConstants.GetSolutionDir();
+            String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
+            String messyDB = $"{folder}\\messy.db";
+            System.IO.File.Copy(goodDB, messyDB, true);
+            Database.existingDatabase(messyDB);
+            SQLiteConnection conn = Database.dbConnection;
+            Categories categories = new Categories(conn, false);
             Expenses expenses = new Expenses();
-            expenses.ReadFromFile(dir + "\\" + testInputFile);
             int IdToDelete = 3;
 
             // Act
             expenses.Delete(IdToDelete);
-            List<Expense> expensesList = expenses.List();
-            int sizeOfList = expensesList.Count;
+            List<Expense> expenseList = expenses.List();
+            int sizeOfList = expenseList.Count;
 
             // Assert
             Assert.Equal(numberOfExpensesInFile - 1, sizeOfList);
-            Assert.False(expensesList.Exists(e => e.Id == IdToDelete), "correct expense item deleted");
+            Assert.False(expenseList.Exists(e => e.Id == IdToDelete), "correct Category item deleted");
 
         }
 
@@ -164,9 +170,15 @@ namespace BudgetCodeTests
         public void ExpensesMethod_Delete_InvalidIDDoesntCrash()
         {
             // Arrange
-            String dir = TestConstants.GetSolutionDir();
+            // Arrange
+            String folder = TestConstants.GetSolutionDir();
+            String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
+            String messyDB = $"{folder}\\messyDB";
+            System.IO.File.Copy(goodDB, messyDB, true);
+            Database.existingDatabase(messyDB);
+            SQLiteConnection conn = Database.dbConnection;
+            Categories categories = new Categories(conn, false);
             Expenses expenses = new Expenses();
-            expenses.ReadFromFile(dir + "\\" + testInputFile);
             int IdToDelete = 1006;
             int sizeOfList = expenses.List().Count;
 
@@ -186,6 +198,38 @@ namespace BudgetCodeTests
 
 
         // ========================================================================
+
+        [Fact]
+        public void ExpensesMethod_UpdateExpense()
+        {
+            // Arrange
+            String folder = TestConstants.GetSolutionDir();
+            String newDB = $"{folder}\\newDB.db";
+            Database.newDatabase(newDB);
+            SQLiteConnection conn = Database.dbConnection;
+            Categories categories = new Categories(conn, false);
+            Expenses expenses = new Expenses();
+            String newDescr = "food";
+            int id = 11;
+            DateTime newDate = DateTime.Now;
+            double newAmount = 15.99;
+            int category = 10;
+
+            // Act
+            expenses.UpdateExpense(id, newDate,category,newAmount,newDescr);
+            Expense expense = expenses.GetExpenseFromId(id);
+
+            // Assert 
+            Assert.Equal(newDate, expense.Date);
+            Assert.Equal(category, expense.Category);
+            Assert.Equal(newAmount, expense.Amount);
+            Assert.Equal(newDescr, expense.Description);
+
+        }
+
+
+        // ========================================================================
+
 
         [Fact]
         public void ExpenseMethod_WriteToFile()

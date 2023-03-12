@@ -4,6 +4,7 @@
 // ============================================================================
 
 using System.Data.SQLite;
+using System.Globalization;
 using static Budget.Category;
 
 namespace Budget
@@ -680,36 +681,35 @@ namespace Budget
             // -----------------------------------------------------------------------
             List<BudgetItem> items = GetBudgetItems(Start, End, FilterFlag, CategoryID);
 
-            // -----------------------------------------------------------------------
-            // Group by year/month
-            // -----------------------------------------------------------------------
-            var GroupedByMonth = items.GroupBy(c => c.Date.Year.ToString("D4") + "/" + c.Date.Month.ToString("D2"));
+            DateTime realStart = Start ?? new DateTime(1900, 1, 1);
+            DateTime realEnd = End ?? new DateTime(2500, 1, 1);
 
-            // -----------------------------------------------------------------------
-            // create new list
-            // -----------------------------------------------------------------------
-            var summary = new List<BudgetItemsByMonth>();
-            foreach (var MonthGroup in GroupedByMonth)
+            string start=realStart.ToString("yyyy-MM-dd");
+            string end=realEnd.ToString("yyyy-MM-dd");
+
+            var cmd = new SQLiteCommand(Database.dbConnection);
+
+            if (FilterFlag)
             {
-                // calculate total for this month, and create list of details
-                double total = 0;
-                var details = new List<BudgetItem>();
-                foreach (var item in MonthGroup)
-                {
-                    total = total + item.Amount;
-                    details.Add(item);
-                }
-
-                // Add new BudgetItemsByMonth to our list
-                summary.Add(new BudgetItemsByMonth
-                {
-                    Month = MonthGroup.Key,
-                    Details = details,
-                    Total = total
-                });
+                cmd.CommandText = "SELECT strftime('%m-%Y', E.Date) AS Month, SUM(E.Amount) AS Total " +
+                    "FROM expenses AS E " +
+                    "WHERE E.CategoryId=@CategoryID AND E.Date<=@end AND E.Date>=@start " +
+                    "GROUP BY Month;";
+                cmd.Parameters.AddWithValue("@CategoryID", CategoryID);
+            }
+            else
+            {
+                cmd.CommandText = "SELECT strftime('%m-%Y', E.Date) AS Month, SUM(E.Amount) AS Total " +
+                    "FROM expenses AS E " +
+                    "WHERE E.Date<=@end AND E.Date>=@start " +
+                    "GROUP BY Month;";
             }
 
-            return summary;
+            cmd.Parameters.AddWithValue("@start", start); 
+            cmd.Parameters.AddWithValue("@end", end);
+
+
+            cmd.ExecuteNonQuery();
         }
 
         // ============================================================================
