@@ -102,7 +102,7 @@ namespace BudgetCodeTests
         // ========================================================================
 
         [Fact]
-        public void CategoryObject_PropertiesAreReadOnly()
+        public void ExpenseObject_PropertiesAreReadOnly()
         {
             // Arrange
             DateTime now = DateTime.Now;
