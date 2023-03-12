@@ -48,8 +48,9 @@ namespace BudgetCodeTests
             Expense expense = new Expense(id, now, category, amount, descr);
 
             // Act
-            Expense copy = new Expense(expense);
-            copy.Amount = expense.Amount + 15;
+            double copyAmount = expense.Amount + 15;
+            Expense copy = new Expense(id, now, category, copyAmount, descr);//---------------------REVIEW
+            //Expense copyOld = new Expense(expense);
 
             // Assert 
             Assert.Equal(id, expense.Id);
@@ -80,19 +81,46 @@ namespace BudgetCodeTests
 
             Expense expense = new Expense(id, now, category, amount, descr);
 
+
             // Act
-            expense.Amount = newAmount;
-            expense.Category = newCategory;
-            expense.Description = newDescr;
+            Expense newExpense = new Expense(id, now, newCategory, newAmount, newDescr);
+            //expense.Amount = newAmount;
+            //expense.Category = newCategory;
+            //expense.Description = newDescr;
 
             // Assert 
-            Assert.True(typeof(Expense).GetProperty("Date").CanWrite == false);
+            Assert.True(typeof(Expense).GetProperty("Date").CanWrite == false);//---------------------REVIEW
             Assert.True(typeof(Expense).GetProperty("Id").CanWrite == false);
-            Assert.Equal(newAmount, expense.Amount);
-            Assert.Equal(newDescr, expense.Description);
-            Assert.Equal(newCategory, expense.Category);
+            Assert.Equal(newAmount, newExpense.Amount);
+            Assert.Equal(newDescr, newExpense.Description);
+            Assert.Equal(newCategory, newExpense.Category);
+            //Assert.Equal(newAmount, expense.Amount);
+            //Assert.Equal(newDescr, expense.Description);
+            //Assert.Equal(newCategory, expense.Category);
         }
 
+        // ========================================================================
 
+        [Fact]
+        public void CategoryObject_PropertiesAreReadOnly()
+        {
+            // Arrange
+            DateTime now = DateTime.Now;
+            double amount = 24.55;
+            string descr = "New Sweater";
+            int category = 34;
+            int id = 42;
+
+            // Act
+            Expense expense = new Expense(id, now, category, amount, descr);
+
+            // Assert 
+            Assert.IsType<Expense>(expense);
+            Assert.True(typeof(Expense).GetProperty("Id").CanWrite == false);
+            Assert.True(typeof(Expense).GetProperty("Date").CanWrite == false);
+            Assert.True(typeof(Expense).GetProperty("Amount").CanWrite == false);
+            Assert.True(typeof(Expense).GetProperty("Description").CanWrite == false);
+            Assert.True(typeof(Expense).GetProperty("Category").CanWrite == false);
+        }
     }
 }
