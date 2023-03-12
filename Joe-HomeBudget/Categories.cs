@@ -87,7 +87,7 @@ namespace Budget
         {
             if (!newDb)
             {
-               RetrieveCategoriesFromDatabase(dbConnection);
+               RetrieveCategoriesFromDatabase();
             }
             else
             {
@@ -121,7 +121,7 @@ namespace Budget
         /// </summary>
         /// <param name="dbConnection">Represents connection to database</param>
 
-        public void RetrieveCategoriesFromDatabase(SQLiteConnection dbConnection)
+        public void RetrieveCategoriesFromDatabase()
         {
             List();
         }
@@ -177,7 +177,6 @@ namespace Budget
             // ---------------------------------------------------------------
             // reading from file resets all the current categories,
             // ---------------------------------------------------------------
-            //_Cats.Clear();---------------------------------------------------------------------------------------------------------------changed
 
             // ---------------------------------------------------------------
             // reset default dir/filename to null 
