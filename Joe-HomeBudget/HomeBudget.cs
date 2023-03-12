@@ -871,7 +871,7 @@ namespace Budget
             // get all items first
             // -----------------------------------------------------------------------
             // have to wait for Yensan to do it to test it
-            List<BudgetItem> items = GetBudgetItems(Start, End, FilterFlag, CategoryID); // might want to remove this
+           // List<BudgetItem> items = GetBudgetItems(Start, End, FilterFlag, CategoryID); // might want to remove this
 
             //--------------------------------------------------------------------------
             //change the dates format to a string
@@ -889,33 +889,21 @@ namespace Budget
             if (FilterFlag)
             {
                 // if the filter is true
-                cmd.CommandText = "SELECT E.*,SumT.Total, C.Description AS Category" +
-                    "FROM (" +
-                        "SELECT CategoryId, SUM(Amount) AS Total " +
-                        "FROM Expenses " +
-                        "WHERE Date<@end AND Date>@start " +
-                        "GROUP BY CategoryId" +
-                        ") AS SumT " +
-                    "INNER JOIN expenses AS E ON E.CategoryId=SumT.CategoryId " +
-                    "JOIN categories AS C on E.categoryId=C.Id " +
-                    "WHERE E.Date<@start AND E.Date>@end AND E.CategoryId=@CategoryID " +
-                    "ORDER BY C.Description;";
+                cmd.CommandText = "SELECT C.Description AS Category, SUM(E.Amount) AS Total " +
+                    "FROM expenses AS E " +
+                    "LEFT OUTER JOIN categories AS C ON E.CategoryId=C.Id " +
+                    "WHERE Date<2019 AND Date>1889 AND E.CategoryId=12;";
 
                 cmd.Parameters.AddWithValue("@CategoryID", CategoryID);
             }
             else
             {
-                cmd.CommandText = "SELECT E.*,SumT.Total, C.Description AS Category " +
-                    "FROM (" +
-                        "SELECT CategoryId, SUM(Amount) AS Total " +
-                        "FROM Expenses " +
-                        "WHERE Date<@end AND Date>@start " +
-                        "GROUP BY CategoryId" +
-                        ") AS SumT " +
-                    "INNER JOIN expenses AS E ON E.CategoryId=SumT.CategoryId " +
-                    "JOIN categories AS C on E.categoryId=C.Id " +
-                    "WHERE E.Date<@start AND E.Date>@end " +
-                    "ORDER BY C.Description;";
+                cmd.CommandText = "SELECT C.Description AS Category, SUM(E.Amount) AS Total " +
+                    "FROM expenses AS E " +
+                    "LEFT OUTER JOIN categories AS C ON E.CategoryId=C.Id " +
+                    "WHERE Date<@end AND Date>@start " +
+                    "GROUP BY C.Description " +
+                    "ORDER BY C.Description ASC;";
 
             }
 
