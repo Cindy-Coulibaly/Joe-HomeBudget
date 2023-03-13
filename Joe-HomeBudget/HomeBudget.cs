@@ -892,7 +892,7 @@ namespace Budget
                 cmd.CommandText = "SELECT C.Description AS Category,C.Id AS Id, SUM(E.Amount) AS Total " +
                     "FROM expenses AS E " +
                     "LEFT OUTER JOIN categories AS C ON E.CategoryId=C.Id " +
-                    "WHERE Date<2019 AND Date>1889 AND E.CategoryId=12;";
+                    "WHERE Date<@start AND Date>@end AND E.CategoryId=@CategoryID;";
 
                 cmd.Parameters.AddWithValue("@CategoryID", CategoryID);
             }
@@ -901,7 +901,7 @@ namespace Budget
                 cmd.CommandText = "SELECT C.Description AS Category,C.Id AS Id, SUM(E.Amount) AS Total " +
                     "FROM expenses AS E " +
                     "LEFT OUTER JOIN categories AS C ON E.CategoryId=C.Id " +
-                    "WHERE Date<@end AND Date>@start " +
+                    "WHERE Date<=@end AND Date>=@start " +
                     "GROUP BY C.Description " +
                     "ORDER BY C.Description ASC;";
 
