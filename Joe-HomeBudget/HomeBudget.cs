@@ -106,12 +106,6 @@ namespace Budget
         /// with the file you gave it.
         /// </summary>
         /// <param name="budgetFileName">The file with all your categories and expenses.</param>
-        //public HomeBudget(String budgetFileName)
-        //{
-        //    _categories = new Categories();
-        //    _expenses = new Expenses();
-        //    ReadFromFile(budgetFileName);
-        //}
 
         public HomeBudget(String databaseFile, String expensesXMLFile, bool newDB = false)
         {
@@ -337,7 +331,7 @@ namespace Budget
         // NOTE: VERY IMPORTANT... budget amount is the negative of the expense amount
         // Reasoning: an expense of $15 is -$15 from your bank account.
         /// <summary>
-        /// Get a list of all your Items, depending on your criteria.
+        /// Get a list of all your Items from your database, depending on your criteria.
         /// </summary>
         /// <param name="Start">The From what date do tou want to see.</param>
         /// <param name="End">The To what date do you want to see.</param>
@@ -467,51 +461,6 @@ namespace Budget
         /// </example>
 
         // ============================================================================
-        public List<BudgetItem> OLDGetBudgetItems(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID)
-        {
-            // ------------------------------------------------------------------------
-            // return joined list within time frame
-            // ------------------------------------------------------------------------
-
-            Start = Start ?? new DateTime(1900, 1, 1);
-            End = End ?? new DateTime(2500, 1, 1);
-
-            var query = from c in _categories.List()
-                        join e in _expenses.List() on c.Id equals e.Category
-                        where e.Date >= Start && e.Date <= End
-                        select new { CatId = c.Id, ExpId = e.Id, e.Date, Category = c.Description, e.Description, e.Amount };
-
-            // ------------------------------------------------------------------------
-            // create a BudgetItem list with totals,
-            // ------------------------------------------------------------------------
-            List<BudgetItem> items = new List<BudgetItem>();
-            Double total = 0;
-
-            foreach (var queryResult in query.OrderBy(q => q.Date))
-            {
-                // filter out unwanted categories if filter flag is on
-                if (FilterFlag && CategoryID != queryResult.CatId)
-                {
-                    continue;
-                }
-
-                // keep track of running totals
-                total = total + queryResult.Amount; // look back----------------------------------------------------
-                items.Add(new BudgetItem
-                {
-                    CategoryID = queryResult.CatId,
-                    ExpenseID = queryResult.ExpId,
-                    ShortDescription = queryResult.Description,
-                    Date = queryResult.Date,
-                    Amount = +queryResult.Amount, // look back-----------------------------------------------------
-                    Category = queryResult.Category,
-                    Balance = total
-                });
-            }
-
-            return items;
-        }
-
         public List<BudgetItem> GetBudgetItems(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID)
         {
 
@@ -1028,35 +977,6 @@ namespace Budget
 
 
             }
-
-            //// -----------------------------------------------------------------------
-            //// Group by Category
-            //// -----------------------------------------------------------------------
-            //var GroupedByCategory = items.GroupBy(c => c.Category);
-
-            //// -----------------------------------------------------------------------
-            //// create new list
-            //// -----------------------------------------------------------------------
-            //var summary = new List<BudgetItemsByCategory>();
-            //foreach (var CategoryGroup in GroupedByCategory.OrderBy(g => g.Key))
-            //{
-            //    // calculate total for this category, and create list of details
-            //    double total = 0;
-            //    var details = new List<BudgetItem>();
-            //    foreach (var item in CategoryGroup)
-            //    {
-            //        total = total + item.Amount;
-            //        details.Add(item);
-            //    }
-
-            //    // Add new BudgetItemsByCategory to our list
-            //    summary.Add(new BudgetItemsByCategory
-            //    {
-            //        Category = CategoryGroup.Key,
-            //        Details = details,
-            //        Total = total
-            //    });
-            //}
 
             return listBugetItemsByCategory;
         }
