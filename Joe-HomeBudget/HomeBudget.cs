@@ -969,42 +969,106 @@ namespace Budget
             public List<BudgetItemsByCategory> GeBudgetItemsByCategory(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID)
             {
 
-                // -----------------------------------------------------------------------
-                // get all items first
-                // -----------------------------------------------------------------------
-                List<BudgetItem> items = GetBudgetItems(Start, End, FilterFlag, CategoryID);
 
-                // -----------------------------------------------------------------------
-                // Group by Category
-                // -----------------------------------------------------------------------
-                var GroupedByCategory = items.GroupBy(c => c.Category);
+            // -----------------------------------------------------------------------
+            // get all items first
+            // -----------------------------------------------------------------------
+            // have to wait for Yensan to do it to test it
+            // List<BudgetItem> items = GetBudgetItems(Start, End, FilterFlag, CategoryID); // might want to remove this
 
-                // -----------------------------------------------------------------------
-                // create new list
-                // -----------------------------------------------------------------------
-                var summary = new List<BudgetItemsByCategory>();
-                foreach (var CategoryGroup in GroupedByCategory.OrderBy(g => g.Key))
-                {
-                    // calculate total for this category, and create list of details
-                    double total = 0;
-                    var details = new List<BudgetItem>();
-                    foreach (var item in CategoryGroup)
-                    {
-                        total = total + item.Amount;
-                        details.Add(item);
-                    }
+            //--------------------------------------------------------------------------
+            //change the dates format to a string
+            //--------------------------------------------------------------------------
+            DateTime realStart = Start ?? new DateTime(1900, 1, 1); // might change it because the date is changed in GDB
+            DateTime realEnd = End ?? new DateTime(2500, 1, 1);
 
-                    // Add new BudgetItemsByCategory to our list
-                    summary.Add(new BudgetItemsByCategory
-                    {
-                        Category = CategoryGroup.Key,
-                        Details = details,
-                        Total = total
-                    });
-                }
+            string start = realStart.ToString("yyyy-MM-dd");
+            string end = realEnd.ToString("yyyy-MM-dd");
 
-                return summary;
+            //get all the items using the database
+            var cmd = new SQLiteCommand(Database.dbConnection);
+
+            // the group by is in case the filter is false, we still want to group it by category id
+            if (FilterFlag)
+            {
+                // if the filter is true
+                cmd.CommandText = "SELECT C.Description AS Category,C.Id AS Id, SUM(E.Amount) AS Total " +
+                    "FROM expenses AS E " +
+                    "LEFT OUTER JOIN categories AS C ON E.CategoryId=C.Id " +
+                    "WHERE Date<@start AND Date>@end AND E.CategoryId=@CategoryID;";
+
+                cmd.Parameters.AddWithValue("@CategoryID", CategoryID);
             }
+            else
+            {
+                cmd.CommandText = "SELECT C.Description AS Category,C.Id AS Id, SUM(E.Amount) AS Total " +
+                    "FROM expenses AS E " +
+                    "LEFT OUTER JOIN categories AS C ON E.CategoryId=C.Id " +
+                    "WHERE Date<=@end AND Date>=@start " +
+                    "GROUP BY C.Description " +
+                    "ORDER BY C.Description ASC;";
+
+            }
+
+            cmd.Parameters.AddWithValue("@start", start);
+            cmd.Parameters.AddWithValue("@end", end);
+
+            cmd.ExecuteNonQuery();
+
+            var listBugetItemsByCategory = new List<BudgetItemsByCategory>();
+
+            var rdr = cmd.ExecuteReader();
+
+            List<BudgetItem> listOfBudget;
+
+            while (rdr.Read())
+            {
+
+                listOfBudget = GetBudgetItems(Start, End, FilterFlag, (int)rdr["Id"]);
+
+                listBugetItemsByCategory.Add(new BudgetItemsByCategory
+                {
+                    Category = (String)rdr["Category"],
+                    Details = listOfBudget,
+                    Total = (Double)rdr["Total"]
+
+                });
+
+
+
+            }
+
+            //// -----------------------------------------------------------------------
+            //// Group by Category
+            //// -----------------------------------------------------------------------
+            //var GroupedByCategory = items.GroupBy(c => c.Category);
+
+            //// -----------------------------------------------------------------------
+            //// create new list
+            //// -----------------------------------------------------------------------
+            //var summary = new List<BudgetItemsByCategory>();
+            //foreach (var CategoryGroup in GroupedByCategory.OrderBy(g => g.Key))
+            //{
+            //    // calculate total for this category, and create list of details
+            //    double total = 0;
+            //    var details = new List<BudgetItem>();
+            //    foreach (var item in CategoryGroup)
+            //    {
+            //        total = total + item.Amount;
+            //        details.Add(item);
+            //    }
+
+            //    // Add new BudgetItemsByCategory to our list
+            //    summary.Add(new BudgetItemsByCategory
+            //    {
+            //        Category = CategoryGroup.Key,
+            //        Details = details,
+            //        Total = total
+            //    });
+            //}
+
+            return listBugetItemsByCategory;
+        }
 
 
             // ============================================================================
