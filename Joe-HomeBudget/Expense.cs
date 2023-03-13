@@ -34,15 +34,15 @@ namespace Budget
         /// <value>
         /// The value of the expense, how much was this expense.
         /// </value>
-        public Double Amount { get; set; }
+        public Double Amount { get; }
         /// <value>
         /// The description of this expense, what was the expense.
         /// </value>
-        public String Description { get; set; }
+        public String Description { get; }
         /// <value>
         /// The category id of the expense.
         /// </value>
-        public int Category { get; set; }
+        public int Category { get; }
 
         // ====================================================================
         // Constructor

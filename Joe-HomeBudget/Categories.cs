@@ -209,7 +209,7 @@ namespace Budget
             // ---------------------------------------------------------------
 
             using var cmd = new SQLiteCommand(Database.dbConnection);
-            cmd.CommandText = "DELETE FROM categories";
+            cmd.CommandText = "DELETE FROM categories;";
             cmd.ExecuteNonQuery();
 
             // ---------------------------------------------------------------
