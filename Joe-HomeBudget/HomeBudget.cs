@@ -871,7 +871,7 @@ namespace Budget
             // get all items first
             // -----------------------------------------------------------------------
             // have to wait for Yensan to do it to test it
-           // List<BudgetItem> items = GetBudgetItems(Start, End, FilterFlag, CategoryID); // might want to remove this
+            // List<BudgetItem> items = GetBudgetItems(Start, End, FilterFlag, CategoryID); // might want to remove this
 
             //--------------------------------------------------------------------------
             //change the dates format to a string
@@ -879,8 +879,8 @@ namespace Budget
             DateTime realStart = Start ?? new DateTime(1900, 1, 1); // might change it because the date is changed in GDB
             DateTime realEnd = End ?? new DateTime(2500, 1, 1);
 
-            string start=realStart.ToString("yyyy-MM-dd");
-            string end=realEnd.ToString("yyyy-MM-dd");
+            string start = realStart.ToString("yyyy-MM-dd");
+            string end = realEnd.ToString("yyyy-MM-dd");
 
             //get all the items using the database
             var cmd = new SQLiteCommand(Database.dbConnection);
@@ -889,7 +889,7 @@ namespace Budget
             if (FilterFlag)
             {
                 // if the filter is true
-                cmd.CommandText = "SELECT C.Description AS Category, SUM(E.Amount) AS Total " +
+                cmd.CommandText = "SELECT C.Description AS Category,C.Id AS Id, SUM(E.Amount) AS Total " +
                     "FROM expenses AS E " +
                     "LEFT OUTER JOIN categories AS C ON E.CategoryId=C.Id " +
                     "WHERE Date<2019 AND Date>1889 AND E.CategoryId=12;";
@@ -898,7 +898,7 @@ namespace Budget
             }
             else
             {
-                cmd.CommandText = "SELECT C.Description AS Category, SUM(E.Amount) AS Total " +
+                cmd.CommandText = "SELECT C.Description AS Category,C.Id AS Id, SUM(E.Amount) AS Total " +
                     "FROM expenses AS E " +
                     "LEFT OUTER JOIN categories AS C ON E.CategoryId=C.Id " +
                     "WHERE Date<@end AND Date>@start " +
@@ -908,7 +908,7 @@ namespace Budget
             }
 
             cmd.Parameters.AddWithValue("@start", start);
-            cmd.Parameters.AddWithValue("@end",end);
+            cmd.Parameters.AddWithValue("@end", end);
 
             cmd.ExecuteNonQuery();
 
@@ -916,25 +916,21 @@ namespace Budget
 
             var rdr = cmd.ExecuteReader();
 
-            int previousCategory=0;
-            List <BudgetItem> listOfBudget;
+            List<BudgetItem> listOfBudget;
 
             while (rdr.Read())
             {
 
-                if(previousCategory!= (int)rdr["CategoryId"])
+                listOfBudget = GetBudgetItems(Start, End, FilterFlag, (int)rdr["Id"]);
+
+                listBugetItemsByCategory.Add(new BudgetItemsByCategory
                 {
-                    listOfBudget = GetBudgetItems(Start, End, FilterFlag, (int)rdr[4]);
+                    Category = (String)rdr["Category"],
+                    Details = listOfBudget,
+                    Total = (Double)rdr["Total"]
 
-                    listBugetItemsByCategory.Add(new BudgetItemsByCategory
-                    {
-                        Category = (String)rdr[6],
-                        Details=listOfBudget,
-                        Total = (Double)rdr[5]
+                });
 
-                    });
-                }
-                previousCategory = (int)rdr[4];
 
 
             }
