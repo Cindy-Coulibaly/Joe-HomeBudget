@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
+using System.Data.SQLite;
 
 public class UserInputErrors : Exception
 {
@@ -192,6 +193,15 @@ namespace Budget
             _Expenses.Add(new Expense(new_id, date, category, amount, description));
 
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="date"></param>
+        /// <param name="category"></param>
+        /// <param name="amount"></param>
+        /// <param name="description"></param>
         public void UpdateExpense(int id, DateTime date, int category, Double amount, String description)
         {
             try
@@ -257,6 +267,12 @@ namespace Budget
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="i"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public Expense GetExpenseFromId(int i)
         {
             List<Expense> newList = List();
