@@ -5,6 +5,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+public class ConnectionException : Exception
+{
+    public string ConnectString { get; } // extra info
+
+    public ConnectionException() { }         // standard constructor
+
+    public ConnectionException(string message) // calls 'Exception(message)'
+        : base(message) { }
+
+    public ConnectionException(string message, string connectionString)
+        : this(message)
+    {
+        ConnectString = connectionString;
+    }
+}
+
 namespace Budget
 {
     public class Database
@@ -16,7 +32,6 @@ namespace Budget
         {
             // If there was a database open before, close it and release the lock
             CloseDatabaseAndReleaseFile();
-            // your code
 
             _connection = new SQLiteConnection(@$"URI=file:{databaseFile};Foreign Keys=1;");
             dbConnection.Open();
@@ -57,10 +72,13 @@ namespace Budget
         }
         public static void existingDatabase(string filename)
         {
+            if (!File.Exists(filename))
+            {
+                throw new ConnectionException("this is bad");
 
+            }
             CloseDatabaseAndReleaseFile();
 
-            // your code
             _connection = new SQLiteConnection(@$"URI=file:{filename};Foreign Keys=1;");
             dbConnection.Open();
         }

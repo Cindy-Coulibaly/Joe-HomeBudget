@@ -8,21 +8,6 @@ using System.Xml;
 using System.Data.SQLite;
 using static Budget.Category;
 
-public class UserInputErrors : Exception
-{
-    public string InputErrorString { get; } // extra info
-
-    public UserInputErrors() { }         // standard constructor
-
-    public UserInputErrors(string message) // calls 'Exception(message)'
-        : base(message) { }
-
-    public UserInputErrors(string message, string inputErrorString)
-        : this(message)
-    {
-        InputErrorString = inputErrorString;
-    }
-}
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -41,7 +26,6 @@ namespace Budget
     public class Expenses
     {
         private static String DefaultFileName = "budget.txt";
-        private List<Expense> _Expenses = new List<Expense>();
         private string _FileName;
         private string _DirName;
 
@@ -86,13 +70,6 @@ namespace Budget
         // ====================================================================
         public void ReadFromFile(String filepath = null)
         {
-
-            // ---------------------------------------------------------------
-            // reading from file resets all the current expenses,
-            // so clear out any old definitions
-            // ---------------------------------------------------------------
-            _Expenses.Clear();
-
             // ---------------------------------------------------------------
             // reset default dir/filename to null 
             // ... filepath may not be valid, 
@@ -135,38 +112,38 @@ namespace Budget
         /// </code>
         /// </example>
         // ====================================================================
-        public void SaveToFile(String filepath = null)
-        {
-            // ---------------------------------------------------------------
-            // if file path not specified, set to last read file
-            // ---------------------------------------------------------------
-            if (filepath == null && DirName != null && FileName != null)
-            {
-                filepath = DirName + "\\" + FileName;
-            }
+        //public void SaveToFile(String filepath = null)
+        //{
+        //    // ---------------------------------------------------------------
+        //    // if file path not specified, set to last read file
+        //    // ---------------------------------------------------------------
+        //    if (filepath == null && DirName != null && FileName != null)
+        //    {
+        //        filepath = DirName + "\\" + FileName;
+        //    }
 
-            // ---------------------------------------------------------------
-            // just in case filepath doesn't exist, reset path info
-            // ---------------------------------------------------------------
-            _DirName = null;
-            _FileName = null;
+        //    // ---------------------------------------------------------------
+        //    // just in case filepath doesn't exist, reset path info
+        //    // ---------------------------------------------------------------
+        //    _DirName = null;
+        //    _FileName = null;
 
-            // ---------------------------------------------------------------
-            // get filepath name (throws exception if it doesn't exist)
-            // ---------------------------------------------------------------
-            filepath = BudgetFiles.VerifyWriteToFileName(filepath, DefaultFileName);
+        //    // ---------------------------------------------------------------
+        //    // get filepath name (throws exception if it doesn't exist)
+        //    // ---------------------------------------------------------------
+        //    filepath = BudgetFiles.VerifyWriteToFileName(filepath, DefaultFileName);
 
-            // ---------------------------------------------------------------
-            // save as XML
-            // ---------------------------------------------------------------
-            _WriteXMLFile(filepath);
+        //    // ---------------------------------------------------------------
+        //    // save as XML
+        //    // ---------------------------------------------------------------
+        //    _WriteXMLFile(filepath);
 
-            // ----------------------------------------------------------------
-            // save filename info for later use
-            // ----------------------------------------------------------------
-            _DirName = Path.GetDirectoryName(filepath);
-            _FileName = Path.GetFileName(filepath);
-        }
+        //    // ----------------------------------------------------------------
+        //    // save filename info for later use
+        //    // ----------------------------------------------------------------
+        //    _DirName = Path.GetDirectoryName(filepath);
+        //    _FileName = Path.GetFileName(filepath);
+        //}
 
 
 
@@ -175,7 +152,7 @@ namespace Budget
         // ====================================================================
         private void Add(Expense exp)
         {
-            _Expenses.Add(exp);
+            //_Expenses.Add(exp);
         }
         /// <summary>
         /// Add new expenses into your lists of expenses.
@@ -193,18 +170,8 @@ namespace Budget
         /// </example>
         public void Add(DateTime date, int category, Double amount, String description)
         {
-            int new_id = 1;
 
-            // if we already have expenses, set ID to max
-            if (_Expenses.Count > 0)
-            {
-                new_id = (from e in _Expenses select e.Id).Max();
-                new_id++;
-            }
-
-            _Expenses.Add(new Expense(new_id, date, category, amount, description));
             AddExpensesToDatabase(date,description, amount, category);
-
         }
 
         public void AddExpensesToDatabase(DateTime date, String description, Double amount, int categoryId)
@@ -356,9 +323,6 @@ namespace Budget
         // ====================================================================
         public void Delete(int Id)
         {
-            int i = _Expenses.FindIndex(x => x.Id == Id);
-            if (i != -1) { _Expenses.RemoveAt(i); } // will only delete if valid id
-
             try 
             {
                 DeleteExpense(Id);
@@ -540,59 +504,59 @@ namespace Budget
         // write to an XML file
         // if filepath is not specified, read/save in AppData file
         // ====================================================================
-        private void _WriteXMLFile(String filepath)
-        {
-            // ---------------------------------------------------------------
-            // loop over all categories and write them out as XML
-            // ---------------------------------------------------------------
-            try
-            {
-                // create top level element of expenses
-                XmlDocument doc = new XmlDocument();
-                doc.LoadXml("<Expenses></Expenses>");
+        //private void _WriteXMLFile(String filepath)
+        //{
+        //    // ---------------------------------------------------------------
+        //    // loop over all categories and write them out as XML
+        //    // ---------------------------------------------------------------
+        //    try
+        //    {
+        //        // create top level element of expenses
+        //        XmlDocument doc = new XmlDocument();
+        //        doc.LoadXml("<Expenses></Expenses>");
 
-                // foreach Category, create an new xml element
-                foreach (Expense exp in _Expenses)
-                {
-                    // main element 'Expense' with attribute ID
-                    XmlElement ele = doc.CreateElement("Expense");
-                    XmlAttribute attr = doc.CreateAttribute("ID");
-                    attr.Value = exp.Id.ToString();
-                    ele.SetAttributeNode(attr);
-                    doc.DocumentElement.AppendChild(ele);
+        //        // foreach Category, create an new xml element
+        //        foreach (Expense exp in _Expenses)
+        //        {
+        //            // main element 'Expense' with attribute ID
+        //            XmlElement ele = doc.CreateElement("Expense");
+        //            XmlAttribute attr = doc.CreateAttribute("ID");
+        //            attr.Value = exp.Id.ToString();
+        //            ele.SetAttributeNode(attr);
+        //            doc.DocumentElement.AppendChild(ele);
 
-                    // child attributes (date, description, amount, category)
-                    XmlElement d = doc.CreateElement("Date");
-                    XmlText dText = doc.CreateTextNode(exp.Date.ToString("yyyy-MM-dd")); // changed hh:mm:ss tt/ M/dd/yyyy
-                    ele.AppendChild(d);
-                    d.AppendChild(dText);
+        //            // child attributes (date, description, amount, category)
+        //            XmlElement d = doc.CreateElement("Date");
+        //            XmlText dText = doc.CreateTextNode(exp.Date.ToString("yyyy-MM-dd")); // changed hh:mm:ss tt/ M/dd/yyyy
+        //            ele.AppendChild(d);
+        //            d.AppendChild(dText);
 
-                    XmlElement de = doc.CreateElement("Description");
-                    XmlText deText = doc.CreateTextNode(exp.Description);
-                    ele.AppendChild(de);
-                    de.AppendChild(deText);
+        //            XmlElement de = doc.CreateElement("Description");
+        //            XmlText deText = doc.CreateTextNode(exp.Description);
+        //            ele.AppendChild(de);
+        //            de.AppendChild(deText);
 
-                    XmlElement a = doc.CreateElement("Amount");
-                    XmlText aText = doc.CreateTextNode(exp.Amount.ToString());
-                    ele.AppendChild(a);
-                    a.AppendChild(aText);
+        //            XmlElement a = doc.CreateElement("Amount");
+        //            XmlText aText = doc.CreateTextNode(exp.Amount.ToString());
+        //            ele.AppendChild(a);
+        //            a.AppendChild(aText);
 
-                    XmlElement c = doc.CreateElement("Category");
-                    XmlText cText = doc.CreateTextNode(exp.Category.ToString());
-                    ele.AppendChild(c);
-                    c.AppendChild(cText);
+        //            XmlElement c = doc.CreateElement("Category");
+        //            XmlText cText = doc.CreateTextNode(exp.Category.ToString());
+        //            ele.AppendChild(c);
+        //            c.AppendChild(cText);
 
-                }
+        //        }
 
-                // write the xml to FilePath
-                doc.Save(filepath);
+        //        // write the xml to FilePath
+        //        doc.Save(filepath);
 
-            }
-            catch (Exception e)
-            {
-                throw new Exception("SaveToFileException: Reading XML " + e.Message);
-            }
-        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        throw new Exception("SaveToFileException: Reading XML " + e.Message);
+        //    }
+        //}
 
     }
 }

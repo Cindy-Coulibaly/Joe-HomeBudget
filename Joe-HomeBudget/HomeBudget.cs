@@ -115,18 +115,26 @@ namespace Budget
 
         public HomeBudget(String databaseFile, String expensesXMLFile, bool newDB = false)
         {
-            // if database exists, and user doesn't want a new database, open existing DB
+            // if database exists, and user doe sn't want a new database, open existing DB
             if (!newDB && File.Exists(databaseFile))
             {
-                Database.existingDatabase(databaseFile);
+                try { Database.existingDatabase(databaseFile); }
+                catch (ConnectionException e)
+                {
+                    Console.WriteLine(e.Message + ":" + e.ConnectString);
+                }
+                // catches all other exceptions
+                catch (Exception e)
+                {
+                    Console.WriteLine("Unknown error:" + e.Message);
+                }
             }
 
             // file did not exist, or user wants a new database, so open NEW DB
             else
             {
-                Database.newDatabase(databaseFile);
+                Database.newDatabase(databaseFile);      
                 newDB = true;
-                //DBCategoryType(Database.dbConnection); //---------------------------------------------GO BACK
             }
 
             // create the category object
@@ -138,24 +146,6 @@ namespace Budget
             _expenses.ReadFromFile(expensesXMLFile);
         }
 
-        private void DBCategoryType(SQLiteConnection db)
-        {
-
-            using var cmd = new SQLiteCommand(db);
-
-            cmd.CommandText = "INSERT INTO categoryTypes(Id, Description) VALUES(0, 'Income')";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "INSERT INTO categoryTypes(Id, Description) VALUES(1, 'Expense')";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "INSERT INTO categoryTypes(Id, Description) VALUES(2, 'Credit')";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "INSERT INTO categoryTypes(Id, Description) VALUES(3, 'Savings')";
-            cmd.ExecuteNonQuery();
-
-        }
         #region OpenNewAndSave
         // ---------------------------------------------------------------
         // Read
