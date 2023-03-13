@@ -995,7 +995,8 @@ namespace Budget
                 cmd.CommandText = "SELECT C.Description AS Category,C.Id AS Id, SUM(E.Amount) AS Total " +
                     "FROM expenses AS E " +
                     "LEFT OUTER JOIN categories AS C ON E.CategoryId=C.Id " +
-                    "WHERE Date<@start AND Date>@end AND E.CategoryId=@CategoryID;";
+                    "WHERE Date<=@end AND Date>=@start AND E.CategoryId=@CategoryID  " +
+                    "ORDER BY C.Description ASC;";
 
                 cmd.Parameters.AddWithValue("@CategoryID", CategoryID);
             }
@@ -1024,7 +1025,7 @@ namespace Budget
             while (rdr.Read())
             {
 
-                listOfBudget = GetBudgetItems(Start, End, FilterFlag, (int)rdr["Id"]);
+                listOfBudget = GetBudgetItems(Start, End, true, (int)(long)rdr["Id"]);
 
                 listBugetItemsByCategory.Add(new BudgetItemsByCategory
                 {
