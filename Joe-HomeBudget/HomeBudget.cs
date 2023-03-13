@@ -4,6 +4,7 @@
 // ============================================================================
 
 using System.Data.SQLite;
+using System.Globalization;
 using static Budget.Category;
 
 namespace Budget
@@ -132,7 +133,7 @@ namespace Budget
 
             // create the _expenses course
 
-           
+
             _categories = new Categories();
             _expenses = new Expenses();
 
@@ -203,7 +204,7 @@ namespace Budget
                 // read the expenses and categories from their respective files
                 _categories.ReadFromFile(folder + "\\" + filenames[0]);
                 _expenses.ReadFromFile(folder + "\\" + filenames[1]);
-                                             
+
 
                 // Save information about budget file
                 _DirName = Path.GetDirectoryName(budgetFileName);
@@ -513,7 +514,7 @@ namespace Budget
                     ExpenseID = queryResult.ExpId,
                     ShortDescription = queryResult.Description,
                     Date = queryResult.Date,
-                    Amount = + queryResult.Amount, // look back-----------------------------------------------------
+                    Amount = +queryResult.Amount, // look back-----------------------------------------------------
                     Category = queryResult.Category,
                     Balance = total
                 });
@@ -680,523 +681,543 @@ namespace Budget
             // -----------------------------------------------------------------------
             List<BudgetItem> items = GetBudgetItems(Start, End, FilterFlag, CategoryID);
 
-            // -----------------------------------------------------------------------
-            // Group by year/month
-            // -----------------------------------------------------------------------
-            var GroupedByMonth = items.GroupBy(c => c.Date.Year.ToString("D4") + "/" + c.Date.Month.ToString("D2"));
+            DateTime realStart = Start ?? new DateTime(1900, 1, 1);
+            DateTime realEnd = End ?? new DateTime(2500, 1, 1);
 
-            // -----------------------------------------------------------------------
-            // create new list
-            // -----------------------------------------------------------------------
-            var summary = new List<BudgetItemsByMonth>();
-            foreach (var MonthGroup in GroupedByMonth)
+            string start = realStart.ToString("yyyy-MM-dd");
+            string end = realEnd.ToString("yyyy-MM-dd");
+
+            var cmd = new SQLiteCommand(Database.dbConnection);
+
+            if (FilterFlag)
             {
-                // calculate total for this month, and create list of details
-                double total = 0;
-                var details = new List<BudgetItem>();
-                foreach (var item in MonthGroup)
-                {
-                    total = total + item.Amount;
-                    details.Add(item);
-                }
-
-                // Add new BudgetItemsByMonth to our list
-                summary.Add(new BudgetItemsByMonth
-                {
-                    Month = MonthGroup.Key,
-                    Details = details,
-                    Total = total
-                });
+                cmd.CommandText = "SELECT DATE(E.Date) AS Month, SUM(E.Amount) AS Total " +
+                    "FROM expenses AS E " +
+                    "WHERE E.CategoryId=@CategoryID AND E.Date<=@end AND E.Date>=@start " +
+                    "GROUP BY Month;";
+                cmd.Parameters.AddWithValue("@CategoryID", CategoryID);
+            }
+            else
+            {
+                cmd.CommandText = "SELECT DATE(E.Date) AS Month, SUM(E.Amount) AS Total " +
+                    "FROM expenses AS E " +
+                    "WHERE E.Date<=@end AND E.Date>=@start " +
+                    "GROUP BY Month;";
             }
 
-            return summary;
-        }
+            cmd.Parameters.AddWithValue("@start", start);
+            cmd.Parameters.AddWithValue("@end", end);
 
-        // ============================================================================
-        // Group all expenses by category (ordered by category name)
-        /// <summary>
-        /// Create a list of all the items group by category
-        /// </summary>
-        /// <param name="Start">The date start of the list.</param>
-        /// <param name="End">The date end of the list</param>
-        /// <param name="FilterFlag">This is tell that you want to have special filter on the categories you want to show.</param>
-        /// <param name="CategoryID">The category you want appear in the list.</param>
-        /// <returns>The list of of all the categories and in each category the list of all the items.</returns>
-        /// <example>
-        ///The lists are being outputed are always sorted
-        ///Also you can have the balance of your account: the balance is how much is in your account( if it's minus you own money)
-        /// For all examples below, assume the budget file contains the
-        /// following elements:
-        /// 
-        /// <code>
-        /// Cat_ID  Expense_ID  Date                    Description                    Cost
-        ///    10       1       1/10/2018 12:00:00 AM   Clothes hat (on credit)         10
-        ///     9       2       1/11/2018 12:00:00 AM   Credit Card hat                -10
-        ///    10       3       1/10/2019 12:00:00 AM   Clothes scarf(on credit)        15
-        ///     9       4       1/10/2020 12:00:00 AM   Credit Card scarf              -15
-        ///    14       5       1/11/2020 12:00:00 AM   Eating Out McDonalds            45
-        ///    14       7       1/12/2020 12:00:00 AM   Eating Out Wendys               25
-        ///    14      10       2/1/2020 12:00:00 AM    Eating Out Pizza                33.33
-        ///     9      13       2/10/2020 12:00:00 AM   Credit Card mittens            -15
-        ///     9      12       2/25/2020 12:00:00 AM   Credit Card Hat                -25
-        ///    14      11       2/27/2020 12:00:00 AM   Eating Out Pizza                33.33
-        ///    14       9       7/11/2020 12:00:00 AM   Eating Out Cafeteria            11.11
-        /// </code>
-        /// 
-        /// <b>Getting a list of ALL budget items By Category.</b>
-        /// 
-        /// <code>
-        /// <![CDATA[
-        ///  HomeBudget budget = new HomeBudget();
-        ///  budget.ReadFromFile(filename);
-        ///  
-        ///  // Get a list of all budget items By Category
-        ///  var budgetItems = budget.GeBudgetItemsByCategory(null, null, false, 0);
-        ///            
-        ///  // print important information
-        ///  foreach (BudgetItemsByCategory item in budgetItems)
-        ///  {
-        ///      Console.WriteLine ( 
-        ///          String.Format("{0} {1,-20}", 
-        ///             item.Category,
-        ///             item.Total));
-        ///     
-        ///      foreach((BudgetItem temp in item.Details)
-        ///      {
-        ///         Console.Write(
-        ///             String.Format("{2,8:C} {3,12:C} {4,25C} {5,35C}"),
-        ///             temp.Category,temp.Description, temp.cost, temp.balance;
-        ///      
-        ///      }
-        ///  }
-        /// ]]>
-        /// </code>
-        /// 
-        /// Sample output:
-        /// <code>
-        /// Clothe -25 hat (on credit)       ($10.00)     ($10.00)
-        /// Clothe -25 scarf(on credit)      ($15.00)     ($15.00)
-        /// Credit Card 65 hat                     $10.00        $0.00
-        /// Credit Card 65 scarf                   $15.00        $0.00
-        /// Credit Card 65 mittens                 $15.00     ($88.33)
-        /// Credit Card 65 Hat                     $25.00     ($63.33)
-        /// Eating Out  -147.76999999999998 McDonalds             ($45.00)     ($45.00)
-        /// Eating Out  -147.76999999999998 Wendys                ($25.00)     ($70.00)
-        /// Eating Out  -147.76999999999998 Pizza                 ($33.33)    ($103.33)
-        /// Eating Out  -147.76999999999998 Pizza                 ($33.33)     ($96.66)
-        /// Eating Out  -147.76999999999998 Cafeteria             ($11.11)    ($107.77)
-        /// </code>
-        /// 
-        /// <b>Getting a list of the budgets items by Category that have a filter and that only want the category 14: </b>
-        ///<code>
-        /// <![CDATA[
-        ///  HomeBudget budget = new HomeBudget();
-        ///  budget.ReadFromFile(filename);
-        ///  
-        ///  // Get a list of all budget items By Category
-        ///  var budgetItems = budget.GeBudgetItemsByCategory(null, null, true, 14);
-        ///            
-        ///  // print important information
-        ///  foreach (BudgetItemsByCategory item in budgetItems)
-        ///  {
-        ///      Console.WriteLine ( 
-        ///          String.Format("{0} {1,-20}", 
-        ///             item.Category,
-        ///             item.Total));
-        ///     
-        ///      foreach((BudgetItem temp in item.Details)
-        ///      {
-        ///         Console.Write(
-        ///             String.Format("{2,8:C} {3,12:C} {4,25C} {5,35C}"),
-        ///             temp.Category,temp.Description, temp.cost, temp.balance;
-        ///      
-        ///      }
-        ///  }
-        /// ]]>
-        /// </code>
-        /// 
-        /// Sample output:
-        /// <code>
-        /// Eating Out  -147.76999999999998 McDonalds             ($45.00)     ($45.00)
-        /// Eating Out  -147.76999999999998 Wendys                ($25.00)     ($70.00)
-        /// Eating Out  -147.76999999999998 Pizza                 ($33.33)    ($103.33)
-        /// Eating Out  -147.76999999999998 Pizza                 ($33.33)     ($96.66)
-        /// Eating Out  -147.76999999999998 Cafeteria             ($11.11)    ($107.77)
-        /// </code>
-        /// 
-        /// <b>Getting a list of the budget items by Category that from january 1st 2020 to  july 20th 2020, when we only want to see the category 9</b>
-        /// <code>
-        /// <![CDATA[
-        ///  DateTime start=DateTime(2020,1,1); //the date range is inclusive
-        ///  DateTime end=DateTime(2020, 7,20);
-        ///  HomeBudget budget = new HomeBudget();
-        ///  budget.ReadFromFile(filename);
-        ///  
-        ///  // Get a list of all budget items By Category
-        ///  var budgetItems = budget.GeBudgetItemsByCategory(start, end, true, 9);
-        ///            
-        ///  // print important information
-        ///  foreach (BudgetItemsByCategory item in budgetItems)
-        ///  {
-        ///      Console.WriteLine ( 
-        ///          String.Format("{0} {1,-20}", 
-        ///             item.Month,
-        ///             item.Total));
-        ///     
-        ///      foreach((BudgetItem temp in item.Details)
-        ///      {
-        ///         Console.Write(
-        ///             String.Format("{2,8:C} {3,12:C} {4,25C} {5,35C}"),
-        ///             temp.Category,temp.Description, temp.cost, temp.balance;
-        ///      
-        ///      }
-        ///  }
-        /// ]]>
-        /// </code>
-        /// Sample output:
-        /// <code>
-        /// Credit Card 65 scarf                   $15.00        $0.00
-        /// Credit Card 65 mittens                 $15.00     ($88.33)
-        /// Credit Card 65 Hat                     $25.00     ($63.33)
-        /// </code>
-        /// 
-        /// </example>
-        // ============================================================================
-        public List<BudgetItemsByCategory> GeBudgetItemsByCategory(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID)
-        {
 
-            // -----------------------------------------------------------------------
-            // get all items first
-            // -----------------------------------------------------------------------
-            List<BudgetItem> items = GetBudgetItems(Start, End, FilterFlag, CategoryID);
+            cmd.ExecuteNonQuery();
 
-            // -----------------------------------------------------------------------
-            // Group by Category
-            // -----------------------------------------------------------------------
-            var GroupedByCategory = items.GroupBy(c => c.Category);
+            var listBugetItemsByMonth = new List<BudgetItemsByMonth>();
 
-            // -----------------------------------------------------------------------
-            // create new list
-            // -----------------------------------------------------------------------
-            var summary = new List<BudgetItemsByCategory>();
-            foreach (var CategoryGroup in GroupedByCategory.OrderBy(g => g.Key))
+            var rdr = cmd.ExecuteReader();
+
+            List<BudgetItem> listOfBudget;
+
+            while (rdr.Read())
             {
-                // calculate total for this category, and create list of details
-                double total = 0;
-                var details = new List<BudgetItem>();
-                foreach (var item in CategoryGroup)
-                {
-                    total = total + item.Amount;
-                    details.Add(item);
-                }
+                    listOfBudget = GetBudgetItems(Start, End, FilterFlag, (int)rdr[4]);
+                    
 
-                // Add new BudgetItemsByCategory to our list
-                summary.Add(new BudgetItemsByCategory
-                {
-                    Category = CategoryGroup.Key,
-                    Details = details,
-                    Total = total
-                });
+                    listBugetItemsByMonth.Add(new BudgetItemsByMonth
+                    {
+                        Month = (String)rdr["Month"],
+                        Details = listOfBudget,
+                        Total = (double)rdr["Total"]
+
+                    });
             }
-
-            return summary;
+            return listBugetItemsByMonth;
         }
 
-
-        // ============================================================================
-        // Group all expenses by category and Month
-        // creates a list of Dictionary objects (which are objects that contain key value pairs).
-        // The list of Dictionary objects includes:
-        //          one dictionary object per month with expenses,
-        //          and one dictionary object for the category totals
-        // 
-        // Each per month dictionary object has the following key value pairs:
-        //           "Month", <the year/month for that month as a string>
-        //           "Total", <the total amount for that month as a double>
-        //            and for each category for which there is an expense in the month:
-        //             "items:category", a List<BudgetItem> of all items in that category for the month
-        //             "category", the total amount for that category for this month
-        //
-        // The one dictionary for the category totals has the following key value pairs:
-        //             "Month", the string "TOTALS"
-        //             for each category for which there is an expense in ANY month:
-        //             "category", the total for that category for all the months
-        /// <summary>
-        /// Create a dictionary that will hold a list categories and each categories will be sorted by month.
-        /// </summary>
-        /// <param name="Start">The date start of the list</param>
-        /// <param name="End">The date end of the list</param>
-        /// <param name="FilterFlag">This is tell that you want to have special filter on the categories you want to show</param>
-        /// <param name="CategoryID">The category you want appear in the list</param>
-        /// <returns>A dictionary that holds a list categories and each categories will be sorted by month.</returns>
-        /// <example>
-        ///The lists are being outputed are always sorted
-        ///Also you can have the balance of your account: the balance is how much is in your account( if it's minus you own money)
-        /// For all examples below, assume the budget file contains the
-        /// following elements:
-        /// 
-        /// <code>
-        /// Cat_ID  Expense_ID  Date                    Description                    Cost
-        ///    10       1       1/10/2018 12:00:00 AM   Clothes hat (on credit)         10
-        ///     9       2       1/11/2018 12:00:00 AM   Credit Card hat                -10
-        ///    10       3       1/10/2019 12:00:00 AM   Clothes scarf(on credit)        15
-        ///     9       4       1/10/2020 12:00:00 AM   Credit Card scarf              -15
-        ///    14       5       1/11/2020 12:00:00 AM   Eating Out McDonalds            45
-        ///    14       7       1/12/2020 12:00:00 AM   Eating Out Wendys               25
-        ///    14      10       2/1/2020 12:00:00 AM    Eating Out Pizza                33.33
-        ///     9      13       2/10/2020 12:00:00 AM   Credit Card mittens            -15
-        ///     9      12       2/25/2020 12:00:00 AM   Credit Card Hat                -25
-        ///    14      11       2/27/2020 12:00:00 AM   Eating Out Pizza                33.33
-        ///    14       9       7/11/2020 12:00:00 AM   Eating Out Cafeteria            11.11
-        /// </code>
-        /// 
-        /// <b>Getting a list of ALL budget items By Category by month.</b>
-        /// 
-        /// <code>
-        /// <![CDATA[
-        ///  HomeBudget budget = new HomeBudget();
-        ///  budget.ReadFromFile(filename);
-        ///  
-        ///  // Get a list of all budget items By Category by month
-        ///  var budgetItems = budget.GetBudgetDictionaryByCategoryAndMonth(null, null, false, 0);
-        ///            
-        ///  // print important information
-        ///foreach (Dictionary<string, object> dic in list)
-        ///     {
-        ///         foreach(KeyValuePair<string, object> item in dic)
-        ///             {
-        ///             
-        ///                 if(item.Key == "Month")
-        ///                 {
-        ///                        Console.WriteLine ( 
-        ///                        String.Format("{0} {1,-20}", 
-        ///                         item.Key,
-        ///                         item.Value));
-        ///                 }
-        ///                else if (item.Key=="Total")
-        ///                {
-        ///                        Write(String.Format("{2,30} {3,40}", 
-        ///                         item.Key,
-        ///                         item.Value));
-        ///                }
-        ///                else if (regex.IsMatch(item.Key))
-        ///                {
-        ///                     WriteLine($"{item.Key}\n");
-        ///                    foreach (var detail in (List<BudgetItem>)item.Value)
-        ///                    {
-        ///                         Console.Write(
-        ///                     String.Format("{4,50:C} {5,60:C} {6,70C}"),
-        ///                     detail.Description, detail.cost, detail.balance;
-        ///                     }
-        ///                 }
-        ///             }
-        ///     }
-        /// ]]>
-        /// </code>
-        /// 
-        /// Sample output:
-        /// <code>
-        /// Month 2018/01 Total:0 Clothes hat (on credit)       ($10.00)     ($10.00)
-        /// Month 2018/01 Total:0 Credit Card hat                     $10.00        $0.00
-        /// Month 2019/01 Total:-15 Clothes scarf(on credit)      ($15.00)     ($15.00)
-        /// Month 2020/01 Total:-55 Credit Card scarf                   $15.00        $0.00
-        /// Month 2020/01 Total:-55 Eating Out McDonalds             ($45.00)     ($45.00)
-        /// Month 2020/01 Total:-55 Eating Out McDonalds Wendys                ($25.00)     ($70.00)
-        /// Month 2020/02 Total:-26.9997 Credit Card mittens                 $15.00     ($88.33)
-        /// Month 2020/02 Total:-26.9997 Credit Card  Hat                     $25.00     ($63.33)
-        /// Month 2020/02 Total:-26.9997  Eating Out Pizza                 ($33.33)    ($103.33)
-        /// Month 2020/02 Total:-26.9997 Eating Out Pizza                 ($33.33)     ($96.66)
-        /// Month 2020/07 Total:-11.11 Eating Out Cafeteria             ($11.11)    ($107.77)
-        /// </code>
-        /// 
-        /// <b>Getting a list of the budgets items by Category by month that have a filter and that only want the category 14: </b>
-        ///<code>
-        /// <![CDATA[
-        ///  HomeBudget budget = new HomeBudget();
-        ///  budget.ReadFromFile(filename);
-        ///  
-        ///  // Get a list of all budget items By Category by month
-        ///  var budgetItems = budget.GetBudgetDictionaryByCategoryAndMonth(null, null, true, 14);
-        ///            
-        /// //print important information
-        ///foreach (Dictionary<string, object> dic in list)
-        ///     {
-        ///         foreach(KeyValuePair<string, object> item in dic)
-        ///             {
-        ///             
-        ///                 if(item.Key == "Month")
-        ///                 {
-        ///                        Console.WriteLine ( 
-        ///                        String.Format("{0} {1,-20}", 
-        ///                         item.Key,
-        ///                         item.Value));
-        ///                 }
-        ///                else if (item.Key=="Total")
-        ///                {
-        ///                        Write(String.Format("{2,30} {3,40}", 
-        ///                         item.Key,
-        ///                         item.Value));
-        ///                }
-        ///                else if (regex.IsMatch(item.Key))
-        ///                {
-        ///                     WriteLine($"{item.Key}\n");
-        ///                    foreach (var detail in (List<BudgetItem>)item.Value)
-        ///                    {
-        ///                         Console.Write(
-        ///                     String.Format("{4,50:C} {5,60:C} {6,70C} {7,80C}"),
-        ///                     detail.Category,detail.Description, detail.cost, detail.balance;
-        ///                     }
-        ///                 }
-        ///             }
-        ///     }
-        /// ]]>
-        /// </code>
-        /// 
-        /// Sample output:
-        /// <code>
-        /// Month 2020/01 Total:-55 Eating Out McDonalds             ($45.00)     ($45.00)
-        /// Month 2020/01 Total:-55 Eating Out McDonalds Wendys                ($25.00)     ($70.00)
-        /// Month 2020/02 Total:-26.9997  Eating Out Pizza                 ($33.33)    ($103.33)
-        /// Month 2020/02 Total:-26.9997 Eating Out Pizza                 ($33.33)     ($96.66)
-        /// Month 2020/07 Total:-11.11 Eating Out Cafeteria             ($11.11)    ($107.77)
-        /// </code>
-        /// 
-        /// <b>Getting a list of the budget items by Category by month that from january 1st 2020 to  july 20th 2020, when we only want to see the category 9</b>
-        /// <code>
-        /// <![CDATA[
-        ///  DateTime start=DateTime(2020,1,1); //the date range is inclusive
-        ///  DateTime end=DateTime(2020, 7,20);
-        ///  HomeBudget budget = new HomeBudget();
-        ///  budget.ReadFromFile(filename);
-        ///  
-        ///  // Get a list of all budget items By Category by month
-        ///  var budgetItems = budget.GetBudgetDictionaryByCategoryAndMonth(start, end, true, 9);
-        ///            
-        ///  // print important information
-        ///foreach (Dictionary<string, object> dic in list)
-        ///     {
-        ///         foreach(KeyValuePair<string, object> item in dic)
-        ///             {
-        ///             
-        ///                 if(item.Key == "Month")
-        ///                 {
-        ///                        Console.WriteLine ( 
-        ///                        String.Format("{0} {1,-20}", 
-        ///                         item.Key,
-        ///                         item.Value));
-        ///                 }
-        ///                else if (item.Key=="Total")
-        ///                {
-        ///                        Write(String.Format("{2,30} {3,40}", 
-        ///                         item.Key,
-        ///                         item.Value));
-        ///                }
-        ///                else if (regex.IsMatch(item.Key))
-        ///                {
-        ///                     WriteLine($"{item.Key}\n");
-        ///                    foreach (var detail in (List<BudgetItem>)item.Value)
-        ///                    {
-        ///                         Console.Write(
-        ///                     String.Format("{4,50:C} {5,60:C} {6,70C} {7,80C}"),
-        ///                     detail.Category,detail.Description, detail.cost, detail.balance;
-        ///                     }
-        ///                 }
-        ///             }
-        ///     }
-        /// ]]>
-        /// </code>
-        /// Sample output:
-        /// <code>
-        /// Month 2020/01 Total:-55 Credit Card scarf                   $15.00        $0.00
-        /// Month 2020/02 Total:-26.9997 Credit Card mittens                 $15.00     ($88.33)
-        /// Month 2020/02 Total:-26.9997 Credit Card  Hat                     $25.00     ($63.33)
-        /// </code>
-        /// 
-        /// </example>
-        // ============================================================================
-        public List<Dictionary<string, object>> GetBudgetDictionaryByCategoryAndMonth(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID)
-        {
-            // -----------------------------------------------------------------------
-            // get all items by month 
-            // -----------------------------------------------------------------------
-            List<BudgetItemsByMonth> GroupedByMonth = GetBudgetItemsByMonth(Start, End, FilterFlag, CategoryID);
-
-            // -----------------------------------------------------------------------
-            // loop over each month
-            // -----------------------------------------------------------------------
-            var summary = new List<Dictionary<string, object>>(); // give u a list of Dico and each Dico ( string is the key and object is a the value)
-            var totalsPerCategory = new Dictionary<String, Double>();// is a dictionary with a string has the key of each value that are double
-
-            foreach (var MonthGroup in GroupedByMonth) // foreach month in a groupedByMonth
+            // ============================================================================
+            // Group all expenses by category (ordered by category name)
+            /// <summary>
+            /// Create a list of all the items group by category
+            /// </summary>
+            /// <param name="Start">The date start of the list.</param>
+            /// <param name="End">The date end of the list</param>
+            /// <param name="FilterFlag">This is tell that you want to have special filter on the categories you want to show.</param>
+            /// <param name="CategoryID">The category you want appear in the list.</param>
+            /// <returns>The list of of all the categories and in each category the list of all the items.</returns>
+            /// <example>
+            ///The lists are being outputed are always sorted
+            ///Also you can have the balance of your account: the balance is how much is in your account( if it's minus you own money)
+            /// For all examples below, assume the budget file contains the
+            /// following elements:
+            /// 
+            /// <code>
+            /// Cat_ID  Expense_ID  Date                    Description                    Cost
+            ///    10       1       1/10/2018 12:00:00 AM   Clothes hat (on credit)         10
+            ///     9       2       1/11/2018 12:00:00 AM   Credit Card hat                -10
+            ///    10       3       1/10/2019 12:00:00 AM   Clothes scarf(on credit)        15
+            ///     9       4       1/10/2020 12:00:00 AM   Credit Card scarf              -15
+            ///    14       5       1/11/2020 12:00:00 AM   Eating Out McDonalds            45
+            ///    14       7       1/12/2020 12:00:00 AM   Eating Out Wendys               25
+            ///    14      10       2/1/2020 12:00:00 AM    Eating Out Pizza                33.33
+            ///     9      13       2/10/2020 12:00:00 AM   Credit Card mittens            -15
+            ///     9      12       2/25/2020 12:00:00 AM   Credit Card Hat                -25
+            ///    14      11       2/27/2020 12:00:00 AM   Eating Out Pizza                33.33
+            ///    14       9       7/11/2020 12:00:00 AM   Eating Out Cafeteria            11.11
+            /// </code>
+            /// 
+            /// <b>Getting a list of ALL budget items By Category.</b>
+            /// 
+            /// <code>
+            /// <![CDATA[
+            ///  HomeBudget budget = new HomeBudget();
+            ///  budget.ReadFromFile(filename);
+            ///  
+            ///  // Get a list of all budget items By Category
+            ///  var budgetItems = budget.GeBudgetItemsByCategory(null, null, false, 0);
+            ///            
+            ///  // print important information
+            ///  foreach (BudgetItemsByCategory item in budgetItems)
+            ///  {
+            ///      Console.WriteLine ( 
+            ///          String.Format("{0} {1,-20}", 
+            ///             item.Category,
+            ///             item.Total));
+            ///     
+            ///      foreach((BudgetItem temp in item.Details)
+            ///      {
+            ///         Console.Write(
+            ///             String.Format("{2,8:C} {3,12:C} {4,25C} {5,35C}"),
+            ///             temp.Category,temp.Description, temp.cost, temp.balance;
+            ///      
+            ///      }
+            ///  }
+            /// ]]>
+            /// </code>
+            /// 
+            /// Sample output:
+            /// <code>
+            /// Clothe -25 hat (on credit)       ($10.00)     ($10.00)
+            /// Clothe -25 scarf(on credit)      ($15.00)     ($15.00)
+            /// Credit Card 65 hat                     $10.00        $0.00
+            /// Credit Card 65 scarf                   $15.00        $0.00
+            /// Credit Card 65 mittens                 $15.00     ($88.33)
+            /// Credit Card 65 Hat                     $25.00     ($63.33)
+            /// Eating Out  -147.76999999999998 McDonalds             ($45.00)     ($45.00)
+            /// Eating Out  -147.76999999999998 Wendys                ($25.00)     ($70.00)
+            /// Eating Out  -147.76999999999998 Pizza                 ($33.33)    ($103.33)
+            /// Eating Out  -147.76999999999998 Pizza                 ($33.33)     ($96.66)
+            /// Eating Out  -147.76999999999998 Cafeteria             ($11.11)    ($107.77)
+            /// </code>
+            /// 
+            /// <b>Getting a list of the budgets items by Category that have a filter and that only want the category 14: </b>
+            ///<code>
+            /// <![CDATA[
+            ///  HomeBudget budget = new HomeBudget();
+            ///  budget.ReadFromFile(filename);
+            ///  
+            ///  // Get a list of all budget items By Category
+            ///  var budgetItems = budget.GeBudgetItemsByCategory(null, null, true, 14);
+            ///            
+            ///  // print important information
+            ///  foreach (BudgetItemsByCategory item in budgetItems)
+            ///  {
+            ///      Console.WriteLine ( 
+            ///          String.Format("{0} {1,-20}", 
+            ///             item.Category,
+            ///             item.Total));
+            ///     
+            ///      foreach((BudgetItem temp in item.Details)
+            ///      {
+            ///         Console.Write(
+            ///             String.Format("{2,8:C} {3,12:C} {4,25C} {5,35C}"),
+            ///             temp.Category,temp.Description, temp.cost, temp.balance;
+            ///      
+            ///      }
+            ///  }
+            /// ]]>
+            /// </code>
+            /// 
+            /// Sample output:
+            /// <code>
+            /// Eating Out  -147.76999999999998 McDonalds             ($45.00)     ($45.00)
+            /// Eating Out  -147.76999999999998 Wendys                ($25.00)     ($70.00)
+            /// Eating Out  -147.76999999999998 Pizza                 ($33.33)    ($103.33)
+            /// Eating Out  -147.76999999999998 Pizza                 ($33.33)     ($96.66)
+            /// Eating Out  -147.76999999999998 Cafeteria             ($11.11)    ($107.77)
+            /// </code>
+            /// 
+            /// <b>Getting a list of the budget items by Category that from january 1st 2020 to  july 20th 2020, when we only want to see the category 9</b>
+            /// <code>
+            /// <![CDATA[
+            ///  DateTime start=DateTime(2020,1,1); //the date range is inclusive
+            ///  DateTime end=DateTime(2020, 7,20);
+            ///  HomeBudget budget = new HomeBudget();
+            ///  budget.ReadFromFile(filename);
+            ///  
+            ///  // Get a list of all budget items By Category
+            ///  var budgetItems = budget.GeBudgetItemsByCategory(start, end, true, 9);
+            ///            
+            ///  // print important information
+            ///  foreach (BudgetItemsByCategory item in budgetItems)
+            ///  {
+            ///      Console.WriteLine ( 
+            ///          String.Format("{0} {1,-20}", 
+            ///             item.Month,
+            ///             item.Total));
+            ///     
+            ///      foreach((BudgetItem temp in item.Details)
+            ///      {
+            ///         Console.Write(
+            ///             String.Format("{2,8:C} {3,12:C} {4,25C} {5,35C}"),
+            ///             temp.Category,temp.Description, temp.cost, temp.balance;
+            ///      
+            ///      }
+            ///  }
+            /// ]]>
+            /// </code>
+            /// Sample output:
+            /// <code>
+            /// Credit Card 65 scarf                   $15.00        $0.00
+            /// Credit Card 65 mittens                 $15.00     ($88.33)
+            /// Credit Card 65 Hat                     $25.00     ($63.33)
+            /// </code>
+            /// 
+            /// </example>
+            // ============================================================================
+            public List<BudgetItemsByCategory> GeBudgetItemsByCategory(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID)
             {
-                // create record object for this month
-                Dictionary<string, object> record = new Dictionary<string, object>(); //for each month create a dictionary
-                record["Month"] = MonthGroup.Month; //the month key (month is the name of key) = the name of the month (which is an object)
-                record["Total"] = MonthGroup.Total; // the total key (total is the name of the key) = the total of that given month (which is a object)
-
-                // break up the month details into categories
-                // Cindy: Details is a list of budget items
-                // this is saying for the given month get the list of budget items and group it by Category(Income, Expense, Credit, Saving) by budget item
-                var GroupedByCategory = MonthGroup.Details.GroupBy(c => c.Category);// so GroupedByCategory is a list budget items grouped by categories (key=category) (value=list of budject items)
 
                 // -----------------------------------------------------------------------
-                // loop over each category
+                // get all items first
                 // -----------------------------------------------------------------------
-                foreach (var CategoryGroup in GroupedByCategory.OrderBy(g => g.Key)) //order Alphabetically each key of the dictionary GroupedByCategory (so basically the categories)
+                List<BudgetItem> items = GetBudgetItems(Start, End, FilterFlag, CategoryID);
+
+                // -----------------------------------------------------------------------
+                // Group by Category
+                // -----------------------------------------------------------------------
+                var GroupedByCategory = items.GroupBy(c => c.Category);
+
+                // -----------------------------------------------------------------------
+                // create new list
+                // -----------------------------------------------------------------------
+                var summary = new List<BudgetItemsByCategory>();
+                foreach (var CategoryGroup in GroupedByCategory.OrderBy(g => g.Key))
                 {
-
-                    // calculate totals for the cat/month, and create list of details
+                    // calculate total for this category, and create list of details
                     double total = 0;
                     var details = new List<BudgetItem>();
-
-                    foreach (var item in CategoryGroup) // for the item in the list budget items of the given category(alphabitically)
+                    foreach (var item in CategoryGroup)
                     {
-                        total = total + item.Amount; // get the total of the given month on that given category
-                        details.Add(item); // add the given item to the list of details
+                        total = total + item.Amount;
+                        details.Add(item);
                     }
 
-                    // add new properties and values to our record object
-                    record["details:" + CategoryGroup.Key] = details; // for the "details cateoryGroup(name)"=key the value will be the list of items in this given category
-                    record[CategoryGroup.Key] = total; // and for category name=key the value will be the total of that month in the given category
-
-                    // keep track of totals for each category
-                    if (totalsPerCategory.TryGetValue(CategoryGroup.Key, out Double CurrentCatTotal)) // if the total is a cat/month is a double
+                    // Add new BudgetItemsByCategory to our list
+                    summary.Add(new BudgetItemsByCategory
                     {
-                        totalsPerCategory[CategoryGroup.Key] = CurrentCatTotal + total; // the total of that given month will be current category value+ total
-                    }
-                    else
-                    {
-                        totalsPerCategory[CategoryGroup.Key] = total;
-                    }
+                        Category = CategoryGroup.Key,
+                        Details = details,
+                        Total = total
+                    });
                 }
 
-                // add record to collection
-                summary.Add(record); // in the summary list of dictionnary each dictionnary represent the month -> that has different categories -> that has total price and details of each items
+                return summary;
             }
-            // ---------------------------------------------------------------------------
-            // add final record which is the totals for each category
-            // ---------------------------------------------------------------------------
-            Dictionary<string, object> totalsRecord = new Dictionary<string, object>();
-            totalsRecord["Month"] = "TOTALS";
 
-            foreach (var cat in categories.List())
+
+            // ============================================================================
+            // Group all expenses by category and Month
+            // creates a list of Dictionary objects (which are objects that contain key value pairs).
+            // The list of Dictionary objects includes:
+            //          one dictionary object per month with expenses,
+            //          and one dictionary object for the category totals
+            // 
+            // Each per month dictionary object has the following key value pairs:
+            //           "Month", <the year/month for that month as a string>
+            //           "Total", <the total amount for that month as a double>
+            //            and for each category for which there is an expense in the month:
+            //             "items:category", a List<BudgetItem> of all items in that category for the month
+            //             "category", the total amount for that category for this month
+            //
+            // The one dictionary for the category totals has the following key value pairs:
+            //             "Month", the string "TOTALS"
+            //             for each category for which there is an expense in ANY month:
+            //             "category", the total for that category for all the months
+            /// <summary>
+            /// Create a dictionary that will hold a list categories and each categories will be sorted by month.
+            /// </summary>
+            /// <param name="Start">The date start of the list</param>
+            /// <param name="End">The date end of the list</param>
+            /// <param name="FilterFlag">This is tell that you want to have special filter on the categories you want to show</param>
+            /// <param name="CategoryID">The category you want appear in the list</param>
+            /// <returns>A dictionary that holds a list categories and each categories will be sorted by month.</returns>
+            /// <example>
+            ///The lists are being outputed are always sorted
+            ///Also you can have the balance of your account: the balance is how much is in your account( if it's minus you own money)
+            /// For all examples below, assume the budget file contains the
+            /// following elements:
+            /// 
+            /// <code>
+            /// Cat_ID  Expense_ID  Date                    Description                    Cost
+            ///    10       1       1/10/2018 12:00:00 AM   Clothes hat (on credit)         10
+            ///     9       2       1/11/2018 12:00:00 AM   Credit Card hat                -10
+            ///    10       3       1/10/2019 12:00:00 AM   Clothes scarf(on credit)        15
+            ///     9       4       1/10/2020 12:00:00 AM   Credit Card scarf              -15
+            ///    14       5       1/11/2020 12:00:00 AM   Eating Out McDonalds            45
+            ///    14       7       1/12/2020 12:00:00 AM   Eating Out Wendys               25
+            ///    14      10       2/1/2020 12:00:00 AM    Eating Out Pizza                33.33
+            ///     9      13       2/10/2020 12:00:00 AM   Credit Card mittens            -15
+            ///     9      12       2/25/2020 12:00:00 AM   Credit Card Hat                -25
+            ///    14      11       2/27/2020 12:00:00 AM   Eating Out Pizza                33.33
+            ///    14       9       7/11/2020 12:00:00 AM   Eating Out Cafeteria            11.11
+            /// </code>
+            /// 
+            /// <b>Getting a list of ALL budget items By Category by month.</b>
+            /// 
+            /// <code>
+            /// <![CDATA[
+            ///  HomeBudget budget = new HomeBudget();
+            ///  budget.ReadFromFile(filename);
+            ///  
+            ///  // Get a list of all budget items By Category by month
+            ///  var budgetItems = budget.GetBudgetDictionaryByCategoryAndMonth(null, null, false, 0);
+            ///            
+            ///  // print important information
+            ///foreach (Dictionary<string, object> dic in list)
+            ///     {
+            ///         foreach(KeyValuePair<string, object> item in dic)
+            ///             {
+            ///             
+            ///                 if(item.Key == "Month")
+            ///                 {
+            ///                        Console.WriteLine ( 
+            ///                        String.Format("{0} {1,-20}", 
+            ///                         item.Key,
+            ///                         item.Value));
+            ///                 }
+            ///                else if (item.Key=="Total")
+            ///                {
+            ///                        Write(String.Format("{2,30} {3,40}", 
+            ///                         item.Key,
+            ///                         item.Value));
+            ///                }
+            ///                else if (regex.IsMatch(item.Key))
+            ///                {
+            ///                     WriteLine($"{item.Key}\n");
+            ///                    foreach (var detail in (List<BudgetItem>)item.Value)
+            ///                    {
+            ///                         Console.Write(
+            ///                     String.Format("{4,50:C} {5,60:C} {6,70C}"),
+            ///                     detail.Description, detail.cost, detail.balance;
+            ///                     }
+            ///                 }
+            ///             }
+            ///     }
+            /// ]]>
+            /// </code>
+            /// 
+            /// Sample output:
+            /// <code>
+            /// Month 2018/01 Total:0 Clothes hat (on credit)       ($10.00)     ($10.00)
+            /// Month 2018/01 Total:0 Credit Card hat                     $10.00        $0.00
+            /// Month 2019/01 Total:-15 Clothes scarf(on credit)      ($15.00)     ($15.00)
+            /// Month 2020/01 Total:-55 Credit Card scarf                   $15.00        $0.00
+            /// Month 2020/01 Total:-55 Eating Out McDonalds             ($45.00)     ($45.00)
+            /// Month 2020/01 Total:-55 Eating Out McDonalds Wendys                ($25.00)     ($70.00)
+            /// Month 2020/02 Total:-26.9997 Credit Card mittens                 $15.00     ($88.33)
+            /// Month 2020/02 Total:-26.9997 Credit Card  Hat                     $25.00     ($63.33)
+            /// Month 2020/02 Total:-26.9997  Eating Out Pizza                 ($33.33)    ($103.33)
+            /// Month 2020/02 Total:-26.9997 Eating Out Pizza                 ($33.33)     ($96.66)
+            /// Month 2020/07 Total:-11.11 Eating Out Cafeteria             ($11.11)    ($107.77)
+            /// </code>
+            /// 
+            /// <b>Getting a list of the budgets items by Category by month that have a filter and that only want the category 14: </b>
+            ///<code>
+            /// <![CDATA[
+            ///  HomeBudget budget = new HomeBudget();
+            ///  budget.ReadFromFile(filename);
+            ///  
+            ///  // Get a list of all budget items By Category by month
+            ///  var budgetItems = budget.GetBudgetDictionaryByCategoryAndMonth(null, null, true, 14);
+            ///            
+            /// //print important information
+            ///foreach (Dictionary<string, object> dic in list)
+            ///     {
+            ///         foreach(KeyValuePair<string, object> item in dic)
+            ///             {
+            ///             
+            ///                 if(item.Key == "Month")
+            ///                 {
+            ///                        Console.WriteLine ( 
+            ///                        String.Format("{0} {1,-20}", 
+            ///                         item.Key,
+            ///                         item.Value));
+            ///                 }
+            ///                else if (item.Key=="Total")
+            ///                {
+            ///                        Write(String.Format("{2,30} {3,40}", 
+            ///                         item.Key,
+            ///                         item.Value));
+            ///                }
+            ///                else if (regex.IsMatch(item.Key))
+            ///                {
+            ///                     WriteLine($"{item.Key}\n");
+            ///                    foreach (var detail in (List<BudgetItem>)item.Value)
+            ///                    {
+            ///                         Console.Write(
+            ///                     String.Format("{4,50:C} {5,60:C} {6,70C} {7,80C}"),
+            ///                     detail.Category,detail.Description, detail.cost, detail.balance;
+            ///                     }
+            ///                 }
+            ///             }
+            ///     }
+            /// ]]>
+            /// </code>
+            /// 
+            /// Sample output:
+            /// <code>
+            /// Month 2020/01 Total:-55 Eating Out McDonalds             ($45.00)     ($45.00)
+            /// Month 2020/01 Total:-55 Eating Out McDonalds Wendys                ($25.00)     ($70.00)
+            /// Month 2020/02 Total:-26.9997  Eating Out Pizza                 ($33.33)    ($103.33)
+            /// Month 2020/02 Total:-26.9997 Eating Out Pizza                 ($33.33)     ($96.66)
+            /// Month 2020/07 Total:-11.11 Eating Out Cafeteria             ($11.11)    ($107.77)
+            /// </code>
+            /// 
+            /// <b>Getting a list of the budget items by Category by month that from january 1st 2020 to  july 20th 2020, when we only want to see the category 9</b>
+            /// <code>
+            /// <![CDATA[
+            ///  DateTime start=DateTime(2020,1,1); //the date range is inclusive
+            ///  DateTime end=DateTime(2020, 7,20);
+            ///  HomeBudget budget = new HomeBudget();
+            ///  budget.ReadFromFile(filename);
+            ///  
+            ///  // Get a list of all budget items By Category by month
+            ///  var budgetItems = budget.GetBudgetDictionaryByCategoryAndMonth(start, end, true, 9);
+            ///            
+            ///  // print important information
+            ///foreach (Dictionary<string, object> dic in list)
+            ///     {
+            ///         foreach(KeyValuePair<string, object> item in dic)
+            ///             {
+            ///             
+            ///                 if(item.Key == "Month")
+            ///                 {
+            ///                        Console.WriteLine ( 
+            ///                        String.Format("{0} {1,-20}", 
+            ///                         item.Key,
+            ///                         item.Value));
+            ///                 }
+            ///                else if (item.Key=="Total")
+            ///                {
+            ///                        Write(String.Format("{2,30} {3,40}", 
+            ///                         item.Key,
+            ///                         item.Value));
+            ///                }
+            ///                else if (regex.IsMatch(item.Key))
+            ///                {
+            ///                     WriteLine($"{item.Key}\n");
+            ///                    foreach (var detail in (List<BudgetItem>)item.Value)
+            ///                    {
+            ///                         Console.Write(
+            ///                     String.Format("{4,50:C} {5,60:C} {6,70C} {7,80C}"),
+            ///                     detail.Category,detail.Description, detail.cost, detail.balance;
+            ///                     }
+            ///                 }
+            ///             }
+            ///     }
+            /// ]]>
+            /// </code>
+            /// Sample output:
+            /// <code>
+            /// Month 2020/01 Total:-55 Credit Card scarf                   $15.00        $0.00
+            /// Month 2020/02 Total:-26.9997 Credit Card mittens                 $15.00     ($88.33)
+            /// Month 2020/02 Total:-26.9997 Credit Card  Hat                     $25.00     ($63.33)
+            /// </code>
+            /// 
+            /// </example>
+            // ============================================================================
+            public List<Dictionary<string, object>> GetBudgetDictionaryByCategoryAndMonth(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID)
             {
-                try
+                // -----------------------------------------------------------------------
+                // get all items by month 
+                // -----------------------------------------------------------------------
+                List<BudgetItemsByMonth> GroupedByMonth = GetBudgetItemsByMonth(Start, End, FilterFlag, CategoryID);
+
+                // -----------------------------------------------------------------------
+                // loop over each month
+                // -----------------------------------------------------------------------
+                var summary = new List<Dictionary<string, object>>(); // give u a list of Dico and each Dico ( string is the key and object is a the value)
+                var totalsPerCategory = new Dictionary<String, Double>();// is a dictionary with a string has the key of each value that are double
+
+                foreach (var MonthGroup in GroupedByMonth) // foreach month in a groupedByMonth
                 {
-                    totalsRecord.Add(cat.Description, totalsPerCategory[cat.Description]); // foreach category find the description to put it has a key then get the total of that category 
+                    // create record object for this month
+                    Dictionary<string, object> record = new Dictionary<string, object>(); //for each month create a dictionary
+                    record["Month"] = MonthGroup.Month; //the month key (month is the name of key) = the name of the month (which is an object)
+                    record["Total"] = MonthGroup.Total; // the total key (total is the name of the key) = the total of that given month (which is a object)
+
+                    // break up the month details into categories
+                    // Cindy: Details is a list of budget items
+                    // this is saying for the given month get the list of budget items and group it by Category(Income, Expense, Credit, Saving) by budget item
+                    var GroupedByCategory = MonthGroup.Details.GroupBy(c => c.Category);// so GroupedByCategory is a list budget items grouped by categories (key=category) (value=list of budject items)
+
+                    // -----------------------------------------------------------------------
+                    // loop over each category
+                    // -----------------------------------------------------------------------
+                    foreach (var CategoryGroup in GroupedByCategory.OrderBy(g => g.Key)) //order Alphabetically each key of the dictionary GroupedByCategory (so basically the categories)
+                    {
+
+                        // calculate totals for the cat/month, and create list of details
+                        double total = 0;
+                        var details = new List<BudgetItem>();
+
+                        foreach (var item in CategoryGroup) // for the item in the list budget items of the given category(alphabitically)
+                        {
+                            total = total + item.Amount; // get the total of the given month on that given category
+                            details.Add(item); // add the given item to the list of details
+                        }
+
+                        // add new properties and values to our record object
+                        record["details:" + CategoryGroup.Key] = details; // for the "details cateoryGroup(name)"=key the value will be the list of items in this given category
+                        record[CategoryGroup.Key] = total; // and for category name=key the value will be the total of that month in the given category
+
+                        // keep track of totals for each category
+                        if (totalsPerCategory.TryGetValue(CategoryGroup.Key, out Double CurrentCatTotal)) // if the total is a cat/month is a double
+                        {
+                            totalsPerCategory[CategoryGroup.Key] = CurrentCatTotal + total; // the total of that given month will be current category value+ total
+                        }
+                        else
+                        {
+                            totalsPerCategory[CategoryGroup.Key] = total;
+                        }
+                    }
+
+                    // add record to collection
+                    summary.Add(record); // in the summary list of dictionnary each dictionnary represent the month -> that has different categories -> that has total price and details of each items
                 }
-                catch { }
+                // ---------------------------------------------------------------------------
+                // add final record which is the totals for each category
+                // ---------------------------------------------------------------------------
+                Dictionary<string, object> totalsRecord = new Dictionary<string, object>();
+                totalsRecord["Month"] = "TOTALS";
+
+                foreach (var cat in categories.List())
+                {
+                    try
+                    {
+                        totalsRecord.Add(cat.Description, totalsPerCategory[cat.Description]); // foreach category find the description to put it has a key then get the total of that category 
+                    }
+                    catch { }
+                }
+                summary.Add(totalsRecord); // the dictionary of given categories description=key total=total
+
+
+                return summary;
             }
-            summary.Add(totalsRecord); // the dictionary of given categories description=key total=total
-
-
-            return summary;
-        }
 
 
 
 
-        #endregion GetList
+            #endregion GetList
 
     }
-}
+} 
