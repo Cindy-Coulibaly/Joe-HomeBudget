@@ -286,7 +286,6 @@ namespace Budget
         {
             if (description != string.Empty)
             {
-                string stringDate = date.ToString("yyyy-MM-dd");
 
                 //create a command search for the given id
                 using var cmdCheckId = new SQLiteCommand("SELECT Id from expenses WHERE Id=" + "@id", Database.dbConnection);
@@ -301,9 +300,9 @@ namespace Budget
                 {
 
                     using var cmd = new SQLiteCommand(Database.dbConnection);
-                    cmd.CommandText = $"UPDATE expenses Set Description = @description, Date = @date, Category = @category, Amount = @amount WHERE Id = @id";
+                    cmd.CommandText = $"UPDATE expenses Set Description = @description, Date = @date, CategoryId = @category, Amount = @amount WHERE Id = @id";
                     cmd.Parameters.AddWithValue("@description", description);
-                    cmd.Parameters.AddWithValue("@date", stringDate);
+                    cmd.Parameters.AddWithValue("@date", date);
                     cmd.Parameters.AddWithValue("@category", category);
                     cmd.Parameters.AddWithValue("@amount", amount);
                     cmd.Parameters.AddWithValue("@id", id);

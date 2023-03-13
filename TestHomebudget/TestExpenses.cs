@@ -52,11 +52,16 @@ namespace BudgetCodeTests
         // ========================================================================
 
         [Fact]
-        public void ExpensesMethod_ReadFromFile_ValidateCorrectDataWasRead()
+         public void ExpensesMethod_ReadFromFile_ValidateCorrectDataWasRead()
         {
             // Arrange
             String dir = TestConstants.GetSolutionDir();
-            Expenses expenses = new Expenses();
+            String goodDB = $"{dir}\\{TestConstants.testDBInputFile}";
+            String messyDB = $"{dir}\\messy.db";
+            System.IO.File.Copy(goodDB, messyDB, true);
+            Database.existingDatabase(messyDB);
+            SQLiteConnection conn = Database.dbConnection;
+            Expenses expenses = new Expenses(conn, false);
 
             // Act
             expenses.ReadFromFile(dir + "\\" + testInputFile);
@@ -83,7 +88,12 @@ namespace BudgetCodeTests
         {
             // Arrange
             String dir = TestConstants.GetSolutionDir();
-            Expenses expenses = new Expenses();
+            String goodDB = $"{dir}\\{TestConstants.testDBInputFile}";
+            String messyDB = $"{dir}\\messy.db";
+            System.IO.File.Copy(goodDB, messyDB, true);
+            Database.existingDatabase(messyDB);
+            SQLiteConnection conn = Database.dbConnection;
+            Expenses expenses = new Expenses(conn, false);
             expenses.ReadFromFile(dir + "\\" + testInputFile);
 
             // Act
@@ -125,7 +135,6 @@ namespace BudgetCodeTests
             System.IO.File.Copy(goodDB, messyDB, true);
             Database.existingDatabase(messyDB);
             SQLiteConnection conn = Database.dbConnection;
-            //Categories categories = new Categories(conn, false);
             Expenses expenses = new Expenses(conn, false); 
 
 
@@ -155,8 +164,7 @@ namespace BudgetCodeTests
             System.IO.File.Copy(goodDB, messyDB, true);
             Database.existingDatabase(messyDB);
             SQLiteConnection conn = Database.dbConnection;
-            Categories categories = new Categories(conn, false);
-            Expenses expenses = new Expenses();
+            Expenses expenses = new Expenses(conn, false);
             int IdToDelete = 3;
 
             // Act
@@ -183,8 +191,7 @@ namespace BudgetCodeTests
             System.IO.File.Copy(goodDB, messyDB, true);
             Database.existingDatabase(messyDB);
             SQLiteConnection conn = Database.dbConnection;
-            Categories categories = new Categories(conn, false);
-            Expenses expenses = new Expenses();
+            Expenses expenses = new Expenses(conn, false);
             int IdToDelete = 1006;
             int sizeOfList = expenses.List().Count;
 
@@ -210,13 +217,15 @@ namespace BudgetCodeTests
         {
             // Arrange
             String folder = TestConstants.GetSolutionDir();
-            String newDB = $"{folder}\\newDB.db";
-            Database.newDatabase(newDB);
+            String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
+            String messyDB = $"{folder}\\messy.db";
+            System.IO.File.Copy(goodDB, messyDB, true);
+            Database.existingDatabase(messyDB);
             SQLiteConnection conn = Database.dbConnection;
             Categories categories = new Categories(conn, false);
             Expenses expenses = new Expenses();
             String newDescr = "food";
-            int id = 11;
+            int id = 7;
             DateTime newDate = DateTime.Now;
             double newAmount = 15.99;
             int category = 10;
@@ -226,8 +235,8 @@ namespace BudgetCodeTests
             Expense expense = expenses.GetExpenseFromId(id);
 
             // Assert 
-            Assert.Equal(newDate, expense.Date);
             Assert.Equal(category, expense.Category);
+            Assert.Equal(newDate, expense.Date);
             Assert.Equal(newAmount, expense.Amount);
             Assert.Equal(newDescr, expense.Description);
 
