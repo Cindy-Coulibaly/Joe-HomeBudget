@@ -86,17 +86,6 @@ namespace Budget
         /// </value>
         public Expenses expenses { get { return _expenses; } }
 
-        // -------------------------------------------------------------------
-        // Constructor (new... default categories, no expenses)
-        // -------------------------------------------------------------------
-        /// <summary>
-        /// Create a new list of categories and a new list of expenses.
-        /// </summary>
-        public HomeBudget()
-        {
-            _categories = new Categories();
-            _expenses = new Expenses();
-        }
 
         // -------------------------------------------------------------------
         // Constructor (existing budget ... must specify file)
@@ -107,7 +96,7 @@ namespace Budget
         /// </summary>
         /// <param name="budgetFileName">The file with all your categories and expenses.</param>
 
-        public HomeBudget(String databaseFile, String expensesXMLFile, bool newDB = false)
+        public HomeBudget(String databaseFile,  bool newDB = false)
         {
             // if database exists, and user doe sn't want a new database, open existing DB
             if (!newDB && File.Exists(databaseFile))
@@ -137,190 +126,8 @@ namespace Budget
             // create the _expenses course
             _expenses = new Expenses();
 
-            _expenses.ReadFromFile(expensesXMLFile);
         }
 
-        #region OpenNewAndSave
-        // ---------------------------------------------------------------
-        // Read
-        // Throws Exception if any problem reading this file
-        /// <summary>
-        /// Read all of the information from your file and put all you expenses and category into a list.
-        /// </summary>
-        /// <example>
-        ///For exemple the file contains:
-        ///<code>
-        ///test_categories.cats
-        ///test_expenses.exps
-        ///</code>
-        ///those two are the files of expenses and categories for this budget.
-        ///
-        /// <b>This will populate the categories and expenses lists.</b>
-        /// <code>
-        /// HomeBudget budget = new HomeBudget();
-        /// budget.ReadFromFile("./test.budget");
-        /// </code>
-        /// </example>
-        /// <param name="budgetFileName">The name of the file of your budget.</param>
-        /// <exception cref="Exception">if the file given doesn't exist or that app can't read from it.</exception>
-        // ---------------------------------------------------------------
-        public void ReadFromFile(String budgetFileName)
-        {
-            // ---------------------------------------------------------------
-            // read the budget file and process
-            // ---------------------------------------------------------------
-            try
-            {
-                // get filepath name (throws exception if it doesn't exist)
-                budgetFileName = BudgetFiles.VerifyReadFromFileName(budgetFileName, "");
-
-                // If file exists, read it
-                string[] filenames = System.IO.File.ReadAllLines(budgetFileName);
-
-                // ----------------------------------------------------------------
-                // Save information about budget file
-                // ----------------------------------------------------------------
-                string folder = Path.GetDirectoryName(budgetFileName);
-                _FileName = Path.GetFileName(budgetFileName);
-
-                // read the expenses and categories from their respective files
-                _categories.ReadFromFile(folder + "\\" + filenames[0]);
-                _expenses.ReadFromFile(folder + "\\" + filenames[1]);
-
-
-                // Save information about budget file
-                _DirName = Path.GetDirectoryName(budgetFileName);
-                _FileName = Path.GetFileName(budgetFileName);
-
-            }
-
-            // ----------------------------------------------------------------
-            // throw new exception if we cannot get the info that we need
-            // ----------------------------------------------------------------
-            catch (Exception e)
-            {
-                throw new Exception("Could not read budget info: \n" + e.Message);
-            }
-
-        }
-
-        // ====================================================================
-        // save to a file
-        // saves the following files:
-        //  filepath_expenses.exps  # expenses file
-        //  filepath_categories.cats # categories files
-        //  filepath # a file containing the names of the expenses and categories files.
-        //  Throws exception if we cannot write to that file (ex: invalid dir, wrong permissions)
-        /// <summary>
-        /// Save to a file all your expenses and categories, and will also save sub files of just expenses and just categories.
-        /// </summary>
-        /// <example>
-        /// You need to give in a file name:
-        /// <code>
-        /// HomeBudget budget= new HomeBudget();
-        /// budget.ReadFromFile("./test.budget");// this will populate the given lists
-        /// budget.SaveToFile("./saveFile.budget"); //this actually saves it
-        /// </code>
-        /// <b>then the list of categories and expenses will go into 3 different files:</b>
-        /// 
-        /// the first file will be the name of the two files that this method outputed
-        /// <code>
-        /// output_categories.cats
-        /// output_expenses.exps
-        /// </code>
-        /// the second file will the list of categories
-        /// <code>
-        /// <![CDATA[
-        /// <Categories>
-        ///<Category ID = "17" type="Expense">Non Standard</Category>
-        ///<Category ID = "1" type= "Expense" > Utilities </ Category >
-        ///< Category ID= "2" type= "Expense" > Rent </ Category >
-        ///< Category ID= "3" type= "Expense" > Food </ Category >
-        ///< Category ID= "4" type= "Expense" > Entertainment </ Category >
-        ///< Category ID= "5" type= "Expense" > Education </ Category >
-        ///< Category ID= "6" type= "Expense" > Miscellaneous </ Category >
-        ///< Category ID= "7" type= "Expense" > Medical Expenses</Category>
-        ///<Category ID = "8" type= "Expense" > Vacation </ Category >
-        ///< Category ID= "9" type= "Credit" > Credit Card</Category>
-        ///<Category ID = "10" type= "Expense" > Clothes </ Category >
-        ///< Category ID= "11" type= "Expense" > Gifts </ Category >
-        ///< Category ID= "12" type= "Expense" > Insurance </ Category >
-        ///< Category ID= "13" type= "Expense" > Transportation </ Category >
-        ///< Category ID= "14" type= "Expense" > Eating Out</Category>
-        ///<Category ID = "15" type= "Expense" > Savings </ Category >
-        ///< Category ID= "16" type= "Income" > Income </ Category >
-        ///</ Categories >
-        /// ]]>
-        /// </code>
-        /// 
-        /// the third file will be the list of expenses:
-        /// <code>
-        /// <![CDATA[
-        ///        <Description>Hat</Description>
-        ///<Amount>-25</Amount>
-        ///<Category>9</Category>
-        ///  </Expense>
-        ///  <Expense ID = "13" >
-        ///    < Date > 2 / 10 / 2020 12:00:00 AM</Date>
-        ///    <Description>mittens</Description>
-        ///    <Amount>-15</Amount>
-        ///    <Category>9</Category>
-        ///  </Expense>
-        ///  <Expense ID = "7" >
-        ///    < Date > 1 / 12 / 2020 12:00:00 AM</Date>
-        ///    <Description>Wendys</Description>
-        ///    <Amount>25</Amount>
-        ///    <Category>14</Category>
-        ///  </Expense>
-        ///    </Expenses>
-        /// ]]>
-        /// </code>
-        /// </example>
-        /// <param name="filepath">The file path of the file that you want the app to read from.</param>
-        // ====================================================================
-        //public void SaveToFile(String filepath)
-        //{
-
-        //    // ---------------------------------------------------------------
-        //    // just in case filepath doesn't exist, reset path info
-        //    // ---------------------------------------------------------------
-        //    _DirName = null;
-        //    _FileName = null;
-
-        //    // ---------------------------------------------------------------
-        //    // get filepath name (throws exception if we can't write to the file)
-        //    // ---------------------------------------------------------------
-        //    filepath = BudgetFiles.VerifyWriteToFileName(filepath, "");
-
-        //    String path = Path.GetDirectoryName(Path.GetFullPath(filepath));
-        //    String file = Path.GetFileNameWithoutExtension(filepath);
-        //    String ext = Path.GetExtension(filepath);
-
-        //    // ---------------------------------------------------------------
-        //    // construct file names for expenses and categories
-        //    // ---------------------------------------------------------------
-        //    String expensepath = path + "\\" + file + "_expenses" + ".exps";
-        //    String categorypath = path + "\\" + file + "_categories" + ".cats";
-
-        //    // ---------------------------------------------------------------
-        //    // save the expenses and categories into their own files
-        //    // ---------------------------------------------------------------
-        //    _expenses.SaveToFile(expensepath);
-        //    _categories.SaveToFile(categorypath);
-
-        //    // ---------------------------------------------------------------
-        //    // save filenames of expenses and categories to budget file
-        //    // ---------------------------------------------------------------
-        //    string[] files = { Path.GetFileName(categorypath), Path.GetFileName(expensepath) };
-        //    System.IO.File.WriteAllLines(filepath, files);
-
-        //    // ----------------------------------------------------------------
-        //    // save filename info for later use
-        //    // ----------------------------------------------------------------
-        //    _DirName = path;
-        //    _FileName = Path.GetFileName(filepath);
-        //}
-        #endregion OpenNewAndSave
 
         #region GetList
 
@@ -698,7 +505,8 @@ namespace Budget
                 cmd.CommandText = "SELECT strftime('%Y/%m',DATE(E.Date)) AS Month, SUM(E.Amount) AS Total " +
                     "FROM expenses AS E " +
                     "WHERE E.CategoryId=@CategoryID AND (E.Date<=@end AND E.Date>=@start) " +
-                    "GROUP BY Month;";
+                    "GROUP BY Month " +
+                    "ORDER BY Month;";
                 cmd.Parameters.AddWithValue("@CategoryID", CategoryID);
             }
             else
@@ -706,7 +514,8 @@ namespace Budget
                 cmd.CommandText = "SELECT strftime('%Y/%m',DATE(E.Date)) AS Month, SUM(E.Amount) AS Total " +
                     "FROM expenses AS E " +
                     "WHERE E.Date<=@end AND E.Date>=@start " +
-                    "GROUP BY Month;";
+                    "GROUP BY Month " +
+                    "ORDER BY Month;";
             }
 
             cmd.Parameters.AddWithValue("@start", start);

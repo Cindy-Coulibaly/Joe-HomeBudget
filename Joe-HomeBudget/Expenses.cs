@@ -41,16 +41,6 @@ namespace Budget
         /// </value>
         public String DirName { get { return _DirName; } }
 
-        public Expenses()
-        {
-
-        }
-
-        public Expenses(SQLiteConnection dbConnection, bool newDb)
-        {
-            if (!newDb)
-            { List(); }           
-        }
 
         // ====================================================================
         // populate categories from a file

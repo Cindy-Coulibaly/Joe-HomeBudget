@@ -61,7 +61,7 @@ namespace BudgetCodeTests
             System.IO.File.Copy(goodDB, messyDB, true);
             Database.existingDatabase(messyDB);
             SQLiteConnection conn = Database.dbConnection;
-            Expenses expenses = new Expenses(conn, false);
+            Expenses expenses = new Expenses();
 
             // Act
             expenses.ReadFromFile(dir + "\\" + testInputFile);
@@ -93,7 +93,7 @@ namespace BudgetCodeTests
             System.IO.File.Copy(goodDB, messyDB, true);
             Database.existingDatabase(messyDB);
             SQLiteConnection conn = Database.dbConnection;
-            Expenses expenses = new Expenses(conn, false);
+            Expenses expenses = new Expenses();
             expenses.ReadFromFile(dir + "\\" + testInputFile);
 
             // Act
@@ -135,7 +135,7 @@ namespace BudgetCodeTests
             System.IO.File.Copy(goodDB, messyDB, true);
             Database.existingDatabase(messyDB);
             SQLiteConnection conn = Database.dbConnection;
-            Expenses expenses = new Expenses(conn, false); 
+            Expenses expenses = new Expenses(); 
 
 
             int category = 2;
@@ -164,7 +164,7 @@ namespace BudgetCodeTests
             System.IO.File.Copy(goodDB, messyDB, true);
             Database.existingDatabase(messyDB);
             SQLiteConnection conn = Database.dbConnection;
-            Expenses expenses = new Expenses(conn, false);
+            Expenses expenses = new Expenses();
             int IdToDelete = 3;
 
             // Act
@@ -191,7 +191,7 @@ namespace BudgetCodeTests
             System.IO.File.Copy(goodDB, messyDB, true);
             Database.existingDatabase(messyDB);
             SQLiteConnection conn = Database.dbConnection;
-            Expenses expenses = new Expenses(conn, false);
+            Expenses expenses = new Expenses();
             int IdToDelete = 1006;
             int sizeOfList = expenses.List().Count;
 
