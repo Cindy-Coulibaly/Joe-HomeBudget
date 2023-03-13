@@ -75,7 +75,7 @@ namespace Budget
             // ---------------------------------------------------------------
             // read the expenses from the xml file
             // ---------------------------------------------------------------
-            _ReadXMLFile(filepath);
+
 
             // ----------------------------------------------------------------
             // save filename info for later use?
@@ -109,7 +109,7 @@ namespace Budget
             AddExpensesToDatabase(date,description, amount, category);
         }
 
-        public void AddExpensesToDatabase(DateTime date, String description, Double amount, int categoryId)
+        private void AddExpensesToDatabase(DateTime date, String description, Double amount, int categoryId)
         {
             Int64 id;
 
@@ -184,7 +184,7 @@ namespace Budget
         /// <param name="category"> Category of the expense. </param>
         /// <param name="amount"> Amount of the expense. </param>
         /// <param name="description"> Description of the expense. </param>
-        public void UpdateExpenseToDatabase(int id, DateTime date, int category, Double amount, String description)
+        private void UpdateExpenseToDatabase(int id, DateTime date, int category, Double amount, String description)
         {
             if (description != string.Empty)
             {
@@ -272,12 +272,8 @@ namespace Budget
             }
 
         }
-        /// <summary>
-        /// Deletes expense from the database.
-        /// </summary>
-        /// <param name="id"> Id of the expense to delete. </param>
-        /// <exception cref="UserInputErrors">The expense trying to be deleted isn't in the database</exception>
-        public void DeleteExpense(int id)
+
+        private void DeleteExpense(int id)
         {
             //create a command search for the given id
             using var cmdCheckId = new SQLiteCommand("SELECT Id from expenses WHERE Id=" + "@id", Database.dbConnection);
@@ -340,54 +336,6 @@ namespace Budget
             }
 
             return newList;
-        }
-
-        // ====================================================================
-        // read from an XML file and add categories to our categories list
-        // ====================================================================
-        private void _ReadXMLFile(String filepath)
-        {
-            try
-            {
-                XmlDocument doc = new XmlDocument();
-                doc.Load(filepath);
-
-                // Loop over each Expense
-                foreach (XmlNode expense in doc.DocumentElement.ChildNodes)
-                {
-                    // set default expense parameters
-                    int id = int.Parse((((XmlElement)expense).GetAttributeNode("ID")).InnerText);
-                    String description = "";
-                    DateTime date = DateTime.Parse("2000-01-01");
-                    int category = 0;
-                    Double amount = 0.0;
-
-                    // get expense parameters
-                    foreach (XmlNode info in expense.ChildNodes)
-                    {
-                        switch (info.Name)
-                        {
-                            case "Date":
-                                date = DateTime.Parse(info.InnerText);
-                                break;
-                            case "Amount":
-                                amount = Double.Parse(info.InnerText);
-                                break;
-                            case "Description":
-                                description = info.InnerText;
-                                break;
-                            case "Category":
-                                category = int.Parse(info.InnerText);
-                                break;
-                        }
-                    }
-                }
-
-            }
-            catch (Exception e)
-            {
-                throw new Exception("ReadFromFileException: Reading XML " + e.Message);
-            }
         }
 
     }
