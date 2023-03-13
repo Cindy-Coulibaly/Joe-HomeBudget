@@ -290,7 +290,7 @@ namespace Budget
             object firstCollumId = cmdCheckId.ExecuteScalar();
 
             //if the database is empty then automatically insert it, else find the highest id, and create a new one after the highest one
-            if (firstCollumId == null)
+            if (firstCollumId == null && id + 1 == 1)
             {
                 id++;
                 using var cmd = new SQLiteCommand(Database.dbConnection);
