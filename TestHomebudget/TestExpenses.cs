@@ -119,10 +119,17 @@ namespace BudgetCodeTests
         public void ExpensesMethod_Add()
         {
             // Arrange
-            String dir = TestConstants.GetSolutionDir();
-            Expenses expenses = new Expenses();
-            expenses.ReadFromFile(dir + "\\" + testInputFile);
-            int category = 57;
+            String folder = TestConstants.GetSolutionDir();
+            String goodDB = $"{folder}\\{TestConstants.testDBInputFile}";
+            String messyDB = $"{folder}\\messy.db";
+            System.IO.File.Copy(goodDB, messyDB, true);
+            Database.existingDatabase(messyDB);
+            SQLiteConnection conn = Database.dbConnection;
+            //Categories categories = new Categories(conn, false);
+            Expenses expenses = new Expenses(conn, false); 
+
+
+            int category = 2;
             double amount = 98.1;
 
             // Act
@@ -134,7 +141,6 @@ namespace BudgetCodeTests
             Assert.Equal(numberOfExpensesInFile+1, sizeOfList);
             Assert.Equal(maxIDInExpenseFile + 1, expensesList[sizeOfList - 1].Id);
             Assert.Equal(amount, expensesList[sizeOfList - 1].Amount);
-
         }
 
         // ========================================================================
@@ -267,6 +273,10 @@ namespace BudgetCodeTests
         {
             // Arrange
             String dir = TestConstants.GetSolutionDir();
+                        String newDB = $"{dir}\\newDB.db";
+            Database.newDatabase(newDB);
+            SQLiteConnection conn = Database.dbConnection;
+            Categories categories = new Categories(conn, true);
             Expenses expenses = new Expenses();
             expenses.ReadFromFile(dir + "\\" + testInputFile);
             string fileName = TestConstants.ExpenseOutputTestFile;
@@ -274,7 +284,7 @@ namespace BudgetCodeTests
             File.Delete(outputFile);
 
             // Act
-            expenses.Add(DateTime.Now, 14, 35.27, "McDonalds");
+            expenses.Add(DateTime.Now, 3, 35.27, "McDonalds");
             List<Expense> listBeforeSaving = expenses.List();
             expenses.SaveToFile(outputFile);
             expenses.ReadFromFile(outputFile);

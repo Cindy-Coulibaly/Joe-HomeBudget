@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
 using System.Data.SQLite;
+using static Budget.Category;
 
 public class UserInputErrors : Exception
 {
@@ -55,6 +56,17 @@ namespace Budget
         /// The directory name of where your file of expenses are.
         /// </value>
         public String DirName { get { return _DirName; } }
+
+        public Expenses()
+        {
+
+        }
+
+        public Expenses(SQLiteConnection dbConnection, bool newDb)
+        {
+            if (!newDb)
+            { List(); }           
+        }
 
         // ====================================================================
         // populate categories from a file
@@ -191,7 +203,51 @@ namespace Budget
             }
 
             _Expenses.Add(new Expense(new_id, date, category, amount, description));
+            AddExpensesToDatabase(date,description, amount, category);
 
+        }
+
+        public void AddExpensesToDatabase(DateTime date, String description, Double amount, int categoryId)
+        {
+            Int64 id;
+
+            using var countCMD = new SQLiteCommand("SELECT COUNT(Id) FROM expenses", Database.dbConnection);
+            object idCount = countCMD.ExecuteScalar();
+
+            id = (Int64)idCount;            
+            using var cmdCheckId = new SQLiteCommand("SELECT Id FROM expenses WHERE Id= @Id", Database.dbConnection);
+            cmdCheckId.Parameters.AddWithValue("@Id", id);
+
+
+            object firstCollumId = cmdCheckId.ExecuteScalar();
+            using var cmd = new SQLiteCommand(Database.dbConnection);
+
+            if (firstCollumId == null && id + 1 == 1)
+            { 
+                
+                cmd.CommandText = $"INSERT INTO expenses(Id, Date, Description,Amount,CategoryId) VALUES(@Id, @Date, @Description , @Amount, @CategoryId)";
+                cmd.Parameters.AddWithValue("@Id", id);
+                cmd.Parameters.AddWithValue("@Date", date);
+                cmd.Parameters.AddWithValue("@Description", description);
+                cmd.Parameters.AddWithValue("@Amount", amount);
+                cmd.Parameters.AddWithValue("@CategoryId", categoryId);
+                cmd.ExecuteNonQuery();
+            }
+            else
+            {
+                using var maxCMD = new SQLiteCommand("SELECT MAX(Id) from expenses", Database.dbConnection);
+                object highestId = maxCMD.ExecuteScalar();
+                id = (Int64)highestId;
+                id++;
+                
+                cmd.CommandText = $"INSERT INTO expenses(Id, Date, Description,Amount,CategoryId) VALUES(@Id, @Date, @Description , @Amount, @CategoryId)";
+                cmd.Parameters.AddWithValue("@Id", id);
+                cmd.Parameters.AddWithValue("@Date", date);
+                cmd.Parameters.AddWithValue("@Description", description);
+                cmd.Parameters.AddWithValue("@Amount", amount);
+                cmd.Parameters.AddWithValue("@CategoryId", categoryId);
+                cmd.ExecuteNonQuery();
+            }
         }
 
         /// <summary>
@@ -372,14 +428,59 @@ namespace Budget
         // ====================================================================
         public List<Expense> List()
         {
+            //List<Expense> newList = new List<Expense>();
+            //foreach (Expense expense in _Expenses)
+            //{
+            //    newList.Add(new Expense(expense));
+            //}
+            //return newList;
+
             List<Expense> newList = new List<Expense>();
-            foreach (Expense expense in _Expenses)
+
+
+            using var newAddedId = new SQLiteCommand("SELECT Id, Date, CategoryId, Amount, Description FROM expenses", (Database.dbConnection));
+            var rdr = newAddedId.ExecuteReader();
+            while (rdr.Read())
             {
-                newList.Add(new Expense(expense));
+                DateTime date = DateTime.Parse((string)rdr[1]);
+                newList.Add(new Expense((int)(long)rdr[0], date, (int)(long)rdr[2], (double)rdr[3], (string)rdr[4]));
             }
+
             return newList;
         }
 
+        //public List<Expense> List()
+        //{
+        //    //List<Expense> newList = new List<Expense>();
+        //    //foreach (Expense expense in _Expenses)
+        //    //{
+        //    //    newList.Add(new Expense(expense));
+        //    //}
+        //    //return newList;             //cmd.CommandText = @"CREATE TABLE expenses(
+        //    //                    Id INTEGER PRIMARY KEY,
+        //    //                    Date TEXT,
+        //    //                    Description TEXT,
+        //    //                    Amount DOUBLE,
+        //    //                    CategoryId INTEGER,
+        //    //                    FOREIGN KEY(CategoryId) REFERENCES categories(Id)
+        //    //                    );";            
+            
+        //    List<Expense> newList = new List<Expense>();       
+            
+        //    using var newAddedId = new SQLiteCommand("SELECT Id,Date,CategoryId,Amount,Description FROM expenses", (Database.dbConnection));
+        //    var rdr = newAddedId.ExecuteReader();
+        //    while (rdr.Read())
+        //    {
+        //        DateTime date = DateTime.Parse((string)rdr[1]);
+        //        //DateTime date;
+        //        //string[] dateFormats = new[] { "yyyy-MM-dd" };
+        //        //CultureInfo provider = CultureInfo.InvariantCulture;
+        //        //date = DateTime.ParseExact(rdr[0], dateFormats, provider);
+        //        //int date = DateTime.ParseExact(rdr[1], "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+        //        newList.Add(new Expense((int)(long)rdr[0], date, (int)(long)rdr[2], (double)rdr[3], (String)rdr[4])); // added -1 to fix test
+        //    }
+        //    return newList;
+        //}
 
         // ====================================================================
         // read from an XML file and add categories to our categories list
