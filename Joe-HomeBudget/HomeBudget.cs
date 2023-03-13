@@ -3,6 +3,7 @@
 // * Released under the GNU General Public License
 // ============================================================================
 
+using System;
 using System.Data.SQLite;
 using System.Globalization;
 using static Budget.Category;
@@ -132,9 +133,6 @@ namespace Budget
             _categories = new Categories(Database.dbConnection, newDB);
 
             // create the _expenses course
-
-
-            _categories = new Categories();
             _expenses = new Expenses();
 
             _expenses.ReadFromFile(expensesXMLFile);
@@ -479,7 +477,7 @@ namespace Budget
         /// </example>
 
         // ============================================================================
-        public List<BudgetItem> GetBudgetItems(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID)
+        public List<BudgetItem> OLDGetBudgetItems(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID)
         {
             // ------------------------------------------------------------------------
             // return joined list within time frame
@@ -524,17 +522,8 @@ namespace Budget
             return items;
         }
 
-        public List<BudgetItem> GetBudgetItemsTest(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID)
+        public List<BudgetItem> GetBudgetItems(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID)
         {
-            // ------------------------------------------------------------------------
-            // return joined list within time frame
-            // ------------------------------------------------------------------------
-
-            //format the date (default only so far) -----------TO ADD: format the given date
-            //Start = Start ?? DateTime.ParseExact("1900-01-01",
-            //     "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            //End = End ?? DateTime.ParseExact("2500-01-01",
-            //     "yyyy-MM-dd", CultureInfo.InvariantCulture);
 
             DateTime realStart = Start ?? new DateTime(1900, 1, 1);
             DateTime realEnd = End ?? new DateTime(2500, 1, 1);
@@ -549,13 +538,13 @@ namespace Budget
 
                 cmd.CommandText = $"SELECT c.Id, e.Id, e.Date, c.Description, e.Description, e.Amount " +
                     $"FROM categories as c " +
-                    $"JOIN expenses as e ON e.Category = c.Id " +
-                    $"WHERE e.Date >= @Start && e.Date <= @End " +
+                    $"JOIN expenses as e ON e.CategoryId = c.Id " +
+                    $"WHERE e.Date >= @Start AND e.Date <= @End " +
                     $"ORDER BY e.Date";
 
                 //add binding here
-                cmd.Parameters.AddWithValue("@Start", Start);
-                cmd.Parameters.AddWithValue("@End", End);
+                cmd.Parameters.AddWithValue("@Start", start);
+                cmd.Parameters.AddWithValue("@End", end);
 
                 cmd.ExecuteNonQuery();
             }
@@ -564,8 +553,8 @@ namespace Budget
                 //with filterflag on
                 cmd.CommandText = $"SELECT c.Id, e.Id, e.Date, c.Description, e.Description, e.Amount " +
                     $"FROM categories as c " +
-                    $"JOIN expenses as e ON e.Category = c.Id " +
-                    $"WHERE (e.Date >= @Start && e.Date <= @End) && c.Id = @Id " + // add specify id
+                    $"JOIN expenses as e ON e.CategoryId = c.Id " +
+                    $"WHERE (e.Date >= @Start AND e.Date <= @End) AND c.Id = @Id " + // add specify id
                     $"ORDER BY e.Date";
 
                 //add binding here
@@ -581,18 +570,17 @@ namespace Budget
             var rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                total = total + (double)(long)rdr[4];
-                //DateTime date = DateTime.Parse((string)rdr[3]);
-                //DateTime date = DateTime.ParseExact((string)rdr[1], "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                total = total + (double)rdr[5];
+
                 items.Add(new BudgetItem
                 {
 
                     CategoryID = (int)(long)rdr[0],
                     ExpenseID = (int)(long)rdr[1],
-                    ShortDescription = (string)rdr[2],
-                    Date = DateTime.Parse((string)rdr[3]),
-                    Amount = + (double)(long)rdr[4],
-                    Category = (string)rdr[5],
+                    Date = DateTime.Parse((string)rdr[2]),
+                    Category = (string)rdr[3],
+                    ShortDescription = (string)rdr[4],                   
+                    Amount = + (double)rdr[5],                  
                     Balance = total
                 });
             }
@@ -768,15 +756,15 @@ namespace Budget
 
             if (FilterFlag)
             {
-                cmd.CommandText = "SELECT DATE(E.Date) AS Month, SUM(E.Amount) AS Total " +
+                cmd.CommandText = "SELECT strftime('%Y/%m',DATE(E.Date)) AS Month, SUM(E.Amount) AS Total " +
                     "FROM expenses AS E " +
-                    "WHERE E.CategoryId=@CategoryID AND E.Date<=@end AND E.Date>=@start " +
+                    "WHERE E.CategoryId=@CategoryID AND (E.Date<=@end AND E.Date>=@start) " +
                     "GROUP BY Month;";
                 cmd.Parameters.AddWithValue("@CategoryID", CategoryID);
             }
             else
             {
-                cmd.CommandText = "SELECT DATE(E.Date) AS Month, SUM(E.Amount) AS Total " +
+                cmd.CommandText = "SELECT strftime('%Y/%m',DATE(E.Date)) AS Month, SUM(E.Amount) AS Total " +
                     "FROM expenses AS E " +
                     "WHERE E.Date<=@end AND E.Date>=@start " +
                     "GROUP BY Month;";
@@ -789,16 +777,34 @@ namespace Budget
             cmd.ExecuteNonQuery();
 
             var listBugetItemsByMonth = new List<BudgetItemsByMonth>();
-
             var rdr = cmd.ExecuteReader();
 
+
             List<BudgetItem> listOfBudget;
+            string databaseDate;
+            DateTime startDate;
+            int  lastDay;
+            DateTime endDate;
+
+            string[] seperatedDate;
+            int month;
+            int year;
 
             while (rdr.Read())
             {
-                    listOfBudget = GetBudgetItems(Start, End, FilterFlag, (int)rdr[4]);
-                    
+                //put individual part of date into string
+                databaseDate = (string)rdr[0];
+                seperatedDate = databaseDate.Split('/');
+                year = int.Parse(seperatedDate[0]);
+                month = int.Parse(seperatedDate[1]);
 
+                //create a start date and end date into DateTime object
+                startDate = new DateTime(year, month, 1);
+                lastDay = DateTime.DaysInMonth(year, month);
+                endDate = new DateTime(year, month, lastDay);
+
+                listOfBudget = GetBudgetItems(startDate, endDate, FilterFlag, CategoryID);
+                    
                     listBugetItemsByMonth.Add(new BudgetItemsByMonth
                     {
                         Month = (String)rdr["Month"],
