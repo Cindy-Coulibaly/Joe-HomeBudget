@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
 using System.Data.SQLite;
+using static Budget.Category;
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -39,6 +40,17 @@ namespace Budget
         /// The directory name of where your file of expenses are.
         /// </value>
         public String DirName { get { return _DirName; } }
+
+        public Expenses()
+        {
+
+        }
+
+        public Expenses(SQLiteConnection dbConnection, bool newDb)
+        {
+            if (!newDb)
+            { List(); }           
+        }
 
         // ====================================================================
         // populate categories from a file
@@ -174,23 +186,34 @@ namespace Budget
             }
 
             _Expenses.Add(new Expense(new_id, date, category, amount, description));
-            AddExpensesToDatabaseNew(date,description, amount, category);
+            AddExpensesToDatabase(date,description, amount, category);
 
         }
 
-        public void AddExpensesToDatabaseNew(DateTime date, String description, Double amount, int categoryId)
+        public void AddExpensesToDatabase(DateTime date, String description, Double amount, int categoryId)
         {
             Int64 id;
+
             using var countCMD = new SQLiteCommand("SELECT COUNT(Id) FROM expenses", Database.dbConnection);
             object idCount = countCMD.ExecuteScalar();
-            id = (Int64)idCount;             //Database.dbConnection.Open();             //create a command search for the given id
-            using var cmdCheckId = new SQLiteCommand("SELECT Id FROM expenses WHERE Id=" + id, Database.dbConnection);             //take the first column of the select query
-            object firstCollumId = cmdCheckId.ExecuteScalar();             //if the database is empty then automatically insert it, else find the highest id, and create a new one after the highest one
-            if (firstCollumId == null)
-            {
-                id++;
-                using var cmd = new SQLiteCommand(Database.dbConnection);
-                cmd.CommandText = $"INSERT INTO expenses(Id, Date, Description,Amount,CategoryId) VALUES({id}, '{date}','{description}',{amount},{categoryId})";
+
+            id = (Int64)idCount;            
+            using var cmdCheckId = new SQLiteCommand("SELECT Id FROM expenses WHERE Id= @Id", Database.dbConnection);
+            cmdCheckId.Parameters.AddWithValue("@Id", id);
+
+
+            object firstCollumId = cmdCheckId.ExecuteScalar();
+            using var cmd = new SQLiteCommand(Database.dbConnection);
+
+            if (firstCollumId == null && id + 1 == 1)
+            { 
+                
+                cmd.CommandText = $"INSERT INTO expenses(Id, Date, Description,Amount,CategoryId) VALUES(@Id, @Date, @Description , @Amount, @CategoryId)";
+                cmd.Parameters.AddWithValue("@Id", id);
+                cmd.Parameters.AddWithValue("@Date", date);
+                cmd.Parameters.AddWithValue("@Description", description);
+                cmd.Parameters.AddWithValue("@Amount", amount);
+                cmd.Parameters.AddWithValue("@CategoryId", categoryId);
                 cmd.ExecuteNonQuery();
             }
             else
@@ -198,44 +221,15 @@ namespace Budget
                 using var maxCMD = new SQLiteCommand("SELECT MAX(Id) from expenses", Database.dbConnection);
                 object highestId = maxCMD.ExecuteScalar();
                 id = (Int64)highestId;
-                id++; using var cmd = new SQLiteCommand(Database.dbConnection);
-                cmd.CommandText = $"INSERT INTO expenses(Id, Date, Description,Amount,CategoryId) VALUES({id}, '{date}','{description}',{amount},{categoryId})";
+                id++;
+                
+                cmd.CommandText = $"INSERT INTO expenses(Id, Date, Description,Amount,CategoryId) VALUES(@Id, @Date, @Description , @Amount, @CategoryId)";
+                cmd.Parameters.AddWithValue("@Id", id);
+                cmd.Parameters.AddWithValue("@Date", date);
+                cmd.Parameters.AddWithValue("@Description", description);
+                cmd.Parameters.AddWithValue("@Amount", amount);
+                cmd.Parameters.AddWithValue("@CategoryId", categoryId);
                 cmd.ExecuteNonQuery();
-            }
-        }
-
-
-        //add without creating expense list
-        private void AddExpensesToDatabaseOld(int Id, DateTime date, String description, Double amount, int categoryId)
-        {
-            //create a command search for the given id
-            using var cmdCheckId = new SQLiteCommand("SELECT Id FROM expenses WHERE Id=" + Id, Database.dbConnection);
-
-
-            //take the first column of the select query
-            object firstCollumId = cmdCheckId.ExecuteScalar();
-
-            //if the expense doesn't exist in the database already, then insert it;
-            if (firstCollumId == null)
-            {
-                using var cmd = new SQLiteCommand(Database.dbConnection);
-                cmd.CommandText = $"INSERT INTO expenses(Id, Date, Description,Amount,CategoryId) VALUES({Id}, '{date}','{description}',{amount},{categoryId})";
-                cmd.ExecuteNonQuery();
-                using var newAddedId = new SQLiteCommand("SELECT * FROM expenses WHERE Id=" + Id + " ORDER BY Id ASC", Database.dbConnection);
-                var rdr = newAddedId.ExecuteReader();
-                while (rdr.Read())
-                {
-                    Console.WriteLine("Expense added: id: {0}, date: {1}, description: {2},amount: {3},categoryId: {4}", rdr[0], rdr[1], rdr[2], rdr[3], rdr[4]);
-                }
-            }
-            else
-            {
-                using var newAddedId = new SQLiteCommand("SELECT Id FROM expenses WHERE Id=" + Id + " ORDER BY Id ASC", Database.dbConnection);
-                var rdr = newAddedId.ExecuteReader();
-                while (rdr.Read())
-                {
-                    Console.WriteLine("Expense already exist, id: {0}", rdr[0]);
-                }
             }
         }
 
@@ -282,11 +276,24 @@ namespace Budget
         // ====================================================================
         public List<Expense> List()
         {
+            //List<Expense> newList = new List<Expense>();
+            //foreach (Expense expense in _Expenses)
+            //{
+            //    newList.Add(new Expense(expense));
+            //}
+            //return newList;
+
             List<Expense> newList = new List<Expense>();
-            foreach (Expense expense in _Expenses)
+
+
+            using var newAddedId = new SQLiteCommand("SELECT Id, Date, CategoryId, Amount, Description FROM expenses", (Database.dbConnection));
+            var rdr = newAddedId.ExecuteReader();
+            while (rdr.Read())
             {
-                newList.Add(new Expense(expense));
+                DateTime date = DateTime.Parse((string)rdr[1]);
+                newList.Add(new Expense((int)(long)rdr[0], date, (int)(long)rdr[2], (double)rdr[3], (string)rdr[4]));
             }
+
             return newList;
         }
 

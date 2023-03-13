@@ -125,10 +125,11 @@ namespace BudgetCodeTests
             System.IO.File.Copy(goodDB, messyDB, true);
             Database.existingDatabase(messyDB);
             SQLiteConnection conn = Database.dbConnection;
-            Expenses expenses = new Expenses(); 
-            //expenses.ReadFromFile(folder + "\\" + testInputFile);
+            //Categories categories = new Categories(conn, false);
+            Expenses expenses = new Expenses(conn, false); 
 
-            int category = 57;
+
+            int category = 2;
             double amount = 98.1;
 
             // Act
