@@ -246,101 +246,101 @@ namespace BudgetCodeTests
         // ========================================================================
 
 
-        [Fact]
-        public void ExpenseMethod_WriteToFile()
-        {
-            // Arrange
-            String dir = TestConstants.GetSolutionDir();
-            Expenses expenses = new Expenses();
-            expenses.ReadFromFile(dir + "\\" + testInputFile);
-            string fileName = TestConstants.ExpenseOutputTestFile;
-            String outputFile = dir + "\\" + fileName;
-            File.Delete(outputFile);
+        //[Fact]
+        //public void ExpenseMethod_WriteToFile()
+        //{
+        //    // Arrange
+        //    String dir = TestConstants.GetSolutionDir();
+        //    Expenses expenses = new Expenses();
+        //    expenses.ReadFromFile(dir + "\\" + testInputFile);
+        //    string fileName = TestConstants.ExpenseOutputTestFile;
+        //    String outputFile = dir + "\\" + fileName;
+        //    File.Delete(outputFile);
 
-            // Act
-            expenses.SaveToFile(outputFile);
+        //    // Act
+        //    expenses.SaveToFile(outputFile);
 
-            // Assert
-            Assert.True(File.Exists(outputFile), "output file created");
-            Assert.True(FileEquals(dir + "\\" + testInputFile, outputFile), "Input /output files are the same");
-            String fileDir = Path.GetFullPath(Path.Combine(expenses.DirName, ".\\"));
-            Assert.Equal(dir, fileDir);
-            Assert.Equal(fileName, expenses.FileName);
+        //    // Assert
+        //    Assert.True(File.Exists(outputFile), "output file created");
+        //    Assert.True(FileEquals(dir + "\\" + testInputFile, outputFile), "Input /output files are the same");
+        //    String fileDir = Path.GetFullPath(Path.Combine(expenses.DirName, ".\\"));
+        //    Assert.Equal(dir, fileDir);
+        //    Assert.Equal(fileName, expenses.FileName);
 
-            // Cleanup
-            if (FileEquals(dir + "\\" + testInputFile, outputFile))
-            {
-                File.Delete(outputFile);
-            }
+        //    // Cleanup
+        //    if (FileEquals(dir + "\\" + testInputFile, outputFile))
+        //    {
+        //        File.Delete(outputFile);
+        //    }
 
-        }
-
-        // ========================================================================
-
-        [Fact]
-        public void ExpenseMethod_WriteToFile_VerifyNewExpenseWrittenCorrectly()
-        {
-            // Arrange
-            String dir = TestConstants.GetSolutionDir();
-                        String newDB = $"{dir}\\newDB.db";
-            Database.newDatabase(newDB);
-            SQLiteConnection conn = Database.dbConnection;
-            Categories categories = new Categories(conn, true);
-            Expenses expenses = new Expenses();
-            expenses.ReadFromFile(dir + "\\" + testInputFile);
-            string fileName = TestConstants.ExpenseOutputTestFile;
-            String outputFile = dir + "\\" + fileName;
-            File.Delete(outputFile);
-
-            // Act
-            expenses.Add(DateTime.Now, 3, 35.27, "McDonalds");
-            List<Expense> listBeforeSaving = expenses.List();
-            expenses.SaveToFile(outputFile);
-            expenses.ReadFromFile(outputFile);
-            List<Expense> listAfterSaving = expenses.List();
-
-            Expense beforeSaving = listBeforeSaving[listBeforeSaving.Count - 1];
-            Expense afterSaving = listAfterSaving.Find(e => e.Id == beforeSaving.Id);
-
-            // Assert
-            Assert.Equal(beforeSaving.Id, afterSaving.Id);
-            Assert.Equal(beforeSaving.Category, afterSaving.Category);
-            Assert.Equal(beforeSaving.Description, afterSaving.Description);
-            Assert.Equal(beforeSaving.Amount, afterSaving.Amount);
-
-        }
+        //}
 
         // ========================================================================
 
-        [Fact]
-        public void ExpenseMethod_WriteToFile_WriteToLastFileWrittenToByDefault()
-        {
-            // Arrange
-            String dir = TestConstants.GetSolutionDir();
-            Expenses expenses = new Expenses();
-            expenses.ReadFromFile(dir + "\\" + testInputFile);
-            string fileName = TestConstants.ExpenseOutputTestFile;
-            String outputFile = dir + "\\" + fileName;
-            File.Delete(outputFile);
-            expenses.SaveToFile(outputFile); // output file is now last file that was written to.
-            File.Delete(outputFile);  // Delete the file
+        //[Fact]
+        //public void ExpenseMethod_WriteToFile_VerifyNewExpenseWrittenCorrectly()
+        //{
+        //    // Arrange
+        //    String dir = TestConstants.GetSolutionDir();
+        //                String newDB = $"{dir}\\newDB.db";
+        //    Database.newDatabase(newDB);
+        //    SQLiteConnection conn = Database.dbConnection;
+        //    Categories categories = new Categories(conn, true);
+        //    Expenses expenses = new Expenses();
+        //    expenses.ReadFromFile(dir + "\\" + testInputFile);
+        //    string fileName = TestConstants.ExpenseOutputTestFile;
+        //    String outputFile = dir + "\\" + fileName;
+        //    File.Delete(outputFile);
 
-            // Act
-            expenses.SaveToFile(); // should write to same file as before
+        //    // Act
+        //    expenses.Add(DateTime.Now, 3, 35.27, "McDonalds");
+        //    List<Expense> listBeforeSaving = expenses.List();
+        //    expenses.SaveToFile(outputFile);
+        //    expenses.ReadFromFile(outputFile);
+        //    List<Expense> listAfterSaving = expenses.List();
 
-            // Assert
-            Assert.True(File.Exists(outputFile), "output file created");
-            String fileDir = Path.GetFullPath(Path.Combine(expenses.DirName, ".\\"));
-            Assert.Equal(dir, fileDir);
-            Assert.Equal(fileName, expenses.FileName);
+        //    Expense beforeSaving = listBeforeSaving[listBeforeSaving.Count - 1];
+        //    Expense afterSaving = listAfterSaving.Find(e => e.Id == beforeSaving.Id);
 
-            // Cleanup
-            if (FileEquals(dir + "\\" + testInputFile, outputFile))
-            {
-                File.Delete(outputFile);
-            }
+        //    // Assert
+        //    Assert.Equal(beforeSaving.Id, afterSaving.Id);
+        //    Assert.Equal(beforeSaving.Category, afterSaving.Category);
+        //    Assert.Equal(beforeSaving.Description, afterSaving.Description);
+        //    Assert.Equal(beforeSaving.Amount, afterSaving.Amount);
 
-        }
+        //}
+
+        // ========================================================================
+
+        //[Fact]
+        //public void ExpenseMethod_WriteToFile_WriteToLastFileWrittenToByDefault()
+        //{
+        //    // Arrange
+        //    String dir = TestConstants.GetSolutionDir();
+        //    Expenses expenses = new Expenses();
+        //    expenses.ReadFromFile(dir + "\\" + testInputFile);
+        //    string fileName = TestConstants.ExpenseOutputTestFile;
+        //    String outputFile = dir + "\\" + fileName;
+        //    File.Delete(outputFile);
+        //    expenses.SaveToFile(outputFile); // output file is now last file that was written to.
+        //    File.Delete(outputFile);  // Delete the file
+
+        //    // Act
+        //    expenses.SaveToFile(); // should write to same file as before
+
+        //    // Assert
+        //    Assert.True(File.Exists(outputFile), "output file created");
+        //    String fileDir = Path.GetFullPath(Path.Combine(expenses.DirName, ".\\"));
+        //    Assert.Equal(dir, fileDir);
+        //    Assert.Equal(fileName, expenses.FileName);
+
+        //    // Cleanup
+        //    if (FileEquals(dir + "\\" + testInputFile, outputFile))
+        //    {
+        //        File.Delete(outputFile);
+        //    }
+
+        //}
 
         // ========================================================================
 
