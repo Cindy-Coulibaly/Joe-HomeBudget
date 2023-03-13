@@ -5,6 +5,24 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
+using System.Data.SQLite;
+using static Budget.Category;
+
+public class UserInputErrors : Exception
+{
+    public string InputErrorString { get; } // extra info
+
+    public UserInputErrors() { }         // standard constructor
+
+    public UserInputErrors(string message) // calls 'Exception(message)'
+        : base(message) { }
+
+    public UserInputErrors(string message, string inputErrorString)
+        : this(message)
+    {
+        InputErrorString = inputErrorString;
+    }
+}
 
 // ============================================================================
 // (c) Sandy Bultena 2018
@@ -38,6 +56,17 @@ namespace Budget
         /// The directory name of where your file of expenses are.
         /// </value>
         public String DirName { get { return _DirName; } }
+
+        public Expenses()
+        {
+
+        }
+
+        public Expenses(SQLiteConnection dbConnection, bool newDb)
+        {
+            if (!newDb)
+            { List(); }           
+        }
 
         // ====================================================================
         // populate categories from a file
@@ -87,6 +116,7 @@ namespace Budget
             _DirName = Path.GetDirectoryName(filepath);
             _FileName = Path.GetFileName(filepath);
         }
+
 
         // ====================================================================
         // save to a file
@@ -173,7 +203,141 @@ namespace Budget
             }
 
             _Expenses.Add(new Expense(new_id, date, category, amount, description));
+            AddExpensesToDatabase(date,description, amount, category);
 
+        }
+
+        public void AddExpensesToDatabase(DateTime date, String description, Double amount, int categoryId)
+        {
+            Int64 id;
+
+            using var countCMD = new SQLiteCommand("SELECT COUNT(Id) FROM expenses", Database.dbConnection);
+            object idCount = countCMD.ExecuteScalar();
+
+            id = (Int64)idCount;            
+            using var cmdCheckId = new SQLiteCommand("SELECT Id FROM expenses WHERE Id= @Id", Database.dbConnection);
+            cmdCheckId.Parameters.AddWithValue("@Id", id);
+
+
+            object firstCollumId = cmdCheckId.ExecuteScalar();
+            using var cmd = new SQLiteCommand(Database.dbConnection);
+
+            if (firstCollumId == null && id + 1 == 1)
+            { 
+                
+                cmd.CommandText = $"INSERT INTO expenses(Id, Date, Description,Amount,CategoryId) VALUES(@Id, @Date, @Description , @Amount, @CategoryId)";
+                cmd.Parameters.AddWithValue("@Id", id);
+                cmd.Parameters.AddWithValue("@Date", date);
+                cmd.Parameters.AddWithValue("@Description", description);
+                cmd.Parameters.AddWithValue("@Amount", amount);
+                cmd.Parameters.AddWithValue("@CategoryId", categoryId);
+                cmd.ExecuteNonQuery();
+            }
+            else
+            {
+                using var maxCMD = new SQLiteCommand("SELECT MAX(Id) from expenses", Database.dbConnection);
+                object highestId = maxCMD.ExecuteScalar();
+                id = (Int64)highestId;
+                id++;
+                
+                cmd.CommandText = $"INSERT INTO expenses(Id, Date, Description,Amount,CategoryId) VALUES(@Id, @Date, @Description , @Amount, @CategoryId)";
+                cmd.Parameters.AddWithValue("@Id", id);
+                cmd.Parameters.AddWithValue("@Date", date);
+                cmd.Parameters.AddWithValue("@Description", description);
+                cmd.Parameters.AddWithValue("@Amount", amount);
+                cmd.Parameters.AddWithValue("@CategoryId", categoryId);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="date"></param>
+        /// <param name="category"></param>
+        /// <param name="amount"></param>
+        /// <param name="description"></param>
+        public void UpdateExpense(int id, DateTime date, int category, Double amount, String description)
+        {
+            try
+            {
+                UpdateExpenseToDatabase(id,date,category,amount,description);
+            }
+            catch (UserInputErrors e)
+            {
+                Console.WriteLine(e.Message + ": " + e.InputErrorString);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Unknown error: " + e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Updates the expense in the database according to its id.
+        /// </summary>
+        /// <param name="id"> Id of the expense. </param>
+        /// <param name="date"> Date when the expense was done. </param>
+        /// <param name="category"> Category of the expense. </param>
+        /// <param name="amount"> Amount of the expense. </param>
+        /// <param name="description"> Description of the expense. </param>
+        public void UpdateExpenseToDatabase(int id, DateTime date, int category, Double amount, String description)
+        {
+            if (description != string.Empty)
+            {
+                string stringDate = date.ToString("yyyy-MM-dd");
+
+                //create a command search for the given id
+                using var cmdCheckId = new SQLiteCommand("SELECT Id from expenses WHERE Id=" + "@id", Database.dbConnection);
+                cmdCheckId.Parameters.AddWithValue("@id", id);
+
+                //take the first column of the select query
+                //Parse object to int because ExecuteScalar() return an object
+                object firstCollumId = cmdCheckId.ExecuteScalar();
+
+                //if the id doesn't exist then insert to database
+                if (firstCollumId != null)
+                {
+
+                    using var cmd = new SQLiteCommand(Database.dbConnection);
+                    cmd.CommandText = $"UPDATE expenses Set Description = @description, Date = @date, Category = @category, Amount = @amount WHERE Id = @id";
+                    cmd.Parameters.AddWithValue("@description", description);
+                    cmd.Parameters.AddWithValue("@date", stringDate);
+                    cmd.Parameters.AddWithValue("@category", category);
+                    cmd.Parameters.AddWithValue("@amount", amount);
+                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.ExecuteNonQuery();
+                }
+                else
+                {
+                    throw new UserInputErrors("Expense doesn't exist");
+                }
+            }
+            else
+            {
+                throw new UserInputErrors("No description provided");
+            }
+
+
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="i"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public Expense GetExpenseFromId(int i)
+        {
+            List<Expense> newList = List();
+            Expense c = newList.Find(x => x.Id == i);
+            if (c == null)
+            {
+                throw new Exception("Cannot find category with id " + i.ToString());
+            }
+            return c;
         }
 
         // ====================================================================
@@ -196,7 +360,52 @@ namespace Budget
             int i = _Expenses.FindIndex(x => x.Id == Id);
             if (i != -1) { _Expenses.RemoveAt(i); } // will only delete if valid id
 
+            try 
+            {
+                DeleteExpense(Id);
+            }
+            catch(UserInputErrors e)
+            {
+                Console.WriteLine(e.Message + ": " + e.InputErrorString);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("Unknown error: " + e.Message);
+            }
+
         }
+        /// <summary>
+        /// Deletes expense from the database.
+        /// </summary>
+        /// <param name="id"> Id of the expense to delete. </param>
+        public void DeleteExpense(int id)
+        {
+            //create a command search for the given id
+            using var cmdCheckId = new SQLiteCommand("SELECT Id from expenses WHERE Id=" + "@id", Database.dbConnection);
+            cmdCheckId.Parameters.AddWithValue("@id", id);
+
+            //take the first column of the select query
+            //Parse object to int because ExecuteScalar() return an object
+            object firstCollumId = cmdCheckId.ExecuteScalar();
+
+            //if the id doesn't exist then insert to database
+            if (firstCollumId != null)
+            {
+
+                using var cmd = new SQLiteCommand(Database.dbConnection);
+                cmd.CommandText = "DELETE FROM expenses WHERE Id=" + "@id";
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.ExecuteNonQuery();
+
+                Console.WriteLine("Successfully deleted from Id=" + id);
+            }
+            else
+            {
+                throw new UserInputErrors("Expense doesn't exist");
+            }
+
+        }
+
 
         // ====================================================================
         // Return list of expenses
@@ -219,14 +428,59 @@ namespace Budget
         // ====================================================================
         public List<Expense> List()
         {
+            //List<Expense> newList = new List<Expense>();
+            //foreach (Expense expense in _Expenses)
+            //{
+            //    newList.Add(new Expense(expense));
+            //}
+            //return newList;
+
             List<Expense> newList = new List<Expense>();
-            foreach (Expense expense in _Expenses)
+
+
+            using var newAddedId = new SQLiteCommand("SELECT Id, Date, CategoryId, Amount, Description FROM expenses", (Database.dbConnection));
+            var rdr = newAddedId.ExecuteReader();
+            while (rdr.Read())
             {
-                newList.Add(new Expense(expense));
+                DateTime date = DateTime.Parse((string)rdr[1]);
+                newList.Add(new Expense((int)(long)rdr[0], date, (int)(long)rdr[2], (double)rdr[3], (string)rdr[4]));
             }
+
             return newList;
         }
 
+        //public List<Expense> List()
+        //{
+        //    //List<Expense> newList = new List<Expense>();
+        //    //foreach (Expense expense in _Expenses)
+        //    //{
+        //    //    newList.Add(new Expense(expense));
+        //    //}
+        //    //return newList;             //cmd.CommandText = @"CREATE TABLE expenses(
+        //    //                    Id INTEGER PRIMARY KEY,
+        //    //                    Date TEXT,
+        //    //                    Description TEXT,
+        //    //                    Amount DOUBLE,
+        //    //                    CategoryId INTEGER,
+        //    //                    FOREIGN KEY(CategoryId) REFERENCES categories(Id)
+        //    //                    );";            
+            
+        //    List<Expense> newList = new List<Expense>();       
+            
+        //    using var newAddedId = new SQLiteCommand("SELECT Id,Date,CategoryId,Amount,Description FROM expenses", (Database.dbConnection));
+        //    var rdr = newAddedId.ExecuteReader();
+        //    while (rdr.Read())
+        //    {
+        //        DateTime date = DateTime.Parse((string)rdr[1]);
+        //        //DateTime date;
+        //        //string[] dateFormats = new[] { "yyyy-MM-dd" };
+        //        //CultureInfo provider = CultureInfo.InvariantCulture;
+        //        //date = DateTime.ParseExact(rdr[0], dateFormats, provider);
+        //        //int date = DateTime.ParseExact(rdr[1], "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+        //        newList.Add(new Expense((int)(long)rdr[0], date, (int)(long)rdr[2], (double)rdr[3], (String)rdr[4])); // added -1 to fix test
+        //    }
+        //    return newList;
+        //}
 
         // ====================================================================
         // read from an XML file and add categories to our categories list
