@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Budget;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,18 @@ namespace JoeWpfHomeBudget
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        public void btn_CreateCategory()
+        {
+            //Once the buttons to create a new category are defined in WPF, please make
+            //modifications here.
+            int textBoxId = 1;
+            string textboxDescription = "Groceries";            
+            Category.CategoryType textboxCategoryType = Category.CategoryType.Expense;
+            
+           //Not sure which class is currently referencing the category assembly
+            //Category category = new Category(textBoxId, textboxDescription,textboxCategoryType);
         }
     }
 }
