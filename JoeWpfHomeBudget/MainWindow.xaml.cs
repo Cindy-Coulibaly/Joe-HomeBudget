@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Budget;
+using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml.Linq;
 
 namespace JoeWpfHomeBudget
 {
@@ -20,9 +24,50 @@ namespace JoeWpfHomeBudget
     /// </summary>
     public partial class MainWindow : Window, ViewInterface
     {
+
+        private readonly Presenter presenter;
+        string filePath = string.Empty;
+
         public MainWindow()
         {
             InitializeComponent();
+            presenter = new Presenter(this, filePath);
         }
+
+
+        private void CreateDb()
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            //default directory will be at Document/Budgets folder
+            saveFileDialog.InitialDirectory = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\Budgets";
+            saveFileDialog.Filter = "DB Files|*.db";
+
+            if (saveFileDialog.ShowDialog() == true)
+                filePath = saveFileDialog.FileName;
+            else
+                return;
+        }
+
+        
+        public void ChooseDB()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+
+            openFileDialog.Filter = "DB Files|*.db";
+            openFileDialog.RestoreDirectory = true;
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                //Get the path of specified file
+                filePath = openFileDialog.FileName;
+
+            }
+        }
+
+        public void ChooseDB_btn(object sender, RoutedEventArgs e) {
+
+            ChooseDB();
+        }
+
     }
 }
