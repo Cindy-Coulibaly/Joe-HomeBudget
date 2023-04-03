@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Budget;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,13 +18,19 @@ namespace JoeWpfHomeBudget
     /// <summary>
     /// Interaction logic for Add_Expense.xaml
     /// </summary>
-    public partial class Add_Expense : Window
+    public partial class Add_Expense : Window,ViewInterface
     {
+        private readonly Presenter presenter;
+
         public Add_Expense()
         {
-            
             InitializeComponent();
+
+            presenter=new Presenter(this);
+
             SetDateDefault();
+            PopulateCategoryInBox();
+            
 
         }
         private void SetDateDefault()
@@ -31,9 +38,16 @@ namespace JoeWpfHomeBudget
             date_expense.DisplayDate = DateTime.Now;
             date_expense.SelectedDate = DateTime.Now;
         }
+
         private void PopulateCategoryInBox()
         {
+            List<Category> categories = presenter.GetAllCategories();
 
+            foreach (Category category in categories)
+            {
+                categoryList.Items.Add(category.Description);
+
+            }
         }
     }
 }

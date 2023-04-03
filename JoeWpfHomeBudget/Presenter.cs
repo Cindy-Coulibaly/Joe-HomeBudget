@@ -10,11 +10,21 @@ namespace JoeWpfHomeBudget
     class Presenter
     {
         private readonly HomeBudget model;
-        private ViewInterface view;
+        private readonly ViewInterface view;
 
-        public Presenter(ViewInterface view)
+        public Presenter(ViewInterface v)
         {
-            //model=new HomeBudget();
+            view = v;
+
+            model=new HomeBudget("./messy.db",false); // the person in charge of the file thingy is the one choosing putting the file
+            model.categories.List();
+
+
+        }
+
+        public List<Category> GetAllCategories()
+        {
+            return model.categories.List();
         }
         
     }
