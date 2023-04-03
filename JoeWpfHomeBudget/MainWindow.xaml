@@ -7,6 +7,20 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
 
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <TextBox x:Name="test_input" Margin="0,10,2,105" TextChanged="test_input_TextChanged"/>
+        <Button x:Name="add_expense_button_test" Margin="0,47,1,47" Click="Button_Click"/>
+        <Button x:Name="close_test" Margin="10,114,159,10" Click="Button_Click_Close" Grid.Row="2">Close</Button>
     </Grid>
+
 </Window>

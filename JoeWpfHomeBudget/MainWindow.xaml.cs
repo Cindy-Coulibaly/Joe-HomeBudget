@@ -24,5 +24,25 @@ namespace JoeWpfHomeBudget
         {
             InitializeComponent();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void test_input_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click_Close(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        public void ShowValidationMessage()
+        {
+            throw new NotImplementedException();
+        } 
     }
 }

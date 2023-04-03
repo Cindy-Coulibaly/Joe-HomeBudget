@@ -8,5 +8,6 @@ namespace JoeWpfHomeBudget
 {
     interface ViewInterface
     {
+        void ShowValidationMessage();
     }
 }
