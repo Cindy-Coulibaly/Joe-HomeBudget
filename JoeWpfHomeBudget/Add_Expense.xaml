@@ -20,6 +20,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        
         <!--#region Title-->
         <TextBlock FontSize="60" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center">Add expense</TextBlock>
         <!--#endregion-->
@@ -63,11 +64,39 @@
         <!--#endregion-->
         
         <!--#region Amount-->
-        <TextBlock Grid.Row="3">Amount</TextBlock>
+        <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="0" FontSize="20" FontWeight="DemiBold">Amount</TextBlock>
+            <TextBox Grid.Row="1" Margin="50,10" Grid.Column="0" Grid.ColumnSpan="3" x:Name="Amount"></TextBox>
+        </Grid>
         <!--#endregion-->
         
         <!--#region Description-->
-        <TextBlock Grid.Row="4">Description</TextBlock>
+        <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="0" FontSize="20" FontWeight="DemiBold">Description</TextBlock>
+            <TextBox Grid.Row="1" Margin="50,10" Grid.Column="0" Grid.ColumnSpan="3" x:Name="description"></TextBox>
+        </Grid>
         <!--#endregion-->
 
     </Grid>
