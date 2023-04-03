@@ -1,8 +1,6 @@
-﻿using Budget;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,32 +11,21 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Xml.Linq;
 
 namespace JoeWpfHomeBudget
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for loadDatabase.xaml
     /// </summary>
-    public partial class MainWindow : Window, ViewInterface
+    public partial class loadDatabase : Window
     {
-
-        private readonly Presenter presenter;
-        string filePath = string.Empty;
-
-        public MainWindow()
+        public loadDatabase()
         {
-            loadDatabase test = new loadDatabase();
-            test.Show();
             InitializeComponent();
-            
-            //presenter = new Presenter(this, filePath);
         }
 
-
-        private void CreateDb()
+        private void a_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             //default directory will be at Document/Budgets folder
@@ -46,13 +33,14 @@ namespace JoeWpfHomeBudget
             saveFileDialog.Filter = "DB Files|*.db";
 
             if (saveFileDialog.ShowDialog() == true)
-                filePath = saveFileDialog.FileName;
-            else
-                return;
+            {
+                MessageBox.Show("worked", "test", MessageBoxButton.OK,
+                MessageBoxImage.Asterisk);
+                Close();
+            }
         }
 
-        
-        public void ChooseDB()
+        private void b_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
@@ -61,16 +49,11 @@ namespace JoeWpfHomeBudget
 
             if (openFileDialog.ShowDialog() == true)
             {
-                //Get the path of specified file
-                filePath = openFileDialog.FileName;
+                MessageBox.Show("worked", "test", MessageBoxButton.OK,
+                MessageBoxImage.Asterisk);
+                Close();
 
             }
         }
-
-        public void ChooseDB_btn(object sender, RoutedEventArgs e) {
-
-            ChooseDB();
-        }
-
     }
 }
