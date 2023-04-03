@@ -30,11 +30,11 @@ namespace JoeWpfHomeBudget
 
         public MainWindow()
         {
-            loadDatabase test = new loadDatabase();
-            test.Show();
+            //loadDatabase test = new loadDatabase();
+            //test.Show();
             InitializeComponent();
-            
-            //presenter = new Presenter(this, filePath);
+            CreateDb();
+            presenter = new Presenter(this, filePath);
         }
 
 
@@ -46,9 +46,12 @@ namespace JoeWpfHomeBudget
             saveFileDialog.Filter = "DB Files|*.db";
 
             if (saveFileDialog.ShowDialog() == true)
+            {
                 filePath = saveFileDialog.FileName;
-            else
-                return;
+                using (FileStream fs = File.Create(filePath));
+            }
+                
+
         }
 
         
@@ -63,8 +66,12 @@ namespace JoeWpfHomeBudget
             {
                 //Get the path of specified file
                 filePath = openFileDialog.FileName;
-
             }
+        }
+
+        public void CreateDb_btn(object sender, RoutedEventArgs e)
+        {
+            CreateDb();
         }
 
         public void ChooseDB_btn(object sender, RoutedEventArgs e) {

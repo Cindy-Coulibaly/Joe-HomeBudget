@@ -11,5 +11,13 @@ namespace JoeWpfHomeBudget
     {
         private readonly ViewInterface view;
         private readonly HomeBudget model;
+
+        //need to provide file name for 
+        public Presenter(ViewInterface v, string databaseFile)
+        {
+            model = new HomeBudget(databaseFile, true);
+            view = v;
+        }
     }
+
 }
