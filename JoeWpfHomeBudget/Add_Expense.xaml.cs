@@ -10,30 +10,20 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace JoeWpfHomeBudget
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for Add_Expense.xaml
     /// </summary>
-    public partial class MainWindow : Window, ViewInterface
+    public partial class Add_Expense : Window
     {
-        public MainWindow()
+        public Add_Expense()
         {
             InitializeComponent();
-        }
-
-        private void Add_Expense_Click(object sender, RoutedEventArgs e)
-        {
-            Add_Expense expense=new Add_Expense();
-            expense.Show();
-        }
-
-        private void Remove_Expense_Click(object sender, RoutedEventArgs e)
-        {
-
+            date_expense.DisplayDate=DateTime.Now;
+            date_expense.SelectedDate=DateTime.Now;
         }
     }
 }
