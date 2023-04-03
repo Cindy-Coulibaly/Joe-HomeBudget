@@ -7,4 +7,10 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Reference Include="HomeBudget">
+      <HintPath>dll\HomeBudget.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
