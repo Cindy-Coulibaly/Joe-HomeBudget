@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Budget;
 
 namespace JoeWpfHomeBudget
 {
@@ -22,6 +23,17 @@ namespace JoeWpfHomeBudget
         public AddCategory()
         {
             InitializeComponent();
+        }
+
+        public void btn_Click(object sender, RoutedEventArgs e)
+        {           
+            Presenter p1 = new Presenter();
+
+            int textBoxId = 1;
+            string textboxDescription = "Groceries";
+            Category.CategoryType textboxCategoryType = Category.CategoryType.Expense;
+
+
         }
     }
 }

@@ -27,14 +27,9 @@ namespace JoeWpfHomeBudget
         }
 
         public void btn_AddNewCategory()
-        {
-            //Once the buttons to create a new category are defined in WPF, please make
-            //modifications here.
-            int textBoxId = 1;
-            string textboxDescription = "Groceries";            
-            Category.CategoryType textboxCategoryType = Category.CategoryType.Expense;                        
-         
+        {        
             AddCategory addCategory = new AddCategory();
+            addCategory.Show();
         }
     }
 }
