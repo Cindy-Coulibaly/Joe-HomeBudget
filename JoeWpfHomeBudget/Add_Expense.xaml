@@ -18,6 +18,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <!--#region Title-->
         <TextBlock FontSize="60" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center">Add expense</TextBlock>
@@ -42,7 +43,24 @@
         <!--#endregion-->
         
         <!--#region Category-->
-        <TextBlock Grid.Row="2">Category</TextBlock>
+        <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock Grid.Row="0" FontSize="20" FontWeight="DemiBold" >Category</TextBlock>
+            <ComboBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" IsEditable="True">
+                
+            </ComboBox>
+        </Grid>
+        
         <!--#endregion-->
         
         <!--#region Amount-->

@@ -21,9 +21,19 @@ namespace JoeWpfHomeBudget
     {
         public Add_Expense()
         {
+            
             InitializeComponent();
-            date_expense.DisplayDate=DateTime.Now;
-            date_expense.SelectedDate=DateTime.Now;
+            SetDateDefault();
+
+        }
+        private void SetDateDefault()
+        {
+            date_expense.DisplayDate = DateTime.Now;
+            date_expense.SelectedDate = DateTime.Now;
+        }
+        private void PopulateCategoryInBox()
+        {
+
         }
     }
 }
