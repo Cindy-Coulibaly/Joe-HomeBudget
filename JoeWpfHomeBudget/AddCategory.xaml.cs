@@ -22,18 +22,15 @@ namespace JoeWpfHomeBudget
     {
         public AddCategory()
         {
-            InitializeComponent();
+            InitializeComponent();          
         }
 
         public void btn_Click(object sender, RoutedEventArgs e)
         {           
             Presenter p1 = new Presenter();
-
-            int textBoxId = 1;
             string textboxDescription = "Groceries";
             Category.CategoryType textboxCategoryType = Category.CategoryType.Expense;
-
-
+            p1.AddCategory(textboxDescription, textboxCategoryType );           
         }
     }
 }

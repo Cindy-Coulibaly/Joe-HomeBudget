@@ -15,7 +15,7 @@ namespace JoeWpfHomeBudget
 
         public void AddCategory( string description,Category.CategoryType categoryType)
         {
-            homeBudget.categories.Add("hAT", Category.CategoryType.Credit);
+            homeBudget.categories.Add(description, categoryType);
         }
     }
 }
