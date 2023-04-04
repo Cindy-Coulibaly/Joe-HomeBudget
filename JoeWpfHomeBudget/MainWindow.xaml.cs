@@ -30,11 +30,15 @@ namespace JoeWpfHomeBudget
 
         public MainWindow()
         {
-            //loadDatabase test = new loadDatabase();
-            //test.Show();
             InitializeComponent();
-            CreateDb();
-            presenter = new Presenter(this, filePath);
+
+            loadDatabase test = new loadDatabase();
+            test.DataContext = this;
+            test.ShowDialog();
+            filePath = test.filePath;
+            // CreateDb();
+            //presenter = new Presenter(this, filePath);
+
         }
 
 
@@ -50,7 +54,6 @@ namespace JoeWpfHomeBudget
                 filePath = saveFileDialog.FileName;
                 using (FileStream fs = File.Create(filePath));
             }
-                
 
         }
 

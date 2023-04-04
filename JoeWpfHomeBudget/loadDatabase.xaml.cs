@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,9 +21,14 @@ namespace JoeWpfHomeBudget
     /// </summary>
     public partial class loadDatabase : Window
     {
+        internal string filePath { get; set; }
+
+        private readonly Presenter presenter;
         public loadDatabase()
         {
             InitializeComponent();
+            Window test = new Window();
+
         }
 
         private void a_Click(object sender, RoutedEventArgs e)
@@ -34,6 +40,8 @@ namespace JoeWpfHomeBudget
 
             if (saveFileDialog.ShowDialog() == true)
             {
+                filePath = saveFileDialog.FileName;
+                using (FileStream fs = File.Create(filePath));
                 MessageBox.Show("worked", "test", MessageBoxButton.OK,
                 MessageBoxImage.Asterisk);
                 Close();
@@ -49,6 +57,7 @@ namespace JoeWpfHomeBudget
 
             if (openFileDialog.ShowDialog() == true)
             {
+                filePath = openFileDialog.FileName;
                 MessageBox.Show("worked", "test", MessageBoxButton.OK,
                 MessageBoxImage.Asterisk);
                 Close();
