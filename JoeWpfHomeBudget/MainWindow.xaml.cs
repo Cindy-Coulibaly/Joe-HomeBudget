@@ -18,11 +18,13 @@ namespace JoeWpfHomeBudget
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, ViewInterface
+    public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
+            DuplicateCheckTest DuplicateCheck = new DuplicateCheckTest();
+            DuplicateCheck.Show();
         }
     }
 }

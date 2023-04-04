@@ -1,0 +1,22 @@
+﻿<Window x:Class="JoeWpfHomeBudget.DuplicateCheckTest"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:JoeWpfHomeBudget"
+        mc:Ignorable="d"
+        Title="DuplicateCheckTest" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Button x:Name="Submit" Grid.Column="1" Margin="0,278,0,122" Click="Button_Click">Add Expense</Button>
+        <TextBox x:Name="description" Grid.Column="1" Margin="0,224,0,161" TextChanged="TextBox_TextChanged" Text="Enter an expense description here.."/>
+        <TextBox x:Name="amount" Grid.Column="1" Margin="0,168,0,217" TextChanged="TextBox_TextChanged">Enter an expense amount here..</TextBox>
+        <TextBox x:Name="category" Grid.Column="1" Margin="0,114,0,271" TextChanged="TextBox_TextChanged" Text="Enter an expense category here.."/>
+        <TextBox x:Name="date" Grid.Column="1" Margin="0,60,0,325" TextChanged="TextBox_TextChanged" Text="Enter an expense date here.."/>
+        <TextBox x:Name="id" Grid.Column="1" Margin="0,6,0,379" TextChanged="TextBox_TextChanged" Text="Enter an expense id here.."/>
+    </Grid>
+</Window>
