@@ -21,17 +21,29 @@ namespace JoeWpfHomeBudget
     /// </summary>
     public partial class MainWindow : Window, ViewInterface
     {
+        private Presenter _presenter;
         public MainWindow()
         {
             InitializeComponent();
-            AddCategory addCategory = new AddCategory();
-            addCategory.Show();
+            _presenter= new Presenter();
+            ShowCats();
         }
 
         public void btn_AddNewCategory()
         {        
             AddCategory addCategory = new AddCategory();
             addCategory.Show();
+        }
+
+        public void ShowCats()
+        {
+            List<Category> categories = _presenter.GetAllCategories();
+
+            foreach (Category category in categories)
+            {
+                categoryList.Items.Add(category.Description);
+
+            }
         }
     }
 }
