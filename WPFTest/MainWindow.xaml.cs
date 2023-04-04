@@ -1,5 +1,4 @@
-﻿using Budget;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,24 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace JoeWpfHomeBudget
+namespace WPFTest
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, ViewInterface
+    public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
-            AddCategory addCategory = new AddCategory();
-            addCategory.Show();
-        }
-
-        public void btn_AddNewCategory()
-        {        
-            AddCategory addCategory = new AddCategory();
-            addCategory.Show();
         }
     }
 }

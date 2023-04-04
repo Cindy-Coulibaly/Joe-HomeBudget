@@ -8,19 +8,27 @@
         Title="AddCategory" Height="450" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="100"/>          
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
 
+        <TextBlock Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" FontSize="20">Add A New Category</TextBlock>
 
-
+        <Border BorderBrush="Black" BorderThickness="5" Grid.Row="1" Grid.Column="1" CornerRadius="5" >
+            <StackPanel>
+                <TextBlock HorizontalAlignment="Left" FontSize="25" Margin="100,15,0,0">Category Name</TextBlock>
+                <TextBox BorderBrush="Black" BorderThickness="2" Margin="100,10,100,0" Height="20"></TextBox>
+                <TextBlock HorizontalAlignment="Left" FontSize="25" Margin="100,15,0,0">Category Type</TextBlock>
+                <ComboBox x:Name="categoryTypes" Margin="100,15,100,0"></ComboBox>
+                <Button Margin="100" Width="200">Submit</Button>                
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>
