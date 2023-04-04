@@ -26,6 +26,11 @@ namespace JoeWpfHomeBudget
         {
             return model.categories.List();
         }
+
+        public void AddExpense(DateTime date,double amount,int categoryId,string description)
+        {
+            model.expenses.Add(date,categoryId,amount,description);
+        }
         
     }
 }

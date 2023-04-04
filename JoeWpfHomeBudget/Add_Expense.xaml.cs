@@ -35,8 +35,10 @@ namespace JoeWpfHomeBudget
         }
         private void SetDateDefault()
         {
+            
             date_expense.DisplayDate = DateTime.Now;
             date_expense.SelectedDate = DateTime.Now;
+
         }
 
         private void PopulateCategoryInBox()
@@ -48,6 +50,45 @@ namespace JoeWpfHomeBudget
                 categoryList.Items.Add(category.Description);
 
             }
+        }
+
+        private void add_Click(object sender, RoutedEventArgs e)
+        {
+
+            DateTime date = date_expense.SelectedDate.Value;
+            int categoryId=0;
+            double amount;
+            double badDescription;
+
+            try
+            {
+                if (categoryList.SelectedIndex == -1)
+                {
+                    throw new Exception("you have not inputed for the category category");
+                }
+                else if(!double.TryParse(amount_expense.Text, out amount) || Double.IsNaN(amount) || Double.IsInfinity(amount))
+                {
+                    throw new Exception("the amount is not a valid value");
+                }
+                else if (double.TryParse(description.Text, out badDescription))
+                {
+                    throw new Exception("the description is a number");
+                }
+                else if (description.Text == "")
+                {
+                    throw new Exception("the description is empty");
+                }
+                else
+                {
+                    presenter.AddExpense(date, amount, categoryId, description.Text);
+                    this.Hide();
+                }
+            }
+            catch(Exception err)
+            {
+                MessageBox.Show(err.Message, "Invalid input", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
         }
     }
 }

@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="jQuery-datetimepicker" Version="2.4.5" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.117" />
   </ItemGroup>
 
