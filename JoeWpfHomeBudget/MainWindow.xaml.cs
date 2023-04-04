@@ -36,8 +36,7 @@ namespace JoeWpfHomeBudget
             test.DataContext = this;
             test.ShowDialog();
             filePath = test.filePath;
-            // CreateDb();
-            //presenter = new Presenter(this, filePath);
+            presenter = new Presenter(this, filePath);
 
         }
 
