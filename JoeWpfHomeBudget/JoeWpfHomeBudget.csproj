@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Data.SQLite" Version="1.0.117" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="HomeBudget">
       <HintPath>dll\HomeBudget.dll</HintPath>
     </Reference>

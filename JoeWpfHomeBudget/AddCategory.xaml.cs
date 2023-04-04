@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,26 +21,45 @@ namespace JoeWpfHomeBudget
     /// </summary>
     public partial class AddCategory : Window
     {
+        private Presenter _presenter;
+
         public AddCategory()
         {
-            InitializeComponent();   
-            ShowCategoryTypesComboBox();
+            InitializeComponent();           
+            _presenter= new Presenter();
+            PopulateCategoryInBox();
         }
 
-        public void btn_Submit(object sender, RoutedEventArgs e)
-        {           
-            Presenter p1 = new Presenter();
-            string textboxDescription = "Groceries";
-            Category.CategoryType textboxCategoryType = Category.CategoryType.Expense;
-                        
-            
-            p1.AddCategory(textboxDescription, textboxCategoryType );           
-        }
-        public void ShowCategoryTypesComboBox()
+        public void btn_Submit(object sender, RoutedEventArgs e){
+
+            if (Validate())
+            {
+                _presenter.AddCategory(categoryName.Text,(Category.CategoryType)categoryList.SelectedItem);
+                MessageBox.Show("New Category Added", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                this.Close();
+            }
+        }        
+        public void PopulateCategoryInBox()
         {
-            List<Category> categories= new List<Category>();
-            
+            categoryList.Items.Add(Category.CategoryType.Expense);  
+            categoryList.Items.Add(Category.CategoryType.Income);
+            categoryList.Items.Add(Category.CategoryType.Credit);
+            categoryList.Items.Add(Category.CategoryType.Savings);
+        }
 
+        public Boolean Validate()
+        {
+            if(categoryName.Text == string.Empty)
+            {
+                MessageBox.Show("Must provide Category Name", "Input Missing", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+            else if(categoryList.SelectedIndex == -1)
+            {
+                MessageBox.Show("Must Select Category Type", "Input Missing", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+            return true;
         }
     }
 }
