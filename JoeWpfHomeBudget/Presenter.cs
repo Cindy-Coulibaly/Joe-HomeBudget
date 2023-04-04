@@ -9,13 +9,13 @@ namespace JoeWpfHomeBudget
 {
     class Presenter
     {
-        HomeBudget homeBudget = new HomeBudget("dummy.db",true);
+        HomeBudget model = new HomeBudget("dummy.db",true);
         public Presenter() { }
 
 
         public void AddCategory( string description,Category.CategoryType categoryType)
         {
-            homeBudget.categories.Add(description, categoryType);
+            model.categories.Add(description, categoryType);
         }
 
         public List<Category> GetAllCategories()

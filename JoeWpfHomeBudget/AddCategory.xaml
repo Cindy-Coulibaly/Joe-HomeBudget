@@ -27,7 +27,7 @@
                 <TextBox BorderBrush="Black" BorderThickness="2" Margin="100,10,100,0" Height="20"></TextBox>
                 <TextBlock HorizontalAlignment="Left" FontSize="25" Margin="100,15,0,0">Category Type</TextBlock>
                 <ComboBox x:Name="categoryTypes" Margin="100,15,100,0"></ComboBox>
-                <Button Margin="100" Width="200">Submit</Button>                
+                <Button Margin="100" Width="200" Click="btn_Submit">Submit</Button>                
             </StackPanel>
         </Border>
     </Grid>
