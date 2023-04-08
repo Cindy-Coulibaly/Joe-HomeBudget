@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Budget;
 
 namespace JoeWpfHomeBudget
@@ -27,6 +28,22 @@ namespace JoeWpfHomeBudget
         public void AddExpense(DateTime date, double amount, int categoryId, string description)
         {
             model.expenses.Add(date, categoryId, amount, description);
+        }
+
+        public void SaveBeforeClosing()
+        {
+            Boolean unsavedChanges = true;
+            if(unsavedChanges)
+            {
+                if (MessageBox.Show("Would you like to save the following changes?", "Save Changes?", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+                {
+                    //Close Window
+                }
+            }
+            else
+            {
+                //Close Window
+            }
         }
     }
 }
