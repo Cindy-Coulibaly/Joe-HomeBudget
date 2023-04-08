@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.ComponentModel;
 
 namespace JoeWpfHomeBudget
 {
@@ -22,11 +23,13 @@ namespace JoeWpfHomeBudget
     public partial class MainWindow : Window, ViewInterface
     {
         private Presenter _presenter;
+        private Boolean _unsavedChanges;
         public MainWindow()
         {
             InitializeComponent();
             _presenter= new Presenter();
-            ShowCats();
+            ShowCats();       
+            _unsavedChanges
         }
 
         public void btn_AddNewCategory()
@@ -43,6 +46,24 @@ namespace JoeWpfHomeBudget
             {
                 categoryList.Items.Add(category.Description);
 
+            }
+        }
+
+        //https://learn.microsoft.com/en-us/dotnet/api/system.windows.window.closing?view=windowsdesktop-7.0
+        //How to check if user wants to save changes before closing the window
+        
+        void DataWindow_Closing(object sender, CancelEventArgs e)
+        {                    
+            // If user did not save changes, notify user and ask for a response
+            if (_unsavedChanges)
+            {
+                string msg = "There are unsaved changes. Close without saving?";
+                MessageBoxResult result =
+                  MessageBox.Show(
+                    msg,
+                    "Data App",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);                
             }
         }
     }

@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JoeWpfHomeBudget"
         mc:Ignorable="d"
+        Closing="DataWindow_Closing"  
         Title="MainWindow" Height="450" Width="800">
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="50"/>
