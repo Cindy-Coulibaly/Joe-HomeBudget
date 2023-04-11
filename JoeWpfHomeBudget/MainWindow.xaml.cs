@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Budget;
+using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,9 +22,12 @@ namespace JoeWpfHomeBudget
     /// </summary>
     public partial class MainWindow : Window, ViewInterface
     {
+        private readonly Presenter presenter;
         public MainWindow()
         {
             InitializeComponent();
+            presenter = new Presenter(this);
+
         }
 
         private void Add_Expense_Click(object sender, RoutedEventArgs e)
@@ -35,5 +40,6 @@ namespace JoeWpfHomeBudget
         {
 
         }
+
     }
 }

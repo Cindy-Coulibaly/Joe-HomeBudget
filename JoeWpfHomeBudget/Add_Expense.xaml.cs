@@ -18,7 +18,7 @@ namespace JoeWpfHomeBudget
     /// <summary>
     /// Interaction logic for Add_Expense.xaml
     /// </summary>
-    public partial class Add_Expense : Window,ViewInterface
+    public partial class Add_Expense : Window,ExpensesInterface
     {
         private readonly Presenter presenter;
 
