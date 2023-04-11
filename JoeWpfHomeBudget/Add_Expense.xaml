@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JoeWpfHomeBudget"
         mc:Ignorable="d"
-        Title="Add_Expense" Height="800" Width="450">
+        Title="Add_Expense" Height="1200" Width="450">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -13,18 +13,34 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="2*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        
+
+        <Border Grid.Row="0" Grid.RowSpan="5" Grid.Column="0" Grid.ColumnSpan="3" Background="#0081a7"/>
+
+
         <!--#region Title-->
-        <TextBlock FontSize="60" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center">Add expense</TextBlock>
+
+        <Border Grid.Column="0" 
+                   Grid.Row="0" Grid.ColumnSpan="3"
+                CornerRadius="0,0,50,10" BorderThickness="2" Background="#00AFB9">
+
+            <TextBlock FontSize="50" 
+                   FontFamily="Arial Nova"
+                   HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White">Add expense
+            </TextBlock>
+        </Border>
+        
         <!--#endregion-->
         
+
+
+         
         <!--#region Date-->
         <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
             <Grid.RowDefinitions>
@@ -37,9 +53,21 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
+
+            <Border Grid.Row="0" CornerRadius="10,10,10,10" Background="">
+                <Border.Effect>
+                    <BlurEffect Radius="5" KernelType="Gaussian"/>
+                </Border.Effect>
+            </Border>
+            <StackPanel Grid.Row="0" Margin="10">
+                <Ellipse Width="100" Height="100" Fill="#ecf4be" Grid.Row="1"/>
+                <Ellipse Width="50" Height="50" Grid.Row="1">
+                </Ellipse>
+            </StackPanel>
+
+            <TextBlock Grid.Row="0" FontSize="30" Margin="10" FontFamily="Arial Nova" Foreground="#FED9B7" >Date</TextBlock>
             
-            <TextBlock Grid.Row="0" FontSize="20" FontWeight="DemiBold" >Date</TextBlock>
-            <DatePicker Grid.Row="1" Margin="10" Grid.Column="1"  x:Name="date_expense"></DatePicker>
+            <Calendar Grid.Row="1" Grid.RowSpan="3" Margin="10" Grid.Column="0" Grid.ColumnSpan="3"  x:Name="date_expense"></Calendar>
             
         </Grid>
         <!--#endregion-->
