@@ -54,18 +54,18 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Border Grid.Row="0" CornerRadius="10,10,10,10" Background="">
+            <Border Grid.Row="0" CornerRadius="20,20,20,20" Background="#9fc2b1">
                 <Border.Effect>
                     <BlurEffect Radius="5" KernelType="Gaussian"/>
                 </Border.Effect>
             </Border>
             <StackPanel Grid.Row="0" Margin="10">
-                <Ellipse Width="100" Height="100" Fill="#ecf4be" Grid.Row="1"/>
+                <Ellipse Width="100" Height="100" Fill="#FED9B7" Grid.Row="1"/>
                 <Ellipse Width="50" Height="50" Grid.Row="1">
                 </Ellipse>
             </StackPanel>
 
-            <TextBlock Grid.Row="0" FontSize="30" Margin="10" FontFamily="Arial Nova" Foreground="#FED9B7" >Date</TextBlock>
+            <TextBlock Grid.Row="0" FontSize="30" Margin="10" FontFamily="Arial Nova" ></TextBlock>
             
             <Calendar Grid.Row="1" Grid.RowSpan="3" Margin="10" Grid.Column="0" Grid.ColumnSpan="3"  x:Name="date_expense"></Calendar>
             
