@@ -28,8 +28,8 @@ namespace JoeWpfHomeBudget
         {
             InitializeComponent();
             _presenter= new Presenter();
-            ShowCats();       
-            _unsavedChanges
+            ShowCats();
+            _unsavedChanges = false;
         }
 
         public void btn_AddNewCategory()

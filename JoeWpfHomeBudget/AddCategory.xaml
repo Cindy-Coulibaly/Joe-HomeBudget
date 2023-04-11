@@ -25,9 +25,9 @@
             <StackPanel>
                 <TextBlock HorizontalAlignment="Left" FontSize="25" Margin="100,15,0,0">Category Name</TextBlock>
                 <TextBox BorderBrush="Black" BorderThickness="2" Margin="100,10,100,0" Height="20" x:Name="categoryName"></TextBox>
-                <TextBlock HorizontalAlignment="Left" FontSize="25" Margin="100,15,0,0">Category Type</TextBlock>
+                <TextBlock HorizontalAlignment="Left" FontSize="25" Margin="100,60,0,0">Category Type</TextBlock>
                 <ComboBox x:Name="categoryList" Margin="100,15,100,0"></ComboBox>
-                <Button Margin="100" Width="200" Click="btn_Submit">Submit</Button>                
+                <Button Margin="50" Width="200" Click="btn_Submit">Submit</Button>                
             </StackPanel>
         </Border>
     </Grid>
