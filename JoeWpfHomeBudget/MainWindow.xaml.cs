@@ -27,36 +27,19 @@ namespace JoeWpfHomeBudget
 
         private readonly Presenter presenter;
         string filePath = string.Empty;
+        bool newDb = false;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            loadDatabase test = new loadDatabase();
-            test.DataContext = this;
-            test.ShowDialog();
-            filePath = test.filePath;
-            presenter = new Presenter(this, filePath);
+            initializeDatabase();
 
+            //if the user hasn't choose or created a database then close the main window
+            if (filePath != null) { presenter = new Presenter(this, filePath, newDb); }
+            else { this.Close(); }
         }
 
-
-        private void CreateDb()
-        {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            //default directory will be at Document/Budgets folder
-            saveFileDialog.InitialDirectory = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\Budgets";
-            saveFileDialog.Filter = "DB Files|*.db";
-
-            if (saveFileDialog.ShowDialog() == true)
-            {
-                filePath = saveFileDialog.FileName;
-                using (FileStream fs = File.Create(filePath));
-            }
-
-        }
-
-        
         public void ChooseDB()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -68,15 +51,21 @@ namespace JoeWpfHomeBudget
             {
                 //Get the path of specified file
                 filePath = openFileDialog.FileName;
+                presenter.loadNewDatabase(filePath);        
             }
         }
 
-        public void CreateDb_btn(object sender, RoutedEventArgs e)
+        //make the user choose whether they are working on a new or old database
+        public void initializeDatabase()
         {
-            CreateDb();
+            loadDatabase selectDatabase = new loadDatabase();
+            selectDatabase.DataContext = this;
+            selectDatabase.ShowDialog();
+            filePath = selectDatabase.filePath;
+            newDb = selectDatabase.newDb;
         }
 
-        public void ChooseDB_btn(object sender, RoutedEventArgs e) {
+        public void ChooseDatabase_btn(object sender, RoutedEventArgs e) {
 
             ChooseDB();
         }

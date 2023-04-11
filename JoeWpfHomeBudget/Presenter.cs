@@ -10,13 +10,19 @@ namespace JoeWpfHomeBudget
     class Presenter
     {
         private readonly ViewInterface view;
-        private readonly HomeBudget model;
+        private HomeBudget model { get; set; }
 
         //need to provide file name for 
-        public Presenter(ViewInterface v, string databaseFile)
+        public Presenter(ViewInterface v, string databaseFile, bool newDb)
         {
-            model = new HomeBudget(databaseFile, true);
+            model = new HomeBudget(databaseFile, newDb);
             view = v;
+        }
+        
+        public void loadNewDatabase(string databaseFile)
+        {
+            //loading doesn't create a new database so bool is always false
+            model = new HomeBudget(databaseFile, false);
         }
     }
 

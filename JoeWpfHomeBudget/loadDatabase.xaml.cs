@@ -22,16 +22,15 @@ namespace JoeWpfHomeBudget
     public partial class loadDatabase : Window
     {
         internal string filePath { get; set; }
+        internal bool newDb { get; set; }
 
         private readonly Presenter presenter;
         public loadDatabase()
         {
             InitializeComponent();
-            Window test = new Window();
-
         }
 
-        private void a_Click(object sender, RoutedEventArgs e)
+        private void newDatabase_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             //default directory will be at Document/Budgets folder
@@ -41,27 +40,25 @@ namespace JoeWpfHomeBudget
             if (saveFileDialog.ShowDialog() == true)
             {
                 filePath = saveFileDialog.FileName;
+                newDb = true;
                 using (FileStream fs = File.Create(filePath));
-                MessageBox.Show("worked", "test", MessageBoxButton.OK,
-                MessageBoxImage.Asterisk);
                 Close();
             }
         }
 
-        private void b_Click(object sender, RoutedEventArgs e)
+        private void loadDatabase_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
+            //make so that it only takes
             openFileDialog.Filter = "DB Files|*.db";
             openFileDialog.RestoreDirectory = true;
 
             if (openFileDialog.ShowDialog() == true)
             {
                 filePath = openFileDialog.FileName;
-                MessageBox.Show("worked", "test", MessageBoxButton.OK,
-                MessageBoxImage.Asterisk);
+                newDb = false;
                 Close();
-
             }
         }
     }

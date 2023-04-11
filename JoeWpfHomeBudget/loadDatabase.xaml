@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="loadDatabase" Height="450" Width="800">
     <Grid Margin="0,0,338,0" Width="NaN">
-        <Button x:Name="a" Click="a_Click">new</Button>
-        <Button x:Name="b" Click="b_Click" Margin="467,0,-330,0" Width="NaN" Height="NaN">load</Button>
+        <Button x:Name="a" Click="newDatabase_Click">new</Button>
+        <Button x:Name="b" Click="loadDatabase_Click" Margin="467,0,-330,0" Width="NaN" Height="NaN">load</Button>
     </Grid>
 </Window>
