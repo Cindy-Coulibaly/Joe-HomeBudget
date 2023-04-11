@@ -21,7 +21,7 @@ namespace JoeWpfHomeBudget
     /// </summary>
     public partial class AddCategory : Window
     {
-        private Presenter _presenter;
+        private readonly Presenter _presenter;
 
         public AddCategory(Presenter presenter)
         {
