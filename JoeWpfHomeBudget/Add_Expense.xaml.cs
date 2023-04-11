@@ -33,7 +33,7 @@ namespace JoeWpfHomeBudget
             
 
         }
-        private void SetDateDefault()
+        public void SetDateDefault()
         {
             
             date_expense.DisplayDate = DateTime.Now;
@@ -41,7 +41,7 @@ namespace JoeWpfHomeBudget
 
         }
 
-        private void PopulateCategoryInBox()
+        public void PopulateCategoryInBox()
         {
             List<Category> categories = presenter.GetAllCategories();
 
@@ -59,6 +59,7 @@ namespace JoeWpfHomeBudget
             int categoryId=0;
             double amount;
             double badDescription;
+
 
             try
             {
@@ -81,7 +82,8 @@ namespace JoeWpfHomeBudget
                 else
                 {
                     presenter.AddExpense(date, amount, categoryId, description.Text);
-                    this.Hide();
+
+                    this.Close();
                 }
             }
             catch(Exception err)

@@ -8,5 +8,8 @@ namespace JoeWpfHomeBudget
 {
     internal interface ExpensesInterface
     {
+        void SetDateDefault();
+
+        void PopulateCategoryInBox();
     }
 }

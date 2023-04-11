@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\calendar_img.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="jQuery-datetimepicker" Version="2.4.5" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.117" />
   </ItemGroup>
@@ -16,6 +20,12 @@
     <Reference Include="HomeBudget">
       <HintPath>dll\HomeBudget.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\calendar_img.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>
