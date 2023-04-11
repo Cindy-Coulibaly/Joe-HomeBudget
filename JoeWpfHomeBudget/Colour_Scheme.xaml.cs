@@ -10,21 +10,23 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace JoeWpfHomeBudget
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for Colour_Scheme.xaml
     /// </summary>
-    public partial class MainWindow : Window, ViewInterface
+    public partial class Colour_Scheme : Window
     {
-        public MainWindow()
+        public Colour_Scheme()
         {
             InitializeComponent();
-            Colour_Scheme colour = new Colour_Scheme();
-            colour.Show();
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }
