@@ -5,9 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JoeWpfHomeBudget"
         mc:Ignorable="d"
-        Title="loadDatabase" Height="450" Width="800">
-    <Grid Margin="0,0,338,0" Width="NaN">
-        <Button x:Name="a" Click="newDatabase_Click">new</Button>
-        <Button x:Name="b" Click="loadDatabase_Click" Margin="467,0,-330,0" Width="NaN" Height="NaN">load</Button>
+        Title="loadDatabase" Height="250" Width="500">
+    <Grid>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+        <Button x:Name="a" Click="newDatabase_Click" Grid.Column="0" Width="210"
+                Padding="5" Margin="10" Height="100">new</Button>
+        <Button x:Name="b" Click="loadDatabase_Click" Grid.Column="1" Width="210"
+                Padding="5" Margin="10" Height="100">load</Button>
+
     </Grid>
 </Window>

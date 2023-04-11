@@ -19,12 +19,11 @@ namespace JoeWpfHomeBudget
     /// <summary>
     /// Interaction logic for loadDatabase.xaml
     /// </summary>
-    public partial class loadDatabase : Window
+    public partial class loadDatabase : Window, loadDatabaseInterface
     {
         internal string filePath { get; set; }
         internal bool newDb { get; set; }
 
-        private readonly Presenter presenter;
         public loadDatabase()
         {
             InitializeComponent();
@@ -32,21 +31,15 @@ namespace JoeWpfHomeBudget
 
         private void newDatabase_Click(object sender, RoutedEventArgs e)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            //default directory will be at Document/Budgets folder
-            saveFileDialog.InitialDirectory = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\Budgets";
-            saveFileDialog.Filter = "DB Files|*.db";
-
-            if (saveFileDialog.ShowDialog() == true)
-            {
-                filePath = saveFileDialog.FileName;
-                newDb = true;
-                using (FileStream fs = File.Create(filePath));
-                Close();
-            }
+            CreateNewDatabase();
         }
 
         private void loadDatabase_Click(object sender, RoutedEventArgs e)
+        {
+            ChooseOldDatabase();
+        }
+
+        public void ChooseOldDatabase()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
@@ -58,6 +51,22 @@ namespace JoeWpfHomeBudget
             {
                 filePath = openFileDialog.FileName;
                 newDb = false;
+                Close();
+            }
+        }
+
+        public void CreateNewDatabase()
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            //default directory will be at Document/Budgets folder
+            saveFileDialog.InitialDirectory = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\Budgets";
+            saveFileDialog.Filter = "DB Files|*.db";
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                filePath = saveFileDialog.FileName;
+                newDb = true;
+                using (FileStream fs = File.Create(filePath)) ;
                 Close();
             }
         }
