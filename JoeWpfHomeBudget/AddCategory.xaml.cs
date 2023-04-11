@@ -23,13 +23,12 @@ namespace JoeWpfHomeBudget
     {
         private Presenter _presenter;
 
-        public AddCategory()
+        public AddCategory(Presenter presenter)
         {
             InitializeComponent();           
-            _presenter= new Presenter();
+            _presenter = presenter;
             PopulateCategoryInBox();
         }
-
         public void btn_Submit(object sender, RoutedEventArgs e){
 
             if (Validate())
@@ -46,7 +45,6 @@ namespace JoeWpfHomeBudget
             categoryList.Items.Add(Category.CategoryType.Credit);
             categoryList.Items.Add(Category.CategoryType.Savings);
         }
-
         public Boolean Validate()
         {
             if(categoryName.Text == string.Empty)

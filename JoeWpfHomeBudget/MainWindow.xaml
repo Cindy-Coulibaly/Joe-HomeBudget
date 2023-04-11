@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JoeWpfHomeBudget"
         mc:Ignorable="d"
-        Closing="DataWindow_Closing"  
+        Closing="SaveChangesValidationBeforeClosing"  
         Title="MainWindow" Height="450" Width="800">
     
     <Grid>
@@ -19,7 +19,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
-
+        <Button Grid.Column="1" Grid.Row="1" Margin="10,10,10,250" Click="btn_AddNewCategory">Add  New Category</Button>
         <ComboBox x:Name="categoryList" Grid.Column="1" Grid.Row="1" Height="25">Categories</ComboBox>      
         
     </Grid>

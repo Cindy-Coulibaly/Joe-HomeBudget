@@ -8,11 +8,11 @@ using Budget;
 
 namespace JoeWpfHomeBudget
 {
-    class Presenter
-    {
+    public class Presenter
+    {       
         HomeBudget model = new HomeBudget("./test.db", true);
-        public Presenter() { }
-
+              
+        public Presenter(){ }
 
         public void AddCategory( string description,Category.CategoryType categoryType)
         {
@@ -37,12 +37,12 @@ namespace JoeWpfHomeBudget
             {
                 if (MessageBox.Show("Would you like to save the following changes?", "Save Changes?", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
                 {
-                    //Close Window
+                    //Save changes and close Window
                 }
             }
             else
             {
-                //Close Window
+                //Discard changes and close Window
             }
         }
     }

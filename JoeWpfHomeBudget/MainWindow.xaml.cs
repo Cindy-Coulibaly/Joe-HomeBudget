@@ -27,14 +27,14 @@ namespace JoeWpfHomeBudget
         public MainWindow()
         {
             InitializeComponent();
-            _presenter= new Presenter();
+            _presenter = new Presenter();
             ShowCats();
-            _unsavedChanges = false;
+            _unsavedChanges = false;           
         }
 
-        public void btn_AddNewCategory()
+        public void btn_AddNewCategory(object sender, RoutedEventArgs e)
         {        
-            AddCategory addCategory = new AddCategory();
+            AddCategory addCategory = new AddCategory(_presenter);
             addCategory.Show();
         }
 
@@ -52,18 +52,18 @@ namespace JoeWpfHomeBudget
         //https://learn.microsoft.com/en-us/dotnet/api/system.windows.window.closing?view=windowsdesktop-7.0
         //How to check if user wants to save changes before closing the window
         
-        void DataWindow_Closing(object sender, CancelEventArgs e)
+        void SaveChangesValidationBeforeClosing(object sender, CancelEventArgs e)
         {                    
             // If user did not save changes, notify user and ask for a response
             if (_unsavedChanges)
             {
-                string msg = "There are unsaved changes. Close without saving?";
+                string msg = "Would you like to save your changes before exiting?";
                 MessageBoxResult result =
                   MessageBox.Show(
                     msg,
-                    "Data App",
+                    "Unsaved Changes",
                     MessageBoxButton.YesNo,
-                    MessageBoxImage.Warning);                
+                    MessageBoxImage.Information);                
             }
         }
     }
