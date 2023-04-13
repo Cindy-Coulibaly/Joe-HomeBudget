@@ -46,7 +46,7 @@ namespace JoeWpfHomeBudget
 
         public void btn_AddNewCategory(object sender, RoutedEventArgs e)
         {        
-            AddCategory addCategory = new AddCategory(_presenter);
+            AddCategory addCategory = new AddCategory(presenter);
             addCategory.Show();
         }
 
@@ -59,8 +59,7 @@ namespace JoeWpfHomeBudget
                 categoryList.Items.Add(category.Description);
 
             }
-        }
-        
+        }        
         
         public void ChooseDB()
         {
@@ -93,7 +92,7 @@ namespace JoeWpfHomeBudget
         void SaveChangesValidationBeforeClosing(object sender, CancelEventArgs e)
         {                    
             // If user did not save changes, notify user and ask for a response
-            if (_unsavedChanges)
+            if (unsavedChanges)
             {
                 string msg = "Would you like to save your changes before exiting?";
                 MessageBoxResult result =
