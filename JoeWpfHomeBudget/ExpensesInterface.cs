@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace JoeWpfHomeBudget
 {
-    internal interface ExpensesInterface
+    public interface ExpensesInterface
     {
         void SetDateDefault();
 
