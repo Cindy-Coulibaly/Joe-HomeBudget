@@ -8,12 +8,24 @@ using Budget;
 
 namespace JoeWpfHomeBudget
 {
-    public class Presenter
-    {       
-        HomeBudget model = new HomeBudget("./test.db", true);
-              
-        public Presenter(){ }
 
+    class Presenter
+    {
+        private readonly ViewInterface view;
+        private HomeBudget model { get; set; }
+
+        //need to provide file name for 
+        public Presenter(ViewInterface v, string databaseFile, bool newDb)
+        {
+            model = new HomeBudget(databaseFile, newDb);
+            view = v;
+        }
+        
+        public void loadNewDatabase(string databaseFile)
+        {
+            //loading doesn't create a new database so bool is always false
+            model = new HomeBudget(databaseFile, false);
+        }
         public void AddCategory( string description,Category.CategoryType categoryType)
         {
             model.categories.Add(description, categoryType);
@@ -47,3 +59,4 @@ namespace JoeWpfHomeBudget
         }
     }
 }
+
