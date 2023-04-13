@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Joe-HomeBudget", "Joe-HomeB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestHomebudget", "TestHomebudget\TestHomebudget.csproj", "{5EFC1FBE-7E5E-4407-AE97-5FDA94C03A59}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoeWpfHomeBudget", "JoeWpfHomeBudget\JoeWpfHomeBudget.csproj", "{56C0EC9F-7EB1-4BC7-A8D4-B01AD0AE0B8F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JoeWpfHomeBudget", "JoeWpfHomeBudget\JoeWpfHomeBudget.csproj", "{56C0EC9F-7EB1-4BC7-A8D4-B01AD0AE0B8F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
