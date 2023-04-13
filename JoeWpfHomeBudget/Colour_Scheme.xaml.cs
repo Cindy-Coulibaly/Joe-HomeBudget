@@ -22,11 +22,27 @@ namespace JoeWpfHomeBudget
         public Colour_Scheme()
         {
             InitializeComponent();
+            SelectColour.SelectedIndex = 0;
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            if (SelectColour.Text == "Red")
+            {
+                Background = Brushes.Red;
+            }
+            if (SelectColour.Text == "Blue")
+            {
+                Background = Brushes.Blue;
+            }
+            if (SelectColour.Text == "Magenta")
+            {
+                Background = Brushes.Magenta;
+            }
+            if (SelectColour.Text == "Green")
+            {
+                Background = Brushes.Green;
+            }
         }
     }
 }

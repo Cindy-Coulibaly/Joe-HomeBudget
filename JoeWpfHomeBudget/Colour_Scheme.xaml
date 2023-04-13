@@ -7,10 +7,14 @@
         mc:Ignorable="d"
         Title="Colour_Scheme" Height="450" Width="800">
     <Grid>
-        <ComboBox Margin="238,188,238,217" SelectionChanged="ComboBox_SelectionChanged" Text="Select a color...">
-        <ComboBoxItem>Red</ComboBoxItem>
+        <StackPanel>
+        <ComboBox x:Name="SelectColour" Margin="238,188,238,217" SelectionChanged="ComboBox_SelectionChanged">
+        <ComboBoxItem>Select a color...</ComboBoxItem>
+        <ComboBoxItem>Red</ComboBoxItem>        
         <ComboBoxItem>Blue</ComboBoxItem>
         <ComboBoxItem>Green</ComboBoxItem>
+        <ComboBoxItem>Magenta</ComboBoxItem>
         </ComboBox>
+        </StackPanel>
     </Grid>
 </Window>
