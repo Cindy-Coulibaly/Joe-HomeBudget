@@ -7,7 +7,7 @@ using Budget;
 
 namespace JoeWpfHomeBudget
 {
-    class Presenter
+    public class Presenter
     {
         private readonly ViewInterface view;
         private HomeBudget model { get; set; }
