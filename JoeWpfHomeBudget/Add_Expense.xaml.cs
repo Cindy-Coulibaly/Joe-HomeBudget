@@ -22,11 +22,12 @@ namespace JoeWpfHomeBudget
     {
         private readonly Presenter presenter;
 
-        public Add_Expense()
+
+        public Add_Expense(Presenter _presenter)
         {
             InitializeComponent();
 
-            presenter=new Presenter(this);
+            presenter = _presenter;
 
             SetDateDefault();
             PopulateCategoryInBox();
@@ -81,7 +82,9 @@ namespace JoeWpfHomeBudget
                 }
                 else
                 {
-                    presenter.AddExpense(date, amount, categoryId, description.Text);
+                    categoryId = categoryList.SelectedIndex;
+                    presenter.AddExpense(date,amount,categoryId, description.Text);
+
 
                     this.Close();
                 }

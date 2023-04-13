@@ -37,22 +37,21 @@ namespace JoeWpfHomeBudget
             initializeDatabase();
             if (filePath != null) { presenter = new Presenter(this, filePath, newDb); }
             else { this.Close(); }
-            presenter = new Presenter(this);
+
 
         }
 
         private void Add_Expense_Click(object sender, RoutedEventArgs e)
         {
-            Add_Expense expense = new Add_Expense();
+
+            Add_Expense expense = new Add_Expense(presenter);
             expense.Show();
+            
         }
 
         private void Remove_Expense_Click(object sender, RoutedEventArgs e)
         {
         }
-
-
-
 
         public void ChooseDB()
         {
@@ -84,6 +83,11 @@ namespace JoeWpfHomeBudget
 
             ChooseDB();
 
+        }
+
+        public void AddExpenses()
+        {
+            var temp = 0;
         }
 
     }

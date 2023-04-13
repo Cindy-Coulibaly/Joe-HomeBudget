@@ -19,18 +19,9 @@ namespace JoeWpfHomeBudget
             view = v;
         }
 
-        public Presenter(ViewInterface v)
-        {
-            view = v;
-
-            model = new HomeBudget("messy.db"); // the person in charge of the file thingy is the one choosing putting the file
-            model.categories.List();
-
-
-        }
         public Presenter(ExpensesInterface v)
         {
-            model = new HomeBudget("./messy.db");
+
             expensesView = v;
         }
 
