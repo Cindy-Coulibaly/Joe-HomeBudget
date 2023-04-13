@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace JoeWpfHomeBudget
 {
-    interface ViewInterface
+    interface loadDatabaseInterface
     {
-        public void initializeDatabase();
+        public void ChooseOldDatabase();
+
+        public void CreateNewDatabase();
     }
 }

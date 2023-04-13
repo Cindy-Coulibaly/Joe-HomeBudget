@@ -1,0 +1,22 @@
+﻿<Window x:Class="JoeWpfHomeBudget.loadDatabase"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:JoeWpfHomeBudget"
+        mc:Ignorable="d"
+        Title="loadDatabase" Height="250" Width="500">
+    <Grid>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+        <Button x:Name="a" Click="newDatabase_Click" Grid.Column="0" Width="210"
+                Padding="5" Margin="10" Height="100">new</Button>
+        <Button x:Name="b" Click="loadDatabase_Click" Grid.Column="1" Width="210"
+                Padding="5" Margin="10" Height="100">load</Button>
+
+    </Grid>
+</Window>
