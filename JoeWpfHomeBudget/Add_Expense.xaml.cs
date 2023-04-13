@@ -49,6 +49,7 @@ namespace JoeWpfHomeBudget
             foreach (Category category in categories)
             {
                 categoryList.Items.Add(category.Description);
+               
 
             }
         }
