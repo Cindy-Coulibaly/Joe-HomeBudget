@@ -13,10 +13,66 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-        <Button x:Name="a" Click="newDatabase_Click" Grid.Column="0" Width="210"
-                Padding="5" Margin="10" Height="100">new</Button>
-        <Button x:Name="b" Click="loadDatabase_Click" Grid.Column="1" Width="210"
-                Padding="5" Margin="10" Height="100">load</Button>
+        <Border Grid.Column="0" Grid.ColumnSpan="2">
+            <Border.Background>
+                <LinearGradientBrush>
+                    <GradientStop Color="#fed9b7" Offset="0.5"/>
+                    <GradientStop Color="#00afb9" Offset="0.5"/>
+                </LinearGradientBrush>
+            </Border.Background>
+
+        </Border>
+
+        <!--#region New Button-->
+            
+            <Border  Grid.Column="0" Margin="20,65" CornerRadius="10" Background="#0081a7">
+            
+            <Button x:Name="a" Click="newDatabase_Click" 
+                Padding="5" Width="200"  Height="100" 
+                    BorderThickness="0" Background="#0081a7"
+                    FontSize="20" HorizontalContentAlignment="Right"
+                    FontFamily="Arial Nova">new</Button>
+            </Border>
+
+        <StackPanel Grid.Column="0" Margin="30,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left">
+            <Grid>
+                <Ellipse Width="75" Height="75" Fill="#00afb9" Grid.Row="1"/>
+
+                <Ellipse Width="50" Height="50"  Grid.Row="1">
+                    <Ellipse.Fill>
+                        <ImageBrush ImageSource="./Images/newDatabase.png" Stretch="Fill" />
+                    </Ellipse.Fill>
+                </Ellipse>
+            </Grid>
+
+        </StackPanel>
+                
+        <!--#endregion-->
+
+        <!--#region load Button -->
+        <Border Grid.Column="1" Margin="20,65" CornerRadius="10" Background="#F07167">
+            <Button x:Name="b" Click="loadDatabase_Click"  Width="200"
+                Padding="5" Height="100"
+                    Background="#F07167" BorderThickness="0" FontSize="20" 
+                    HorizontalContentAlignment="Right"
+                    FontFamily="Arial Nova">
+                load
+            </Button>
+        </Border>
+
+        <StackPanel Grid.Column="1" Margin="30,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left">
+            <Grid>
+                <Ellipse Width="75" Height="75" Fill="#fed9b7" Grid.Row="1"/>
+
+                <Ellipse Width="50" Height="50"  Grid.Row="1">
+                    <Ellipse.Fill>
+                        <ImageBrush ImageSource="./Images/loadDatabase.png" Stretch="Fill" />
+                    </Ellipse.Fill>
+                </Ellipse>
+            </Grid>
+
+        </StackPanel>
+        <!--#endregion-->
 
     </Grid>
 </Window>

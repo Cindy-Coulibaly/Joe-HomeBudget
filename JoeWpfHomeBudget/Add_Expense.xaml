@@ -102,7 +102,7 @@
 
             <Border Background="#FED9B7" CornerRadius="10" BorderThickness="2"  
                     Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3">
-                <ComboBox Background="#F07167" x:Name="categoryList" IsEditable="True" Margin="10" FontSize="15" BorderThickness="0" 
+                <ComboBox Background="#FED9B7" x:Name="categoryList" IsEditable="True" Margin="10" FontSize="15" BorderThickness="0" 
                           Style="{StaticResource {x:Static ToolBar.ComboBoxStyleKey}}" Width="450" Height="50">
 
                 </ComboBox>
@@ -131,7 +131,7 @@
                     Grid.ColumnSpan="3" Grid.RowSpan="2" 
                     CornerRadius="3" BorderThickness="2" 
                     Background="#FED9B7" >
-                <TextBox  FontSize="15" x:Name="amount_expense" Margin="10" Background="#F07167"  BorderThickness="0"></TextBox>
+                <TextBox  FontSize="15" x:Name="amount_expense" Margin="10" Background="#FED9B7"  BorderThickness="0"></TextBox>
             </Border>
             
         </Grid>
@@ -155,7 +155,7 @@
                     Grid.ColumnSpan="3" Grid.RowSpan="2" 
                     CornerRadius="3" BorderThickness="2" 
                     Background="#FED9B7" >
-                <TextBox  FontSize="15" x:Name="description" Margin="10" Background="#F07167"  BorderThickness="0"></TextBox>
+                <TextBox  FontSize="15" x:Name="description" Margin="10" Background="#FED9B7"  BorderThickness="0"></TextBox>
             </Border>
         </Grid>
         <!--#endregion-->
