@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <None Remove="Images\calendar_img.png" />
+    <None Remove="Images\category.png" />
     <None Remove="Images\loadDatabase.png" />
     <None Remove="Images\newDatabase.png" />
   </ItemGroup>
@@ -26,6 +27,9 @@
 
   <ItemGroup>
     <Resource Include="Images\calendar_img.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\category.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\loadDatabase.png">

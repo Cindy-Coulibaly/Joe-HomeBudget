@@ -85,11 +85,11 @@
         <!--#endregion-->
         
         <!--#region Category-->
-        <Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3">
+        <Grid Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="3">
             <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
+
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -97,13 +97,26 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             
-            <TextBlock Grid.Row="0" FontSize="20" FontWeight="DemiBold" >Category</TextBlock>
+            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="70,10,0,0" FontSize="30" 
+                       FontWeight="DemiBold" >Category</TextBlock>
+            <StackPanel Grid.Row="0" Margin="10" HorizontalAlignment="Left">
+                <Grid>
+                    <Ellipse Width="50" Height="50" Fill="#FED9B7" Grid.Row="1"/>
+
+                    <Ellipse Width="50" Height="50"  Grid.Row="1">
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="./Images/category.png" Stretch="Fill"/>
+                        </Ellipse.Fill>
+                    </Ellipse>
+                </Grid>
+            </StackPanel>
 
 
             <Border Background="#FED9B7" CornerRadius="10" BorderThickness="2"  
-                    Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3">
+                    Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,0,70">
                 <ComboBox Background="#FED9B7" x:Name="categoryList" IsEditable="True" Margin="10" FontSize="15" BorderThickness="0" 
                           Style="{StaticResource {x:Static ToolBar.ComboBoxStyleKey}}" Width="450" Height="50">
+                    
 
                 </ComboBox>
             </Border>
@@ -113,10 +126,9 @@
         <!--#endregion-->
         
         <!--#region Amount-->
-        <Grid Grid.Row="3" Grid.Column="1">
+        <Grid Grid.Row="3" Grid.Column="1" Grid.RowSpan="2">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -125,12 +137,25 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Row="0" FontSize="20" FontWeight="DemiBold">Amount</TextBlock>
+            <TextBlock Grid.Row="0" FontSize="30"  FontWeight="DemiBold" Grid.ColumnSpan="2" 
+                       Margin="70,10,0,0">Amount</TextBlock>
+            
+            <StackPanel Grid.Row="0" Margin="10" HorizontalAlignment="Left">
+                <Grid>
+                    <Ellipse Width="50" Height="50" Fill="#FED9B7" Grid.Row="1"/>
+
+                    <Ellipse Width="50" Height="50"  Grid.Row="1">
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="./Images/amount.png" Stretch="Fill"/>
+                        </Ellipse.Fill>
+                    </Ellipse>
+                </Grid>
+            </StackPanel>
 
             <Border Grid.Row="1" Grid.Column="0" 
                     Grid.ColumnSpan="3" Grid.RowSpan="2" 
-                    CornerRadius="3" BorderThickness="2" 
-                    Background="#FED9B7" >
+                    CornerRadius="10" BorderThickness="2" 
+                    Background="#FED9B7" Margin="0,0,0,70" >
                 <TextBox  FontSize="15" x:Name="amount_expense" Margin="10" Background="#FED9B7"  BorderThickness="0"></TextBox>
             </Border>
             
@@ -138,11 +163,11 @@
         <!--#endregion-->
         
         <!--#region Description-->
-        <Grid Grid.Row="5" Grid.Column="1">
+        <Grid Grid.Row="5" Grid.Column="1" Grid.RowSpan="2">
             <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
+
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -150,17 +175,31 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Row="0" FontSize="20" FontWeight="DemiBold">Description</TextBlock>
+            <TextBlock Grid.Row="0" FontSize="30"  FontWeight="DemiBold" Grid.ColumnSpan="2" 
+                       Margin="70,10,0,0">Description</TextBlock>
+
+            <StackPanel Grid.Row="0" Margin="10" HorizontalAlignment="Left">
+                <Grid>
+                    <Ellipse Width="50" Height="50" Fill="#FED9B7" Grid.Row="1"/>
+
+                    <Ellipse Width="50" Height="50"  Grid.Row="1">
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="./Images/description.png" Stretch="Fill"/>
+                        </Ellipse.Fill>
+                    </Ellipse>
+                </Grid>
+            </StackPanel>
+
             <Border Grid.Row="1" Grid.Column="0" 
                     Grid.ColumnSpan="3" Grid.RowSpan="2" 
-                    CornerRadius="3" BorderThickness="2" 
-                    Background="#FED9B7" >
+                    CornerRadius="10" BorderThickness="2" 
+                    Background="#FED9B7" Margin="0,0,0,70" >
                 <TextBox  FontSize="15" x:Name="description" Margin="10" Background="#FED9B7"  BorderThickness="0"></TextBox>
             </Border>
         </Grid>
         <!--#endregion-->
 
-        <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Margin="400,10" FontSize="40" x:Name="add" Click="add_Click">Add</Button>
+        <Button Grid.Row="6" Grid.Column="0" Margin="120,0" FontSize="40" x:Name="add" Click="add_Click">Add</Button>
 
     </Grid>
 </Window>
