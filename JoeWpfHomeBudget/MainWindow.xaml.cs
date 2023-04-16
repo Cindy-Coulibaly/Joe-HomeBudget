@@ -1,7 +1,8 @@
 ﻿using Budget;
-using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+using Microsoft.Win32;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -27,27 +28,42 @@ namespace JoeWpfHomeBudget
     public partial class MainWindow : Window, ViewInterface
     {
 
-        
+
         private readonly Presenter presenter;
         string filePath = string.Empty;
         bool newDb = false;
         private Boolean unsavedChanges;
-        
+
         public MainWindow()
         {
-            InitializeComponent();    
+            InitializeComponent();
             initializeDatabase();
             //if the user hasn't choose or created a database then close the main window
             if (filePath != null) { presenter = new Presenter(this, filePath, newDb); }
-            else { this.Close(); }           
-            ShowCats();          
-            unsavedChanges = false;           
+            else { this.Close(); }
+            ShowCats();
+            unsavedChanges = false;
+
+
+        }
+
+        private void Add_Expense_Click(object sender, RoutedEventArgs e)
+        {
+
+            Add_Expense expense = new Add_Expense(presenter);
+            expense.Show();
+
+        }
+
+        private void Remove_Expense_Click(object sender, RoutedEventArgs e)
+        {
+
         }
 
         public void btn_AddNewCategory(object sender, RoutedEventArgs e)
-        {        
+        {
             AddCategory addCategory = new AddCategory(presenter);
-            addCategory.Show();
+            addCategory.ShowDialog();
         }
 
         public void ShowCats()
@@ -59,8 +75,8 @@ namespace JoeWpfHomeBudget
                 categoryList.Items.Add(category.Description);
 
             }
-        }        
-        
+        }
+
         public void ChooseDB()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -72,7 +88,7 @@ namespace JoeWpfHomeBudget
             {
                 //Get the path of specified file
                 filePath = openFileDialog.FileName;
-                presenter.loadNewDatabase(filePath);        
+                presenter.loadNewDatabase(filePath);
             }
         }
 
@@ -83,14 +99,14 @@ namespace JoeWpfHomeBudget
             selectDatabase.DataContext = this;
             selectDatabase.ShowDialog();
             filePath = selectDatabase.filePath;
-            newDb = selectDatabase.newDb;    
-        }       
+            newDb = selectDatabase.newDb;
+        }
 
         //https://learn.microsoft.com/en-us/dotnet/api/system.windows.window.closing?view=windowsdesktop-7.0
         //How to check if user wants to save changes before closing the window
-        
+
         void SaveChangesValidationBeforeClosing(object sender, CancelEventArgs e)
-        {                    
+        {
             // If user did not save changes, notify user and ask for a response
             if (unsavedChanges)
             {
@@ -100,13 +116,21 @@ namespace JoeWpfHomeBudget
                     msg,
                     "Unsaved Changes",
                     MessageBoxButton.YesNo,
-                    MessageBoxImage.Information);                
+                    MessageBoxImage.Information);
             }
         }
 
-        public void ChooseDatabase_btn(object sender, RoutedEventArgs e) {
+        public void ChooseDatabase_btn(object sender, RoutedEventArgs e)
+        {
 
             ChooseDB();
+
+        }
+
+        private void close_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }
+
