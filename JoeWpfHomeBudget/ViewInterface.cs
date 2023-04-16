@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace JoeWpfHomeBudget
 {
-    public interface ViewInterface
+    interface ViewInterface
     {
-        public void initializeDatabase();
     }
 }
