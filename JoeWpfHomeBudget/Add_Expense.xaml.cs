@@ -34,6 +34,9 @@ namespace JoeWpfHomeBudget
             
 
         }
+        /// <summary>
+        /// sets the value default value of an expense to be today.
+        /// </summary>
         public void SetDateDefault()
         {
             
@@ -41,7 +44,9 @@ namespace JoeWpfHomeBudget
             date_expense.SelectedDate = DateTime.Now;
 
         }
-
+        /// <summary>
+        /// Populate the Category that we have in the dropdown.
+        /// </summary>
         public void PopulateCategoryInBox()
         {
             List<Category> categories = presenter.GetAllCategories();
@@ -94,6 +99,22 @@ namespace JoeWpfHomeBudget
             {
                 MessageBox.Show(err.Message, "Invalid input", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+
+        }
+
+        private void add_Category_Click(object sender, RoutedEventArgs e)
+        {
+            AddCategory addCategory = new AddCategory(presenter);
+            addCategory.ShowDialog();
+            PopulateCategoryInBox();
+
+            
+
+        }
+
+        private void cancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
 
         }
     }

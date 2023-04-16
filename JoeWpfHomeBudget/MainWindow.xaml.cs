@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -65,7 +63,7 @@ namespace JoeWpfHomeBudget
         public void btn_AddNewCategory(object sender, RoutedEventArgs e)
         {
             AddCategory addCategory = new AddCategory(presenter);
-            addCategory.Show();
+            addCategory.ShowDialog();
         }
 
         public void ShowCats()
@@ -127,6 +125,11 @@ namespace JoeWpfHomeBudget
 
             ChooseDB();
 
+        }
+
+        private void close_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

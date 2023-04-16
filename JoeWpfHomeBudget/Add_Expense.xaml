@@ -29,23 +29,32 @@
 
         <Border Grid.Column="0" 
                    Grid.Row="0" Grid.ColumnSpan="3"
-                CornerRadius="0,0,50,10" BorderThickness="2" Background="#00AFB9">
+                CornerRadius="0,0,100,10" BorderThickness="2" Background="#00AFB9">
 
-            <TextBlock FontSize="50" 
+            <TextBlock FontSize="90" 
                    FontFamily="Arial Nova"
                    HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White">Add expense
             </TextBlock>
         </Border>
         
+        <StackPanel Grid.Row="0" Margin="10,10,0,0" HorizontalAlignment="Left">
+            <Grid>
+                <Ellipse Width="125" Height="125" Fill="#F07167" Grid.Row="1"/>
+
+                <Ellipse Width="125" Height="125"  Grid.Row="1">
+                    <Ellipse.Fill>
+                        <ImageBrush ImageSource="./Images/expenses.png" Stretch="Fill"/>
+                    </Ellipse.Fill>
+                </Ellipse>
+            </Grid>
+        </StackPanel>
+
         <!--#endregion-->
         
-
-
-         
         <!--#region Date-->
-        <Grid Grid.Row="1" Grid.Column="0" Grid.RowSpan="4">
+        <Grid Grid.Row="1" Grid.Column="0" Grid.RowSpan="5">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
@@ -61,6 +70,9 @@
                 </Border.Effect>
             </Border>-->
 
+            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="150,30,0,0" FontSize="40" 
+                       FontWeight="DemiBold" >Date</TextBlock>
+            
             <StackPanel Grid.Row="0" Margin="10">
                 <Grid>
                     <Ellipse Width="100" Height="100" Fill="#FED9B7" Grid.Row="1"/>
@@ -77,9 +89,11 @@
             <!--<TextBlock Grid.Row="0" FontSize="30" Margin="10" FontFamily="Arial Nova" ></TextBlock>-->
 
             <Viewbox Grid.Row="1" Grid.RowSpan="3" Grid.Column="0" 
-                      Grid.ColumnSpan="3">
+                      Grid.ColumnSpan="3" Width="450" Height="450" VerticalAlignment="Top">
                 <!--x:Name="date_expense" -->
-                <Calendar Margin="10" x:Name="date_expense" ></Calendar>
+                <Calendar Margin="10" x:Name="date_expense"  Background="#FED9B7" Foreground="#F07167" BorderBrush="#F07167" BorderThickness="3">
+                    
+                </Calendar>
             </Viewbox>
             
         </Grid>
@@ -121,6 +135,12 @@
 
                 </ComboBox>
             </Border>
+
+            <Border Grid.Row="1" CornerRadius="10" BorderThickness="6" Margin="0,90,0,0" Background="#F07167">
+                <Button   FontSize="20" BorderThickness="0" Background="#F07167" Margin="2" Click="add_Category_Click">Add Category</Button>
+            </Border>
+
+            
 
         </Grid>
         
@@ -200,7 +220,20 @@
         </Grid>
         <!--#endregion-->
 
-        <Button Grid.Row="6" Grid.Column="0" Margin="120,0" FontSize="40" x:Name="add" Click="add_Click">Add</Button>
+        <Grid Grid.Row="6">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <Border Grid.Column="0" CornerRadius="20" BorderThickness="2"   Background="#F07167" Margin="10">
+                <Button BorderThickness="0"  FontSize="40" x:Name="add" Click="add_Click" Margin="10" Background="#F07167">Add</Button>
+            </Border>
+
+            <Border Grid.Row="6" CornerRadius="20" BorderThickness="2"  Grid.Column="1"  Background="#F07167" Margin="10">
+                <Button BorderThickness="0"  FontSize="40" x:Name="cancel" Click="cancel_Click" Margin="10" Background="#F07167">cancel</Button>
+            </Border>
+        </Grid>
 
     </Grid>
 </Window>

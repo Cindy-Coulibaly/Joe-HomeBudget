@@ -8,8 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\amount.png" />
     <None Remove="Images\calendar_img.png" />
     <None Remove="Images\category.png" />
+    <None Remove="Images\description.png" />
+    <None Remove="Images\expenses.png" />
+    <None Remove="Images\homebudget.png" />
     <None Remove="Images\loadDatabase.png" />
     <None Remove="Images\newDatabase.png" />
   </ItemGroup>
@@ -26,10 +30,22 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\amount.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Images\calendar_img.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\category.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\description.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\expenses.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\homebudget.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\loadDatabase.png">
