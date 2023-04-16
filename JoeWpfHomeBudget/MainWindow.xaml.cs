@@ -52,7 +52,7 @@ namespace JoeWpfHomeBudget
 
             Add_Expense expense = new Add_Expense(presenter);
             expense.Show();
-
+            unsavedChanges = true;
         }
 
         private void Remove_Expense_Click(object sender, RoutedEventArgs e)
@@ -64,6 +64,7 @@ namespace JoeWpfHomeBudget
         {
             AddCategory addCategory = new AddCategory(presenter);
             addCategory.ShowDialog();
+            unsavedChanges = true;
         }
 
         public void ShowCats()
