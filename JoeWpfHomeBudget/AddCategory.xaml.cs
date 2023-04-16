@@ -47,7 +47,8 @@ namespace JoeWpfHomeBudget
         }
         public Boolean Validate()
         {
-            if(categoryName.Text == string.Empty)
+            int notNumeric;
+            if (categoryName.Text == string.Empty || int.TryParse(categoryName.Text, out notNumeric)) 
             {
                 MessageBox.Show("Must provide Category Name", "Input Missing", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
