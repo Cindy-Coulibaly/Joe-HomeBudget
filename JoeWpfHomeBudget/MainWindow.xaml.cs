@@ -19,6 +19,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml.Linq;
+using System.ComponentModel;
+
 
 namespace JoeWpfHomeBudget
 {
@@ -28,15 +30,21 @@ namespace JoeWpfHomeBudget
     public partial class MainWindow : Window, ViewInterface
     {
 
+
         private readonly Presenter presenter;
         string filePath = string.Empty;
         bool newDb = false;
+        private Boolean unsavedChanges;
+
         public MainWindow()
         {
             InitializeComponent();
             initializeDatabase();
+            //if the user hasn't choose or created a database then close the main window
             if (filePath != null) { presenter = new Presenter(this, filePath, newDb); }
             else { this.Close(); }
+            ShowCats();
+            unsavedChanges = false;
 
 
         }
@@ -46,11 +54,29 @@ namespace JoeWpfHomeBudget
 
             Add_Expense expense = new Add_Expense(presenter);
             expense.Show();
-            
+
         }
 
         private void Remove_Expense_Click(object sender, RoutedEventArgs e)
         {
+
+        }
+
+        public void btn_AddNewCategory(object sender, RoutedEventArgs e)
+        {
+            AddCategory addCategory = new AddCategory(presenter);
+            addCategory.Show();
+        }
+
+        public void ShowCats()
+        {
+            List<Category> categories = presenter.GetAllCategories();
+
+            foreach (Category category in categories)
+            {
+                categoryList.Items.Add(category.Description);
+
+            }
         }
 
         public void ChooseDB()
@@ -78,18 +104,30 @@ namespace JoeWpfHomeBudget
             newDb = selectDatabase.newDb;
         }
 
+        //https://learn.microsoft.com/en-us/dotnet/api/system.windows.window.closing?view=windowsdesktop-7.0
+        //How to check if user wants to save changes before closing the window
+
+        void SaveChangesValidationBeforeClosing(object sender, CancelEventArgs e)
+        {
+            // If user did not save changes, notify user and ask for a response
+            if (unsavedChanges)
+            {
+                string msg = "Would you like to save your changes before exiting?";
+                MessageBoxResult result =
+                  MessageBox.Show(
+                    msg,
+                    "Unsaved Changes",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Information);
+            }
+        }
+
         public void ChooseDatabase_btn(object sender, RoutedEventArgs e)
         {
 
             ChooseDB();
 
         }
-
-        public void AddExpenses()
-        {
-            var temp = 0;
-        }
-
     }
 }
 

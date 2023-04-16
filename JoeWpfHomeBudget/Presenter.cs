@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Budget;
 
 namespace JoeWpfHomeBudget
 {
-    public class Presenter
+
+    public partial class Presenter
     {
         private readonly ViewInterface view;
         private readonly ExpensesInterface expensesView;
@@ -45,6 +47,26 @@ namespace JoeWpfHomeBudget
             model = new HomeBudget(databaseFile, false);
         }
 
-    }
+        public void AddCategory(string description, Category.CategoryType categoryType)
+        {
+            model.categories.Add(description, categoryType);
+        }
 
+        public void SaveBeforeClosing()
+        {
+            Boolean unsavedChanges = true;
+            if (unsavedChanges)
+            {
+                if (MessageBox.Show("Would you like to save the following changes?", "Save Changes?", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+                {
+                    //Save changes and close Window
+                }
+            }
+            else
+            {
+                //Discard changes and close Window
+            }
+        }
+    }
 }
+
