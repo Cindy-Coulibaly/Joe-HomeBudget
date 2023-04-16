@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JoeWpfHomeBudget"
         mc:Ignorable="d"
+        Closing="SaveChangesValidationBeforeClosing"
         Title="Add_Expense" Height="800" Width="1050">
     <Grid>
         <Grid.ColumnDefinitions>

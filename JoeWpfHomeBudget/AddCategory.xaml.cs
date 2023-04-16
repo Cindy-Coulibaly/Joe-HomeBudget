@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Security.Policy;
 using System.Text;
@@ -22,6 +23,7 @@ namespace JoeWpfHomeBudget
     public partial class AddCategory : Window
     {
         private readonly Presenter _presenter;
+        private Boolean _submitted;
 
         public AddCategory(Presenter presenter)
         {
@@ -35,6 +37,7 @@ namespace JoeWpfHomeBudget
             {
                 _presenter.AddCategory(categoryName.Text,(Category.CategoryType)categoryList.SelectedItem);
                 MessageBox.Show("New Category Added", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                _submitted = true;
                 this.Close();
             }
         }        
@@ -48,9 +51,13 @@ namespace JoeWpfHomeBudget
         public Boolean Validate()
         {
             int notNumeric;
-            if (categoryName.Text == string.Empty || int.TryParse(categoryName.Text, out notNumeric)) 
+            if (categoryName.Text == string.Empty) 
             {
                 MessageBox.Show("Must provide Category Name", "Input Missing", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+            else if (int.TryParse(categoryName.Text, out notNumeric)){ 
+                MessageBox.Show("Category Name cannot contain numbers", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
             else if(categoryList.SelectedIndex == -1)
@@ -59,6 +66,27 @@ namespace JoeWpfHomeBudget
                 return false;
             }
             return true;
+        }
+
+        //https://learn.microsoft.com/en-us/dotnet/api/system.windows.window.closing?view=windowsdesktop-7.0
+        //How to check if user wants to quit before saving changes
+        void SaveChangesValidationBeforeClosing(object sender, CancelEventArgs e)
+        {
+            // If user did not save changes, notify user and ask for a response            
+            if (!_submitted)
+            {
+                if (categoryName.Text != string.Empty || (categoryList.SelectedIndex != -1 && categoryName.Text == string.Empty))
+                {
+                    if (_presenter.SaveBeforeClosing())
+                    {
+                        e.Cancel = false;                    
+                    }
+                    else
+                    {
+                        e.Cancel = true;
+                    }
+                }
+            }
         }
     }
 }

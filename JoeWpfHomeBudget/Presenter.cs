@@ -52,20 +52,13 @@ namespace JoeWpfHomeBudget
             model.categories.Add(description, categoryType);
         }
 
-        public void SaveBeforeClosing()
+        public Boolean SaveBeforeClosing()
         {
-            Boolean unsavedChanges = true;
-            if (unsavedChanges)
+            if (MessageBox.Show("Are you sure you want to quit? All unsaved changes will be lost.", "Unsaved Changes", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
             {
-                if (MessageBox.Show("Would you like to save the following changes?", "Save Changes?", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
-                {
-                    //Save changes and close Window
-                }
+                return true;
             }
-            else
-            {
-                //Discard changes and close Window
-            }
+            return false;
         }
     }
 }

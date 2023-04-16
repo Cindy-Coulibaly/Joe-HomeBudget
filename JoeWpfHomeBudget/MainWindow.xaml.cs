@@ -51,8 +51,7 @@ namespace JoeWpfHomeBudget
         {
 
             Add_Expense expense = new Add_Expense(presenter);
-            expense.Show();
-            unsavedChanges = true;
+            expense.Show();           
         }
 
         private void Remove_Expense_Click(object sender, RoutedEventArgs e)
@@ -63,8 +62,7 @@ namespace JoeWpfHomeBudget
         public void btn_AddNewCategory(object sender, RoutedEventArgs e)
         {
             AddCategory addCategory = new AddCategory(presenter);
-            addCategory.ShowDialog();
-            unsavedChanges = true;
+            addCategory.ShowDialog();           
         }
 
         public void ShowCats()
@@ -106,20 +104,6 @@ namespace JoeWpfHomeBudget
         //https://learn.microsoft.com/en-us/dotnet/api/system.windows.window.closing?view=windowsdesktop-7.0
         //How to check if user wants to save changes before closing the window
 
-        void SaveChangesValidationBeforeClosing(object sender, CancelEventArgs e)
-        {
-            // If user did not save changes, notify user and ask for a response
-            if (unsavedChanges)
-            {
-                string msg = "Would you like to save your changes before exiting?";
-                MessageBoxResult result =
-                  MessageBox.Show(
-                    msg,
-                    "Unsaved Changes",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Information);
-            }
-        }
 
         public void ChooseDatabase_btn(object sender, RoutedEventArgs e)
         {
@@ -131,7 +115,7 @@ namespace JoeWpfHomeBudget
         private void close_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
-        }
+        }        
     }
 }
 

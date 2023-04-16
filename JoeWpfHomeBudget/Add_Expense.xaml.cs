@@ -1,6 +1,7 @@
 ﻿using Budget;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +22,8 @@ namespace JoeWpfHomeBudget
     public partial class Add_Expense : Window,ExpensesInterface
     {
         private readonly Presenter presenter;
+        private Boolean submitted;
+        private Boolean cancelled;
 
 
         public Add_Expense(Presenter _presenter)
@@ -28,6 +31,8 @@ namespace JoeWpfHomeBudget
             InitializeComponent();
 
             presenter = _presenter;
+            submitted = false;
+            cancelled = false;
 
             SetDateDefault();
             PopulateCategoryInBox();
@@ -90,7 +95,7 @@ namespace JoeWpfHomeBudget
                 {
                     categoryId = categoryList.SelectedIndex;
                     presenter.AddExpense(date,amount,categoryId, description.Text);
-
+                    submitted = true;
 
                     this.Close();
                 }
@@ -112,10 +117,32 @@ namespace JoeWpfHomeBudget
 
         }
 
+        //https://learn.microsoft.com/en-us/dotnet/api/system.windows.window.closing?view=windowsdesktop-7.0
+        //How to check if user wants to quit before saving changes
+        void SaveChangesValidationBeforeClosing(object sender, CancelEventArgs e)
+        {
+            // If user did not save changes, notify user and ask for a response            
+            if (!submitted && !cancelled)
+            {
+                if ((amount_expense.Text != string.Empty || description.Text != string.Empty) || 
+                    (categoryList.SelectedIndex != -1 && (amount_expense.Text == string.Empty || description.Text == string.Empty)))
+                {
+                    if (presenter.SaveBeforeClosing())
+                    {
+                        e.Cancel = false;
+                    }
+                    else
+                    {
+                        e.Cancel = true;
+                    }
+                }
+            }
+        }
+
         private void cancel_Click(object sender, RoutedEventArgs e)
         {
+            cancelled = true;
             this.Close();
-
         }
     }
 }
