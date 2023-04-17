@@ -8,6 +8,6 @@ namespace JoeWpfHomeBudget
 {
     public interface ViewInterface
     {
-        public void initializeDatabase();
+
     }
 }

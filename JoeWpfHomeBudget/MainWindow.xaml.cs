@@ -88,6 +88,7 @@ namespace JoeWpfHomeBudget
                 //Get the path of specified file
                 filePath = openFileDialog.FileName;
                 presenter.loadNewDatabase(filePath);
+                MessageBox.Show(filePath + " file is now in uses", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 

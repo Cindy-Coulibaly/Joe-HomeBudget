@@ -119,6 +119,10 @@
         </Grid>
         <!--#endregion-->
 
+        <Border Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" CornerRadius="10" BorderThickness="6"  Background="#00AFB9">
+            <Button FontWeight="SemiBold"   FontSize="30" BorderThickness="0" Background="#00AFB9" Margin="2" Click="ChooseDatabase_btn">Load</Button>
+        </Border>
+
         <Border Grid.Row="6" Grid.ColumnSpan="5" CornerRadius="10" BorderThickness="6"  Background="#00AFB9">
             <Button FontWeight="SemiBold"   FontSize="30" BorderThickness="0" Background="#00AFB9" Margin="2" Click="close_Click">Close</Button>
         </Border>
