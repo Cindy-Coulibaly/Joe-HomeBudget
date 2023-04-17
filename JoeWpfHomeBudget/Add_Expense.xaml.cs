@@ -95,6 +95,7 @@ namespace JoeWpfHomeBudget
                 {
                     categoryId = categoryList.SelectedIndex;
                     presenter.AddExpense(date,amount,categoryId, description.Text);
+                    MessageBox.Show("New Expense Added", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
                     submitted = true;
 
                     this.Close();

@@ -12,7 +12,6 @@ namespace JoeWpfHomeBudget
     public partial class Presenter
     {
         private readonly ViewInterface view;
-        private readonly ExpensesInterface expensesView;
         private HomeBudget model { get; set; }
 
         public Presenter(ViewInterface v, string databaseFile, bool newDb)
@@ -21,11 +20,6 @@ namespace JoeWpfHomeBudget
             view = v;
         }
 
-        public Presenter(ExpensesInterface v)
-        {
-
-            expensesView = v;
-        }
 
         public List<Category> GetAllCategories()
         {
@@ -34,6 +28,7 @@ namespace JoeWpfHomeBudget
 
         public void AddExpense(DateTime date, double amount, int categoryId, string description)
         {
+
             model.expenses.Add(date, categoryId, amount, description);
         }
         public List<Expense> GetAllExpenses()

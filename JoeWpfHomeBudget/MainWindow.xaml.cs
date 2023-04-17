@@ -39,10 +39,12 @@ namespace JoeWpfHomeBudget
             InitializeComponent();
             initializeDatabase();
             //if the user hasn't choose or created a database then close the main window
-            if (filePath != null) { presenter = new Presenter(this, filePath, newDb); }
+            if (filePath != null) { presenter = new Presenter(this, filePath, newDb);
+                ShowCats();
+                unsavedChanges = false;
+            }
             else { this.Close(); }
-            ShowCats();
-            unsavedChanges = false;
+           
 
 
         }
