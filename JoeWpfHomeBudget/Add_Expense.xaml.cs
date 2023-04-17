@@ -73,38 +73,13 @@ namespace JoeWpfHomeBudget
             double badDescription;
 
 
-            try
-            {
-                if (categoryList.SelectedIndex == -1)
-                {
-                    throw new Exception("you have not inputed for the category category");
-                }
-                else if(!double.TryParse(amount_expense.Text, out amount) || Double.IsNaN(amount) || Double.IsInfinity(amount))
-                {
-                    throw new Exception("the amount is not a valid value");
-                }
-                else if (double.TryParse(description.Text, out badDescription))
-                {
-                    throw new Exception("the description is a number");
-                }
-                else if (description.Text == "")
-                {
-                    throw new Exception("the description is empty");
-                }
-                else
-                {
-                    categoryId = categoryList.SelectedIndex;
-                    presenter.AddExpense(date,amount,categoryId, description.Text);
-                    MessageBox.Show("New Expense Added", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
-                    submitted = true;
-
-                    this.Close();
-                }
-            }
-            catch(Exception err)
-            {
-                MessageBox.Show(err.Message, "Invalid input", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+             categoryId = categoryList.SelectedIndex;
+             presenter.AddExpense(date,amount_expense.Text, categoryId, description.Text);
+            MessageBox.Show("New Expense Added", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+            submitted = true;
+            this.Close();
+                
+ 
 
         }
 
@@ -144,6 +119,11 @@ namespace JoeWpfHomeBudget
         {
             cancelled = true;
             this.Close();
+        }
+
+        public void ShowError(Exception err)
+        {
+            MessageBox.Show(err.Message, "Invalid input", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

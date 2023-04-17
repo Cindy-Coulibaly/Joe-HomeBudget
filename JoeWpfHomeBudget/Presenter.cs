@@ -26,10 +26,43 @@ namespace JoeWpfHomeBudget
             return model.categories.List();
         }
 
-        public void AddExpense(DateTime date, double amount, int categoryId, string description)
+        public void AddExpense(DateTime date, string amount, int categoryId, string description)
         {
+            double amountTemp;
+            double badDescription;
+            try
+            {
+                if (categoryId == -1)
+                {
+                    throw new Exception("you have not inputed for the category category");
+                }
+                else if (!double.TryParse(amount, out amountTemp) || Double.IsNaN(amountTemp) || Double.IsInfinity(amountTemp))
+                {
+                    throw new Exception("the amount is not a valid value");
+                }
+                else if (double.TryParse(description, out badDescription))
+                {
+                    throw new Exception("the description is a number");
+                }
+                else if (description == "")
+                {
+                    throw new Exception("the description is empty");
+                }
+                else
+                {
+                    categoryId = categoryList.SelectedIndex;
+                    presenter.AddExpense(date, amount, categoryId, description.Text);
+                    MessageBox.Show("New Expense Added", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    submitted = true;
 
-            model.expenses.Add(date, categoryId, amount, description);
+                    this.Close();
+                }
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show(err.Message, "Invalid input", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            model.expenses.Add(date, categoryId, amountTemp, description);
         }
         public List<Expense> GetAllExpenses()
         {

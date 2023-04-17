@@ -8,6 +8,7 @@ namespace JoeWpfHomeBudget
 {
     public interface ViewInterface
     {
+        void ShowError(string message);
 
     }
 }

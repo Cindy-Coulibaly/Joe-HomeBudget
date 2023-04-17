@@ -118,7 +118,12 @@ namespace JoeWpfHomeBudget
         private void close_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
-        }        
+        }
+
+        public void ShowError(string message)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 
