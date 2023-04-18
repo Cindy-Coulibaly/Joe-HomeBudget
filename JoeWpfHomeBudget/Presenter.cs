@@ -50,19 +50,14 @@ namespace JoeWpfHomeBudget
                 }
                 else
                 {
-                    categoryId = categoryList.SelectedIndex;
-                    presenter.AddExpense(date, amount, categoryId, description.Text);
-                    MessageBox.Show("New Expense Added", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
-                    submitted = true;
-
-                    this.Close();
+                    model.expenses.Add(date, categoryId, amountTemp, description);
+                    view.ShowValid($"New expense just added named: {description}");
                 }
             }
             catch (Exception err)
             {
-                MessageBox.Show(err.Message, "Invalid input", MessageBoxButton.OK, MessageBoxImage.Error);
+                view.ShowError(err.Message);
             }
-            model.expenses.Add(date, categoryId, amountTemp, description);
         }
         public List<Expense> GetAllExpenses()
         {

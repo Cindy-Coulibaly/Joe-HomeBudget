@@ -120,9 +120,14 @@ namespace JoeWpfHomeBudget
             this.Close();
         }
 
-        public void ShowError(string message)
+        public void ShowError(string err)
         {
-            throw new NotImplementedException();
+            MessageBox.Show(err, "Invalid input", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        public void ShowValid(string message)
+        {
+            MessageBox.Show(message, "Information", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }

@@ -68,14 +68,9 @@ namespace JoeWpfHomeBudget
         {
 
             DateTime date = date_expense.SelectedDate.Value;
-            int categoryId=0;
-            double amount;
-            double badDescription;
+            int categoryId = categoryList.SelectedIndex;
 
-
-             categoryId = categoryList.SelectedIndex;
              presenter.AddExpense(date,amount_expense.Text, categoryId, description.Text);
-            MessageBox.Show("New Expense Added", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
             submitted = true;
             this.Close();
                 
@@ -121,9 +116,13 @@ namespace JoeWpfHomeBudget
             this.Close();
         }
 
-        public void ShowError(Exception err)
+        public void ShowError(String err)
         {
-            MessageBox.Show(err.Message, "Invalid input", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show(err, "Invalid input", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        public void ShowValid(string message)
+        {
+            MessageBox.Show(message, "Information", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }
