@@ -76,6 +76,7 @@ namespace JoeWpfHomeBudget
             foreach (Category category in categories)
             {
                 categoryList.Items.Add(category.Description);
+                cmbCategories.Items.Add(category.Description);
 
             }
         }
@@ -144,6 +145,11 @@ namespace JoeWpfHomeBudget
             {
                 ClearExpense();
             }
+
+        }
+
+        private void categoryList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
 
         }
     }
