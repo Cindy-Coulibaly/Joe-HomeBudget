@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JoeWpfHomeBudget"
         mc:Ignorable="d"        
-        Title="MainWindow" Height="1000" Width="600">
+        Title="MainWindow" Height="1000" Width="2000">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="100"/>
@@ -25,6 +25,7 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="15*"/>
         </Grid.ColumnDefinitions>
 
 
