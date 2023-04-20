@@ -32,14 +32,15 @@ namespace JoeWpfHomeBudget
             PopulateCategoryInBox();
         }
         public void btn_Submit(object sender, RoutedEventArgs e){
+            int categoryType = categoryList.SelectedIndex;
+           bool good= _presenter.AddCategory(categoryName.Text, categoryType);
 
-            if (Validate())
-            {
-                _presenter.AddCategory(categoryName.Text,(Category.CategoryType)categoryList.SelectedItem);
-                MessageBox.Show("New Category Added", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
-                _submitted = true;
-                this.Close();
-            }
+            if (good)
+            {this.Close();}
+
+            _submitted = true;
+            
+            
         }        
         public void PopulateCategoryInBox()
         {
@@ -48,26 +49,6 @@ namespace JoeWpfHomeBudget
             categoryList.Items.Add(Category.CategoryType.Credit);
             categoryList.Items.Add(Category.CategoryType.Savings);
         }
-        public Boolean Validate()
-        {
-            int notNumeric;
-            if (categoryName.Text == string.Empty) 
-            {
-                MessageBox.Show("Must provide Category Name", "Input Missing", MessageBoxButton.OK, MessageBoxImage.Error);
-                return false;
-            }
-            else if (int.TryParse(categoryName.Text, out notNumeric)){ 
-                MessageBox.Show("Category Name cannot contain numbers", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Error);
-                return false;
-            }
-            else if(categoryList.SelectedIndex == -1)
-            {
-                MessageBox.Show("Must Select Category Type", "Input Missing", MessageBoxButton.OK, MessageBoxImage.Error);
-                return false;
-            }
-            return true;
-        }
-
         //https://learn.microsoft.com/en-us/dotnet/api/system.windows.window.closing?view=windowsdesktop-7.0
         //How to check if user wants to quit before saving changes
         void SaveChangesValidationBeforeClosing(object sender, CancelEventArgs e)

@@ -23,6 +23,14 @@ namespace JoeWpfHomeBudget
 
         public List<Category> GetAllCategories()
         {
+            try
+            {
+                var listAllCategories = model.categories.List();
+            }
+            catch (Exception err)
+            {
+                view.ShowError(err.Message);
+            }
             return model.categories.List();
         }
 
@@ -62,6 +70,14 @@ namespace JoeWpfHomeBudget
         }
         public List<Expense> GetAllExpenses()
         {
+            try
+            {
+                var listOfExpenses = model.expenses.List();
+            }
+            catch(Exception err)
+            {
+                view.ShowError(err.Message);
+            }
             return model.expenses.List();
         }
 
@@ -71,9 +87,36 @@ namespace JoeWpfHomeBudget
             model = new HomeBudget(databaseFile, false);
         }
 
-        public void AddCategory(string description, Category.CategoryType categoryType)
+        public bool AddCategory(string description, int categoryType)
         {
-            model.categories.Add(description, categoryType);
+            Category.CategoryType type;
+            try {
+                int notNumeric;
+                if (description == string.Empty)
+                {
+                    throw new Exception("Must provide Category Name");
+                }
+                else if (int.TryParse(description, out notNumeric))
+                {
+                    throw new Exception("Category Name cannot contain numbers");
+                }
+                else if (categoryType == -1)
+                {
+                    throw new Exception ("Must Select Category Type");
+                }
+                else
+                {
+                    type= (Category.CategoryType)categoryType;
+                    model.categories.Add(description, type);
+                    view.ShowValid("New Category Added");
+                    return true;
+                }
+            }
+            catch(Exception err) {
+                view.ShowError(err.Message);
+                return false;
+            }
+            
         }
 
         public Boolean SaveBeforeClosing()
