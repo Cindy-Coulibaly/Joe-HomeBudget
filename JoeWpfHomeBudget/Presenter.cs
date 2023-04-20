@@ -52,6 +52,7 @@ namespace JoeWpfHomeBudget
                 {
                     model.expenses.Add(date, categoryId, amountTemp, description);
                     view.ShowValid($"New expense just added named: {description}");
+                    view.ClearExpense();
                 }
             }
             catch (Exception err)

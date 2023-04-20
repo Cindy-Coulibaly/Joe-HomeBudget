@@ -72,7 +72,6 @@ namespace JoeWpfHomeBudget
 
              presenter.AddExpense(date,amount_expense.Text, categoryId, description.Text);
             submitted = true;
-            this.Close();
                 
  
 
@@ -112,8 +111,7 @@ namespace JoeWpfHomeBudget
 
         private void cancel_Click(object sender, RoutedEventArgs e)
         {
-            cancelled = true;
-            this.Close();
+            CancelExpense();
         }
 
         public void ShowError(String err)
@@ -123,6 +121,28 @@ namespace JoeWpfHomeBudget
         public void ShowValid(string message)
         {
             MessageBox.Show(message, "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        public void ClearExpense()
+        {
+            SetDateDefault();
+            amount_expense.Clear();
+            categoryList.SelectedIndex= -1;
+            description.Clear();
+        }
+        public void CancelExpense()
+        {
+
+            if (MessageBox.Show("Do you really want to cancel your Expense", "Cancel", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                cancelled = true;
+                ClearExpense();
+            }
+
+        }
+
+        private void close_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }
