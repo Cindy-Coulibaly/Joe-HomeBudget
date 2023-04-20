@@ -33,60 +33,19 @@ namespace JoeWpfHomeBudget
         }
         public void btn_Submit(object sender, RoutedEventArgs e){
 
-            if (Validate())
-            {
-                _presenter.AddCategory(categoryName.Text,(Category.CategoryType)categoryList.SelectedItem);
-                MessageBox.Show("New Category Added", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
-                _submitted = true;
-                this.Close();
-            }
-        }        
-        public void PopulateCategoryInBox()
-        {
-            categoryList.Items.Add(Category.CategoryType.Expense);  
-            categoryList.Items.Add(Category.CategoryType.Income);
-            categoryList.Items.Add(Category.CategoryType.Credit);
-            categoryList.Items.Add(Category.CategoryType.Savings);
+        public void btn_Submit(object sender, RoutedEventArgs e)
+        {           
+            Presenter p1 = new Presenter();
+            string textboxDescription = "Groceries";
+            Category.CategoryType textboxCategoryType = Category.CategoryType.Expense;
+                        
+            
+            p1.AddCategory(textboxDescription, textboxCategoryType );           
         }
-        public Boolean Validate()
+        public void ShowCategoryTypesComboBox()
         {
-            int notNumeric;
-            if (categoryName.Text == string.Empty) 
-            {
-                MessageBox.Show("Must provide Category Name", "Input Missing", MessageBoxButton.OK, MessageBoxImage.Error);
-                return false;
-            }
-            else if (int.TryParse(categoryName.Text, out notNumeric)){ 
-                MessageBox.Show("Category Name cannot contain numbers", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Error);
-                return false;
-            }
-            else if(categoryList.SelectedIndex == -1)
-            {
-                MessageBox.Show("Must Select Category Type", "Input Missing", MessageBoxButton.OK, MessageBoxImage.Error);
-                return false;
-            }
-            return true;
-        }
-
-        //https://learn.microsoft.com/en-us/dotnet/api/system.windows.window.closing?view=windowsdesktop-7.0
-        //How to check if user wants to quit before saving changes
-        void SaveChangesValidationBeforeClosing(object sender, CancelEventArgs e)
-        {
-            // If user did not save changes, notify user and ask for a response            
-            if (!_submitted)
-            {
-                if (categoryName.Text != string.Empty || (categoryList.SelectedIndex != -1 && categoryName.Text == string.Empty))
-                {
-                    if (_presenter.SaveBeforeClosing())
-                    {
-                        e.Cancel = false;                    
-                    }
-                    else
-                    {
-                        e.Cancel = true;
-                    }
-                }
-            }
+            List<AddCategory> categoryTypes= new List<AddCategory>();
+            
         }
     }
 }
