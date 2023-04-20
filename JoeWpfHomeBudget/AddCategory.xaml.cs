@@ -32,20 +32,42 @@ namespace JoeWpfHomeBudget
             PopulateCategoryInBox();
         }
         public void btn_Submit(object sender, RoutedEventArgs e){
+            int categoryType = categoryList.SelectedIndex;
+           bool good= _presenter.AddCategory(categoryName.Text, categoryType);
 
-        public void btn_Submit(object sender, RoutedEventArgs e)
-        {           
-            Presenter p1 = new Presenter();
-            string textboxDescription = "Groceries";
-            Category.CategoryType textboxCategoryType = Category.CategoryType.Expense;
-                        
+            if (good)
+            {this.Close();}
+
+            _submitted = true;
             
-            p1.AddCategory(textboxDescription, textboxCategoryType );           
-        }
-        public void ShowCategoryTypesComboBox()
+            
+        }        
+        public void PopulateCategoryInBox()
         {
-            List<AddCategory> categoryTypes= new List<AddCategory>();
-            
+            categoryList.Items.Add(Category.CategoryType.Expense);  
+            categoryList.Items.Add(Category.CategoryType.Income);
+            categoryList.Items.Add(Category.CategoryType.Credit);
+            categoryList.Items.Add(Category.CategoryType.Savings);
+        }
+        //https://learn.microsoft.com/en-us/dotnet/api/system.windows.window.closing?view=windowsdesktop-7.0
+        //How to check if user wants to quit before saving changes
+        void SaveChangesValidationBeforeClosing(object sender, CancelEventArgs e)
+        {
+            // If user did not save changes, notify user and ask for a response            
+            if (!_submitted)
+            {
+                if (categoryName.Text != string.Empty || (categoryList.SelectedIndex != -1 && categoryName.Text == string.Empty))
+                {
+                    if (_presenter.SaveBeforeClosing())
+                    {
+                        e.Cancel = false;                    
+                    }
+                    else
+                    {
+                        e.Cancel = true;
+                    }
+                }
+            }
         }
     }
 }

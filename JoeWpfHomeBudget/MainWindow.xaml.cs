@@ -33,6 +33,7 @@ namespace JoeWpfHomeBudget
         string filePath = string.Empty;
         bool newDb = false;
         private Boolean unsavedChanges;
+        private Add_Expense expense;
 
         public MainWindow()
         {
@@ -50,8 +51,10 @@ namespace JoeWpfHomeBudget
         }
 
         private void Add_Expense_Click(object sender, RoutedEventArgs e)
-        {            
-            Add_Expense expense = new Add_Expense(presenter);
+        {
+
+            Add_Expense _expense = new Add_Expense(presenter);
+            expense=_expense;
             expense.Show();           
         }
 
@@ -133,7 +136,32 @@ namespace JoeWpfHomeBudget
         private void close_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
-        }        
+        }
+
+        public void ShowError(string err)
+        {
+            MessageBox.Show(err, "Invalid input", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        public void ShowValid(string message)
+        {
+            MessageBox.Show(message, "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        public void ClearExpense()
+        {
+            expense.ClearExpense();
+        }
+
+        public void CancelExpense()
+        {
+            
+            if ( MessageBox.Show("Do you really want to cancel your Expense", "Cancel", MessageBoxButton.YesNo,MessageBoxImage.Question)==MessageBoxResult.Yes)
+            {
+                ClearExpense();
+            }
+
+        }
     }
 }
 

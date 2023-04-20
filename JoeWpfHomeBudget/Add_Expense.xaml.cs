@@ -68,43 +68,12 @@ namespace JoeWpfHomeBudget
         {
 
             DateTime date = date_expense.SelectedDate.Value;
-            int categoryId=0;
-            double amount;
-            double badDescription;
+            int categoryId = categoryList.SelectedIndex;
 
-
-            try
-            {
-                if (categoryList.SelectedIndex == -1)
-                {
-                    throw new Exception("you have not inputed for the category category");
-                }
-                else if(!double.TryParse(amount_expense.Text, out amount) || Double.IsNaN(amount) || Double.IsInfinity(amount))
-                {
-                    throw new Exception("the amount is not a valid value");
-                }
-                else if (double.TryParse(description.Text, out badDescription))
-                {
-                    throw new Exception("the description is a number");
-                }
-                else if (description.Text == "")
-                {
-                    throw new Exception("the description is empty");
-                }
-                else
-                {
-                    categoryId = categoryList.SelectedIndex;
-                    presenter.AddExpense(date,amount,categoryId, description.Text);
-                    MessageBox.Show("New Expense Added", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
-                    submitted = true;
-
-                    this.Close();
-                }
-            }
-            catch(Exception err)
-            {
-                MessageBox.Show(err.Message, "Invalid input", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+             presenter.AddExpense(date,amount_expense.Text, categoryId, description.Text);
+            submitted = true;
+                
+ 
 
         }
 
@@ -142,7 +111,37 @@ namespace JoeWpfHomeBudget
 
         private void cancel_Click(object sender, RoutedEventArgs e)
         {
-            cancelled = true;
+            CancelExpense();
+        }
+
+        public void ShowError(String err)
+        {
+            MessageBox.Show(err, "Invalid input", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        public void ShowValid(string message)
+        {
+            MessageBox.Show(message, "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        public void ClearExpense()
+        {
+            SetDateDefault();
+            amount_expense.Clear();
+            categoryList.SelectedIndex= -1;
+            description.Clear();
+        }
+        public void CancelExpense()
+        {
+
+            if (MessageBox.Show("Do you really want to cancel your Expense", "Cancel", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                cancelled = true;
+                ClearExpense();
+            }
+
+        }
+
+        private void close_Click(object sender, RoutedEventArgs e)
+        {
             this.Close();
         }
     }
