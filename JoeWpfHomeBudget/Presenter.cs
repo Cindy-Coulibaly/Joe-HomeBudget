@@ -23,16 +23,61 @@ namespace JoeWpfHomeBudget
 
         public List<Category> GetAllCategories()
         {
+            try
+            {
+                var listAllCategories = model.categories.List();
+            }
+            catch (Exception err)
+            {
+                view.ShowError(err.Message);
+            }
             return model.categories.List();
         }
 
-        public void AddExpense(DateTime date, double amount, int categoryId, string description)
+        public void AddExpense(DateTime date, string amount, int categoryId, string description)
         {
-
-            model.expenses.Add(date, categoryId, amount, description);
+            double amountTemp;
+            double badDescription;
+            try
+            {
+                if (categoryId == -1)
+                {
+                    throw new Exception("you have not inputed for the category category");
+                }
+                else if (!double.TryParse(amount, out amountTemp) || Double.IsNaN(amountTemp) || Double.IsInfinity(amountTemp))
+                {
+                    throw new Exception("the amount is not a valid value");
+                }
+                else if (double.TryParse(description, out badDescription))
+                {
+                    throw new Exception("the description is a number");
+                }
+                else if (description == "")
+                {
+                    throw new Exception("the description is empty");
+                }
+                else
+                {
+                    model.expenses.Add(date, categoryId, amountTemp, description);
+                    view.ShowValid($"New expense just added named: {description}");
+                    view.ClearExpense();
+                }
+            }
+            catch (Exception err)
+            {
+                view.ShowError(err.Message);
+            }
         }
         public List<Expense> GetAllExpenses()
         {
+            try
+            {
+                var listOfExpenses = model.expenses.List();
+            }
+            catch(Exception err)
+            {
+                view.ShowError(err.Message);
+            }
             return model.expenses.List();
         }
 
@@ -42,9 +87,36 @@ namespace JoeWpfHomeBudget
             model = new HomeBudget(databaseFile, false);
         }
 
-        public void AddCategory(string description, Category.CategoryType categoryType)
+        public bool AddCategory(string description, int categoryType)
         {
-            model.categories.Add(description, categoryType);
+            Category.CategoryType type;
+            try {
+                int notNumeric;
+                if (description == string.Empty)
+                {
+                    throw new Exception("Must provide Category Name");
+                }
+                else if (int.TryParse(description, out notNumeric))
+                {
+                    throw new Exception("Category Name cannot contain numbers");
+                }
+                else if (categoryType == -1)
+                {
+                    throw new Exception ("Must Select Category Type");
+                }
+                else
+                {
+                    type= (Category.CategoryType)categoryType;
+                    model.categories.Add(description, type);
+                    view.ShowValid("New Category Added");
+                    return true;
+                }
+            }
+            catch(Exception err) {
+                view.ShowError(err.Message);
+                return false;
+            }
+            
         }
 
         public Boolean SaveBeforeClosing()
