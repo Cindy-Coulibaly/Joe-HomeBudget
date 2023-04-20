@@ -5,8 +5,241 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JoeWpfHomeBudget"
         mc:Ignorable="d"
-        Title="Update_Delete_Budget_Item" Height="450" Width="800">
+        Closing="SaveChangesValidationBeforeClosing"
+        Title="Add_Expense" Height="800" Width="1050">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.15*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="150"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Grid.RowSpan="7" Grid.Column="0" Grid.ColumnSpan="2" Background="#0081a7"/>
+
+
+
+        <!--#region Title-->
+
+        <Border Grid.Column="0" 
+                   Grid.Row="0" Grid.ColumnSpan="3"
+                CornerRadius="0,0,100,10" BorderThickness="2" Background="#00AFB9">
+
+            <TextBlock FontSize="90" 
+                   FontFamily="Arial Nova"
+                   HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White">Update expense
+            </TextBlock>
+        </Border>
+
+        <StackPanel Grid.Row="0" Margin="10,10,0,0" HorizontalAlignment="Left">
+            <Grid>
+                <Ellipse Width="125" Height="125" Fill="#F07167" Grid.Row="1"/>
+
+                <Ellipse Width="125" Height="125"  Grid.Row="1">
+                    <Ellipse.Fill>
+                        <ImageBrush ImageSource="./Images/expenses.png" Stretch="Fill"/>
+                    </Ellipse.Fill>
+                </Ellipse>
+            </Grid>
+        </StackPanel>
+
+        <!--#endregion-->
+
+        <!--#region Date-->
+        <Grid Grid.Row="1" Grid.Column="0" Grid.RowSpan="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!--<Border Grid.Row="0" Grid.Column="0" CornerRadius="20,20,20,20" Margin="15,3" Background="#9fc2b1">
+                <Border.Effect>
+                    <BlurEffect Radius="5" KernelType="Gaussian"/>
+                </Border.Effect>
+            </Border>-->
+
+            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="150,30,0,0" FontSize="40" 
+                       FontWeight="DemiBold" >Date</TextBlock>
+
+            <StackPanel Grid.Row="0" Margin="10">
+                <Grid>
+                    <Ellipse Width="100" Height="100" Fill="#FED9B7" Grid.Row="1"/>
+
+                    <Ellipse Width="75" Height="75"  Grid.Row="1">
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="./Images/calendar_img.png" Stretch="Fill"/>
+                        </Ellipse.Fill>
+                    </Ellipse>
+                </Grid>
+            </StackPanel>
+
+
+            <!--<TextBlock Grid.Row="0" FontSize="30" Margin="10" FontFamily="Arial Nova" ></TextBlock>-->
+
+            <Viewbox Grid.Row="1" Grid.RowSpan="3" Grid.Column="0" 
+                      Grid.ColumnSpan="3" Width="450" Height="450" VerticalAlignment="Top">
+                <!--x:Name="date_expense" -->
+                <Calendar Margin="10" x:Name="date_expense"  Background="#FED9B7" Foreground="#F07167" BorderBrush="#F07167" BorderThickness="3">
+
+                </Calendar>
+            </Viewbox>
+
+        </Grid>
+        <!--#endregion-->
+
+        <!--#region Category-->
+        <Grid Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="70,10,0,0" FontSize="30" 
+                       FontWeight="DemiBold" >Category</TextBlock>
+            <StackPanel Grid.Row="0" Margin="10" HorizontalAlignment="Left">
+                <Grid>
+                    <Ellipse Width="50" Height="50" Fill="#FED9B7" Grid.Row="1"/>
+
+                    <Ellipse Width="50" Height="50"  Grid.Row="1">
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="./Images/category.png" Stretch="Fill"/>
+                        </Ellipse.Fill>
+                    </Ellipse>
+                </Grid>
+            </StackPanel>
+
+
+            <Border Background="#FED9B7" CornerRadius="10" BorderThickness="2"  
+                    Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,0,70">
+                <ComboBox Background="#FED9B7" x:Name="categoryList" IsEditable="True" Margin="10" FontSize="15" BorderThickness="0" 
+                          Style="{StaticResource {x:Static ToolBar.ComboBoxStyleKey}}" Width="450" Height="50">
+
+
+                </ComboBox>
+            </Border>
+
+            <Border Grid.Row="1" CornerRadius="10" BorderThickness="6" Margin="0,90,0,0" Background="#F07167">
+                <Button   FontSize="20" BorderThickness="0" Background="#F07167" Margin="2" Click="add_Category_Click">Add Category</Button>
+            </Border>
+
+
+
+        </Grid>
+
+        <!--#endregion-->
+
+        <!--#region Amount-->
+        <Grid Grid.Row="3" Grid.Column="1" Grid.RowSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="0" FontSize="30"  FontWeight="DemiBold" Grid.ColumnSpan="2" 
+                       Margin="70,10,0,0">Amount</TextBlock>
+
+            <StackPanel Grid.Row="0" Margin="10" HorizontalAlignment="Left">
+                <Grid>
+                    <Ellipse Width="50" Height="50" Fill="#FED9B7" Grid.Row="1"/>
+
+                    <Ellipse Width="50" Height="50"  Grid.Row="1">
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="./Images/amount.png" Stretch="Fill"/>
+                        </Ellipse.Fill>
+                    </Ellipse>
+                </Grid>
+            </StackPanel>
+
+            <Border Grid.Row="1" Grid.Column="0" 
+                    Grid.ColumnSpan="3" Grid.RowSpan="2" 
+                    CornerRadius="10" BorderThickness="2" 
+                    Background="#FED9B7" Margin="0,0,0,70" >
+                <TextBox  FontSize="15" x:Name="amount_expense" Margin="10" Background="#FED9B7"  BorderThickness="0"></TextBox>
+            </Border>
+
+        </Grid>
+        <!--#endregion-->
+
+        <!--#region Description-->
+        <Grid Grid.Row="5" Grid.Column="1" Grid.RowSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="0" FontSize="30"  FontWeight="DemiBold" Grid.ColumnSpan="2" 
+                       Margin="70,10,0,0">Description</TextBlock>
+
+            <StackPanel Grid.Row="0" Margin="10" HorizontalAlignment="Left">
+                <Grid>
+                    <Ellipse Width="50" Height="50" Fill="#FED9B7" Grid.Row="1"/>
+
+                    <Ellipse Width="50" Height="50"  Grid.Row="1">
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="./Images/description.png" Stretch="Fill"/>
+                        </Ellipse.Fill>
+                    </Ellipse>
+                </Grid>
+            </StackPanel>
+
+            <Border Grid.Row="1" Grid.Column="0" 
+                    Grid.ColumnSpan="3" Grid.RowSpan="2" 
+                    CornerRadius="10" BorderThickness="2" 
+                    Background="#FED9B7" Margin="0,0,0,70" >
+                <TextBox  FontSize="15" x:Name="description" Margin="10" Background="#FED9B7"  BorderThickness="0"></TextBox>
+            </Border>
+        </Grid>
+        <!--#endregion-->
+
+        <Grid Grid.Row="6">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" CornerRadius="20" BorderThickness="2"   Background="#F07167" Margin="10">
+                <Button BorderThickness="0"  FontSize="40" x:Name="update" Click="add_Click" Margin="10" Background="#F07167">Update</Button>
+            </Border>
+
+            <Border Grid.Row="6" CornerRadius="20" BorderThickness="2"  Grid.Column="1"  Background="#F07167" Margin="10">
+                <Button BorderThickness="0"  FontSize="40" x:Name="delete" Click="cancel_Click" Margin="10" Background="#F07167">Delete</Button>
+            </Border>
+
+            <Border Grid.Row="6" CornerRadius="20" BorderThickness="2"  Grid.Column="2"  Background="#F07167" Margin="10">
+                <Button BorderThickness="0"  FontSize="40" x:Name="cancel" Click="close_Click" Margin="10" Background="#F07167">Cancel</Button>
+            </Border>
+        </Grid>
+
     </Grid>
 </Window>
