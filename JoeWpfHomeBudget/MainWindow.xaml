@@ -26,14 +26,15 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="15*"/>
+
         </Grid.ColumnDefinitions>
 
 
-        <Border Grid.RowSpan="10" Grid.ColumnSpan="5" Background="#FED9B7"/>
+        <Border Grid.RowSpan="10" Grid.ColumnSpan="15" Background="#FED9B7"/>
         
         <!--#region title-->
         <Border Grid.Column="0" 
-                   Grid.Row="0" Grid.ColumnSpan="5"
+                   Grid.Row="0" Grid.ColumnSpan="10"
                 CornerRadius="0,0,100,10" BorderThickness="2" Background="#F07167">
 
             <TextBlock FontSize="60" 
@@ -122,6 +123,14 @@
         </Grid>
         <!--#endregion-->
 
+        <!--#region list all the expenses-->
+
+        <Border Grid.Row="2" Grid.Column="6" Grid.ColumnSpan="1" Grid.RowSpan="6" >
+            <DataGrid Background="#F07167" BorderBrush="Black" Margin="10" x:Name="listExpenses">
+
+            </DataGrid>
+        </Border>
+        <!--#endregion-->
         <Border Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" CornerRadius="10" BorderThickness="6"  Background="#00AFB9">
             <Button FontWeight="SemiBold"   FontSize="30" BorderThickness="0" Background="#00AFB9" Margin="2" Click="ChooseDatabase_btn">Load</Button>
         </Border>

@@ -146,6 +146,24 @@ namespace JoeWpfHomeBudget
             }
 
         }
+        // Get all the expenses and show the one needed in the gridView depending on the start date and the end date.
+        private void ShowExpenses()
+        {
+            List<Expense> expenses = presenter.GetAllExpenses();
+
+            listExpenses.ItemsSource = expenses;
+
+            // clear all the columns.
+            listExpenses.Columns.Clear();
+
+            //create the columns and bind them.
+
+            var date = new DataGridTextColumn();     // Create a text column object 
+            var category = new DataGridTextColumn();     // Create a text column object 
+            var description = new DataGridTextColumn();     // Create a text column object 
+            var amount = new DataGridTextColumn();     // Create a text column object 
+            var Balance = new DataGridTextColumn();     // Create a text column object 
+        }
     }
 }
 
