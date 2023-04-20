@@ -120,15 +120,15 @@ namespace JoeWpfHomeBudget
         public void radio_ShowExpensesByMonth()
         {
             List<Expense> expenses = presenter.GetAllExpenses();
-            
-           
+            int sum = 0;
+            string prevMonth = expenses[0].Date.ToString("yyyy,MM");
             foreach (Expense expense in expenses)
-            {
-                
-                //expenseListByMonth.Items.Add(expense.Date.Month.ToString("MMMM"), expense.Amount);
+            {  
+                if(true)
+                //expenseListByMonth.Items.Add(expense.Date.ToString("yyyy,mm"), expense.Amount);
+
+
             }
-
-
 
             Boolean check = true;
         }
