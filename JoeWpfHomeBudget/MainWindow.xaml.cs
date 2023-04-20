@@ -42,16 +42,15 @@ namespace JoeWpfHomeBudget
             if (filePath != null) { presenter = new Presenter(this, filePath, newDb);
                 ShowCats();
                 unsavedChanges = false;
+                radio_ShowExpensesByMonth();
             }
             else { this.Close(); }
-           
-
+            
 
         }
 
         private void Add_Expense_Click(object sender, RoutedEventArgs e)
-        {
-
+        {            
             Add_Expense expense = new Add_Expense(presenter);
             expense.Show();           
         }
@@ -113,6 +112,22 @@ namespace JoeWpfHomeBudget
 
             ChooseDB();
 
+        }
+
+        public void radio_ShowExpensesByMonth()
+        {
+            List<Expense> expenses = presenter.GetAllExpenses();
+            
+           
+            foreach (Expense expense in expenses)
+            {
+                
+                //expenseListByMonth.Items.Add(expense.Date.Month.ToString("MMMM"), expense.Amount);
+            }
+
+
+
+            Boolean check = true;
         }
 
         private void close_Click(object sender, RoutedEventArgs e)
