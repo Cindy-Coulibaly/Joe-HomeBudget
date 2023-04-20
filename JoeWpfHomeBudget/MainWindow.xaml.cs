@@ -33,6 +33,7 @@ namespace JoeWpfHomeBudget
         string filePath = string.Empty;
         bool newDb = false;
         private Boolean unsavedChanges;
+        private TestDoubleClick TestDoubleClick;
 
         public MainWindow()
         {
@@ -44,7 +45,8 @@ namespace JoeWpfHomeBudget
                 unsavedChanges = false;
             }
             else { this.Close(); }
-           
+           TestDoubleClick= new TestDoubleClick();
+            TestDoubleClick.Show();
 
 
         }
