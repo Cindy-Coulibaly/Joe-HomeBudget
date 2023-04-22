@@ -229,15 +229,15 @@
             </Grid.ColumnDefinitions>
 
             <Border Grid.Column="0" CornerRadius="20" BorderThickness="2"   Background="#F07167" Margin="10">
-                <Button BorderThickness="0"  FontSize="40" x:Name="update" Click="add_Click" Margin="10" Background="#F07167">Update</Button>
+                <Button BorderThickness="0"  FontSize="40" x:Name="update" Click="update_Click" Margin="10" Background="#F07167">Update</Button>
             </Border>
 
             <Border Grid.Row="6" CornerRadius="20" BorderThickness="2"  Grid.Column="1"  Background="#F07167" Margin="10">
-                <Button BorderThickness="0"  FontSize="40" x:Name="delete" Click="cancel_Click" Margin="10" Background="#F07167">Delete</Button>
+                <Button BorderThickness="0"  FontSize="40" x:Name="delete" Click="delete_Click" Margin="10" Background="#F07167">Delete</Button>
             </Border>
 
             <Border Grid.Row="6" CornerRadius="20" BorderThickness="2"  Grid.Column="2"  Background="#F07167" Margin="10">
-                <Button BorderThickness="0"  FontSize="40" x:Name="cancel" Click="close_Click" Margin="10" Background="#F07167">Cancel</Button>
+                <Button BorderThickness="0"  FontSize="40" x:Name="cancel" Click="cancel_Click" Margin="10" Background="#F07167">Cancel</Button>
             </Border>
         </Grid>
 
