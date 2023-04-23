@@ -297,6 +297,24 @@ namespace TestPresenter
         }
 
         [Fact]
+        public void Test_AddingCategory_InvalidDescription_isNumbers()
+        {
+            //Arrange
+            string dummyFile = "./dummyFile.db";
+            bool newDb = false;
+            TestView view = new TestView();
+            Presenter p = new Presenter(view, dummyFile, newDb);
+            int categoryType = 1;
+            string desc = "1";
+
+            //Act
+            p.AddCategory(desc, categoryType);
+
+            //Assert
+            Assert.True(view.calledShowError);
+        }
+
+        [Fact]
         public void Test_AddingCategory_InvalidDescription_NotSelectedCategory()
         {
             //Arrange
