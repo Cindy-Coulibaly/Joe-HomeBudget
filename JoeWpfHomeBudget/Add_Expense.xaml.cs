@@ -54,13 +54,14 @@ namespace JoeWpfHomeBudget
         /// </summary>
         public void PopulateCategoryInBox()
         {
-            List<Category> categories = presenter.GetAllCategories();
+            presenter.GetAllCategories();
+        }
 
+        public void GetCatergoryInBox(List<Category> categories)
+        {
             foreach (Category category in categories)
             {
                 categoryList.Items.Add(category.Description);
-               
-
             }
         }
 

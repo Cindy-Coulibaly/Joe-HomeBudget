@@ -41,6 +41,7 @@ namespace JoeWpfHomeBudget
             initializeDatabase();
             //if the user hasn't choose or created a database then close the main window
             if (filePath != null) { presenter = new Presenter(this, filePath, newDb);
+                expense = new Add_Expense(presenter);
                 ShowCats();
                 unsavedChanges = false;
             }
@@ -53,8 +54,6 @@ namespace JoeWpfHomeBudget
         private void Add_Expense_Click(object sender, RoutedEventArgs e)
         {
 
-            Add_Expense _expense = new Add_Expense(presenter);
-            expense=_expense;
             expense.Show();           
         }
 
@@ -71,13 +70,16 @@ namespace JoeWpfHomeBudget
 
         public void ShowCats()
         {
-            List<Category> categories = presenter.GetAllCategories();
+            presenter.GetAllCategories();
+        }
 
+        public void GetCatergoryInBox(List<Category> categories)
+        {
+            if (expense != null) { expense.GetCatergoryInBox(categories); }
             foreach (Category category in categories)
             {
                 categoryList.Items.Add(category.Description);
                 cmbCategories.Items.Add(category.Description);
-
             }
         }
 

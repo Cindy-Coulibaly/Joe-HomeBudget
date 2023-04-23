@@ -21,17 +21,17 @@ namespace JoeWpfHomeBudget
         }
 
 
-        public List<Category> GetAllCategories()
+        public void GetAllCategories()
         {
             try
             {
                 var listAllCategories = model.categories.List();
+                view.GetCatergoryInBox(listAllCategories);
             }
             catch (Exception err)
             {
                 view.ShowError(err.Message);
             }
-            return model.categories.List();
         }
 
         public void AddExpense(DateTime date, string amount, int categoryId, string description)
