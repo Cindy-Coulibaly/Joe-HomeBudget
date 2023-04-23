@@ -43,7 +43,8 @@ namespace JoeWpfHomeBudget
             if (filePath != null) { presenter = new Presenter(this, filePath, newDb);
                 ShowCats();
                 unsavedChanges = false;
-                radio_ShowExpensesByMonth();
+                radio_ShowExpensesByCategory();
+                //radio_ShowExpensesByMonth();
             }
             else { this.Close(); }
             
@@ -120,18 +121,63 @@ namespace JoeWpfHomeBudget
         public void radio_ShowExpensesByMonth()
         {
             List<Expense> expenses = presenter.GetAllExpenses();
-            //int sum = expenses[0].Amount;
+
+            //If there's no content in the database
+            if(expenses.Count <= 0 ) 
+            {
+                return;
+            }
+
+            double sum = 0;
             string prevMonth = expenses[0].Date.ToString("yyyy,MM");
             foreach (Expense expense in expenses)
             {
+                //Sums the expenses for each month
                 if (expense.Date.ToString("yyyy,MM") == prevMonth)
                 {
-                    //expenseListByMonth.Items.Add(expense.Date.ToString("yyyy,mm"), expense.Amount);
+                    sum += expense.Amount;
+                    //expenseListByMonth.Items.Add(expense.Date.ToString("yyyy,mm"), sum);                   
                 }
+                else
+                {
+                    prevMonth = expense.Date.ToString("yyyy,MM");
+                    sum += expense.Amount;
+                    //expenseListByMonth.Items.Add(expense.Date.ToString("yyyy,mm"), sum);
+                }
+            }          
+        }
+
+        public void radio_ShowExpensesByCategory()
+        {
+            List<Expense> expenses = presenter.GetAllExpenses();
+            List<Category> category = presenter.GetAllCategories();
+
+            //If there's no content in the database
+            if (expenses.Count <= 0)
+            {
+                return;
             }
 
-            Boolean check = true;
+            double sum = 0;
+            string prevCategory = category[expenses[0].Category - 1].Description;
+            foreach (Expense expense in expenses)
+            {
+                //Sums the expenses for each category
+                if (expense.Date.ToString("yyyy,MM") == prevCategory)
+                {
+                    sum += expense.Amount;
+                    //expenseListByCategory.Items.Add(expense.Date.ToString("yyyy,mm"), sum);                   
+                }
+                else
+                {
+                    prevCategory = expense.Date.ToString("yyyy,MM");
+                    sum += expense.Amount;
+                    //expenseListByCategory.Items.Add(expense.Date.ToString("yyyy,mm"), sum);
+                }
+            }
         }
+
+
 
         private void close_Click(object sender, RoutedEventArgs e)
         {
