@@ -25,9 +25,8 @@
         <Border Grid.Row="1" Grid.Column="1" BorderBrush="Black" BorderThickness="2">
             <StackPanel>
                 
-                
-                
-                
+
+
             </StackPanel>            
         </Border>
 
