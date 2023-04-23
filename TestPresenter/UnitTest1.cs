@@ -210,7 +210,37 @@ namespace TestPresenter
             Assert.True(view.calledShowError);
         }
 
+        [Fact]
+        public void Test_GetAllCategories_errorCase()
+        {
+            //Arrange
+            string dummyFile = "./dummyFile.db";
+            bool newDb = false;
+            TestView view = new TestView();
+            Presenter p = new Presenter(view, dummyFile, newDb);
 
+            //Act
+            var listAllCategories = p.GetAllCategories(); //------------------------try/catch, Try will always pass, need to put an if checking 0
+
+            //Assert
+            Assert.True(view.calledShowError);
+        }
+
+        [Fact]
+        public void Test_GetAllExpenses_errorCase()
+        {
+            //Arrange
+            string dummyFile = "./dummyFile.db";
+            bool newDb = false;
+            TestView view = new TestView();
+            Presenter p = new Presenter(view, dummyFile, newDb);
+
+            //Act
+            var listAllCategories = p.GetAllExpenses(); //------------------------try/catch, Try will always pass, need to put an if checking 0
+
+            //Assert
+            Assert.True(view.calledShowError);
+        }
 
         [Fact]
         public void Test_AddingCategory_Success()
@@ -230,6 +260,59 @@ namespace TestPresenter
             Assert.True(view.calledShowValid);
         }
 
+        [Fact]
+        public void Test_AddingCategory_InvalidDescription_IsEmpty()
+        {
+            //Arrange
+            string dummyFile = "./dummyFile.db";
+            bool newDb = false;
+            TestView view = new TestView();
+            Presenter p = new Presenter(view, dummyFile, newDb);
+            int categoryType = 1;
+            string desc = "";
+
+            //Act
+            p.AddCategory(desc, categoryType);
+
+            //Assert
+            Assert.True(view.calledShowError);
+        }
+
+        [Fact]
+        public void Test_AddingCategory_InvalidDescription_HaveNumbers()
+        {
+            //Arrange
+            string dummyFile = "./dummyFile.db";
+            bool newDb = false;
+            TestView view = new TestView();
+            Presenter p = new Presenter(view, dummyFile, newDb);
+            int categoryType = 1;
+            string desc = "A1";
+
+            //Act
+            p.AddCategory(desc, categoryType);
+
+            //Assert
+            Assert.True(view.calledShowError);
+        }
+
+        [Fact]
+        public void Test_AddingCategory_InvalidDescription_NotSelectedCategory()
+        {
+            //Arrange
+            string dummyFile = "./dummyFile.db";
+            bool newDb = false;
+            TestView view = new TestView();
+            Presenter p = new Presenter(view, dummyFile, newDb);
+            int categoryType = -1;
+            string desc = "Hat";
+
+            //Act
+            p.AddCategory(desc, categoryType);
+
+            //Assert
+            Assert.True(view.calledShowError);
+        }
 
     }
 }
