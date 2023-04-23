@@ -159,24 +159,64 @@ namespace JoeWpfHomeBudget
             }
 
             double sum = 0;
-            string prevCategory = category[expenses[0].Category - 1].Description;
+            
+            int prevCategory = category[0].Id;
+            
             foreach (Expense expense in expenses)
             {
+                string categoryName = category[expense.Category - 1].Description;
+
                 //Sums the expenses for each category
-                if (expense.Date.ToString("yyyy,MM") == prevCategory)
+                if (expense.Category == prevCategory)
                 {
                     sum += expense.Amount;
-                    //expenseListByCategory.Items.Add(expense.Date.ToString("yyyy,mm"), sum);                   
+                    //expenseListByCategory[expense.Category - 1].Items.Add(sum);                   
                 }
                 else
                 {
-                    prevCategory = expense.Date.ToString("yyyy,MM");
+                    prevCategory = category[expense.Category - 1].Id;
+                    sum = 0;
                     sum += expense.Amount;
-                    //expenseListByCategory.Items.Add(expense.Date.ToString("yyyy,mm"), sum);
+                    //expenseListByCategory.Items.Add(categoryName, sum);
                 }
             }
         }
 
+        public void checkbox_FilterByCategory()
+        {
+            List<Expense> expenses = presenter.GetAllExpenses();
+            List<Category> category = presenter.GetAllCategories();
+
+            //If there's no content in the database
+            if (expenses.Count <= 0)
+            {
+                return;
+            }
+
+            double sum = 0;
+
+            int prevCategory = category[0].Id;
+
+            foreach (Expense expense in expenses)
+            {
+                string categoryName = category[expense.Category - 1].Description;
+
+                //Sums the expenses for each category
+                if (expense.Category == prevCategory)
+                {
+                    sum += expense.Amount;
+                    //expenseListByCategory[expense.Category - 1].Items.Add(sum);                   
+                }
+                else
+                {
+                    prevCategory = category[expense.Category - 1].Id;
+                    sum = 0;
+                    sum += expense.Amount;
+                    //expenseListByCategory.Items.Add(categoryName, sum);
+                }
+            }
+        }
+    }
 
 
         private void close_Click(object sender, RoutedEventArgs e)
