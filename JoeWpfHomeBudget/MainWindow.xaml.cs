@@ -40,12 +40,14 @@ namespace JoeWpfHomeBudget
             InitializeComponent();
             initializeDatabase();
             //if the user hasn't choose or created a database then close the main window
-            if (filePath != null) { presenter = new Presenter(this, filePath, newDb);
+            if (filePath != null)
+            {
+                presenter = new Presenter(this, filePath, newDb);
                 ShowCats();
                 unsavedChanges = false;
             }
             else { this.Close(); }
-           
+
 
 
         }
@@ -54,8 +56,8 @@ namespace JoeWpfHomeBudget
         {
 
             Add_Expense _expense = new Add_Expense(presenter);
-            expense=_expense;
-            expense.Show();           
+            expense = _expense;
+            expense.Show();
         }
 
         private void Remove_Expense_Click(object sender, RoutedEventArgs e)
@@ -66,7 +68,7 @@ namespace JoeWpfHomeBudget
         public void btn_AddNewCategory(object sender, RoutedEventArgs e)
         {
             AddCategory addCategory = new AddCategory(presenter);
-            addCategory.ShowDialog();           
+            addCategory.ShowDialog();
         }
 
         public void ShowCats()
@@ -76,6 +78,7 @@ namespace JoeWpfHomeBudget
             foreach (Category category in categories)
             {
                 categoryList.Items.Add(category.Description);
+                cmbCategories.Items.Add(category.Description);
 
             }
         }
@@ -139,8 +142,8 @@ namespace JoeWpfHomeBudget
 
         public void CancelExpense()
         {
-            
-            if ( MessageBox.Show("Do you really want to cancel your Expense", "Cancel", MessageBoxButton.YesNo,MessageBoxImage.Question)==MessageBoxResult.Yes)
+
+            if (MessageBox.Show("Do you really want to cancel your Expense", "Cancel", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 ClearExpense();
             }
@@ -163,6 +166,12 @@ namespace JoeWpfHomeBudget
             var description = new DataGridTextColumn();     // Create a text column object 
             var amount = new DataGridTextColumn();     // Create a text column object 
             var Balance = new DataGridTextColumn();     // Create a text column object 
+
+        }
+        private void categoryList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+
         }
     }
 }
