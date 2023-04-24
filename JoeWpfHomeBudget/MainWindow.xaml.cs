@@ -128,24 +128,39 @@ namespace JoeWpfHomeBudget
             {
                 return;
             }
+            
+            myDataGrid.ItemsSource = expenses;
+
+            // clear all the columns and create rows
+            myDataGrid.Columns.Clear();
+
+            //Date
+            var date = new DataGridTextColumn();
+            date.Header = "Date";
+            date.Binding = new Binding("Date");
+
+            //Balance
+            var balance = new DataGridTextColumn();
+            balance.Header = "Balance";
+            balance.Binding = new Binding("Balance");
 
             double sum = 0;
             string prevMonth = expenses[0].Date.ToString("yyyy,MM");
-            foreach (Expense expense in expenses)
+            foreach (Expense expense in myDataGrid.ItemsSource)
             {
                 //Sums the expenses for each month
                 if (expense.Date.ToString("yyyy,MM") == prevMonth)
                 {
-                    sum += expense.Amount;
-                    //expenseListByMonth.Items.Add(expense.Date.ToString("yyyy,mm"), sum);                   
+                    sum += expense.Amount;                                   
                 }
                 else
                 {
                     prevMonth = expense.Date.ToString("yyyy,MM");
                     sum += expense.Amount;
-                    //expenseListByMonth.Items.Add(expense.Date.ToString("yyyy,mm"), sum);
+                    myDataGrid.Columns.Add(date);
+                    myDataGrid.Columns.Add(balance);
                 }
-            }          
+            }
         }
 
         public void radio_ShowExpensesByCategory()
@@ -158,9 +173,7 @@ namespace JoeWpfHomeBudget
             {
                 return;
             }
-
-            double sum = 0;
-                
+                           
             myDataGrid.ItemsSource = expenses;
 
             // clear all the columns and create rows
@@ -176,7 +189,8 @@ namespace JoeWpfHomeBudget
             balance.Header = "Balance";
             balance.Binding = new Binding("Balance");
 
-            
+            double sum = 0;
+
             int prevCategory =expenses[0].Category;
 
             foreach (Expense expense in myDataGrid.ItemsSource)
