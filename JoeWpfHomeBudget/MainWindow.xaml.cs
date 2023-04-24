@@ -160,8 +160,6 @@ namespace JoeWpfHomeBudget
             }
 
             double sum = 0;
-
-
                 
             myDataGrid.ItemsSource = expenses;
 
@@ -179,7 +177,7 @@ namespace JoeWpfHomeBudget
             balance.Binding = new Binding("Balance");
 
             
-            int prevCategory = category[0].Id;
+            int prevCategory =expenses[0].Category;
 
             foreach (Expense expense in myDataGrid.ItemsSource)
             {
@@ -188,15 +186,15 @@ namespace JoeWpfHomeBudget
                 //Sums the expenses for each category
                 if (expense.Category == prevCategory)
                 {
-                    sum += expense.Amount;
-                    //expenseListByCategory[expense.Category - 1].Items.Add(sum);                   
+                    sum += expense.Amount;                                 
                 }
                 else
                 {
                     prevCategory = category[expense.Category - 1].Id;
                     sum = 0;
                     sum += expense.Amount;
-                    //expenseListByCategory.Items.Add(categoryName, sum);
+                    myDataGrid.Columns.Add(date);
+                    myDataGrid.Columns.Add(balance);
                 }
             }
         }
