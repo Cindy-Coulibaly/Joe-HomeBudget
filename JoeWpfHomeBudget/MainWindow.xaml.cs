@@ -43,9 +43,9 @@ namespace JoeWpfHomeBudget
             if (filePath != null) { presenter = new Presenter(this, filePath, newDb);
                 ShowCats();
                 unsavedChanges = false;
-                //radio_ShowExpensesByCategory();
+                radio_ShowExpensesByCategory();
                 //radio_ShowExpensesByMonth();
-                checkbox_FilterByCategory();
+                //checkbox_FilterByCategory();
             }
             else { this.Close(); }
             
@@ -160,10 +160,28 @@ namespace JoeWpfHomeBudget
             }
 
             double sum = 0;
+
+
+                
+            myDataGrid.ItemsSource = expenses;
+
+            // clear all the columns and create rows
+            myDataGrid.Columns.Clear();
+                        
+            //Date
+            var date = new DataGridTextColumn();
+            date.Header = "Date";
+            date.Binding = new Binding("Date");
+
+            //Balance
+            var balance = new DataGridTextColumn();
+            balance.Header = "Balance";
+            balance.Binding = new Binding("Balance");
+
             
             int prevCategory = category[0].Id;
-            
-            foreach (Expense expense in expenses)
+
+            foreach (Expense expense in myDataGrid.ItemsSource)
             {
                 string categoryName = category[expense.Category - 1].Description;
 
@@ -235,7 +253,6 @@ namespace JoeWpfHomeBudget
             }
         }
     
-
 
         private void close_Click(object sender, RoutedEventArgs e)
         {
