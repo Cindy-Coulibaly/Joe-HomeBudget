@@ -46,7 +46,8 @@ namespace JoeWpfHomeBudget
                 unsavedChanges = false;
             }
             else { this.Close(); }
-           TestDoubleClick= new TestDoubleClick();
+
+            TestDoubleClick= new TestDoubleClick(presenter);
             TestDoubleClick.Show();
 
 

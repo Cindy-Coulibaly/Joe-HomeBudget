@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Budget;
 
 namespace JoeWpfHomeBudget
 {
@@ -19,9 +20,24 @@ namespace JoeWpfHomeBudget
     /// </summary>
     public partial class TestDoubleClick : Window
     {
-        public TestDoubleClick()
+        private readonly Presenter _presenter;
+        private Expense _selectedExpense;
+        public TestDoubleClick(Presenter presenter)
         {
             InitializeComponent();
+            _presenter = presenter;
+            _selectedExpense = new Expense(1, new DateTime(2023, 4, 23), 1, 500, "movies");
+            DataContext = _selectedExpense;
         }
+        private void TextBlock_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (BudgetItems.SelectedItem != null)
+            {
+                Update_Delete_Budget_Item updateDeleteBudgetItem = new Update_Delete_Budget_Item(_presenter,_selectedExpense);
+                updateDeleteBudgetItem.ShowDialog();
+            }
+        }
+
+
     }
 }

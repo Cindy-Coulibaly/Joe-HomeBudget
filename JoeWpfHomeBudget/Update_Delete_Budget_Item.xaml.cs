@@ -22,15 +22,17 @@ namespace JoeWpfHomeBudget
     public partial class Update_Delete_Budget_Item : Window, Update_Delete_Interface
     {
         private readonly Presenter presenter;
+        Expense _selectedExpense;
         private Boolean submitted;
         private Boolean cancelled;
 
-        public Update_Delete_Budget_Item(Presenter _presenter)
+        public Update_Delete_Budget_Item(Presenter _presenter,Expense selectedExpense)
         {
 
             InitializeComponent();
 
             presenter = _presenter;
+            _selectedExpense = selectedExpense;
             submitted = false;
             cancelled = false;
 
