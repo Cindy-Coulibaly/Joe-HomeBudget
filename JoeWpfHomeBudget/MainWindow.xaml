@@ -154,7 +154,7 @@
                 <RadioButton FontWeight="SemiBold">By Category</RadioButton>
                 <RadioButton FontWeight="SemiBold" >By Month and Category</RadioButton>
                 <CheckBox x:Name="Filter" Content="Filters" Margin="0,10,0,3"/>
-                <ComboBox x:Name="cmbCategories"/>
+                <ComboBox x:Name="cmbCategories" SelectionChanged="cmbCategories_SelectionChanged"/>
             </StackPanel>
            
 
