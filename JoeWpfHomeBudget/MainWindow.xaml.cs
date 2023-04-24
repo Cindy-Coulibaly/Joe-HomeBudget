@@ -43,13 +43,11 @@ namespace JoeWpfHomeBudget
             if (filePath != null) { presenter = new Presenter(this, filePath, newDb);
                 ShowCats();
                 unsavedChanges = false;
-                radio_ShowExpensesByCategory();
+                //radio_ShowExpensesByCategory();
                 //radio_ShowExpensesByMonth();
                 //checkbox_FilterByCategory();
             }
             else { this.Close(); }
-            
-
         }
 
         private void Add_Expense_Click(object sender, RoutedEventArgs e)
