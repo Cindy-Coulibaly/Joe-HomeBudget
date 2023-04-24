@@ -43,8 +43,9 @@ namespace JoeWpfHomeBudget
             if (filePath != null) { presenter = new Presenter(this, filePath, newDb);
                 ShowCats();
                 unsavedChanges = false;
-                radio_ShowExpensesByCategory();
+                //radio_ShowExpensesByCategory();
                 //radio_ShowExpensesByMonth();
+                checkbox_FilterByCategory();
             }
             else { this.Close(); }
             
@@ -185,36 +186,45 @@ namespace JoeWpfHomeBudget
         public void checkbox_FilterByCategory()
         {
             List<Expense> expenses = presenter.GetAllExpenses();
-            List<Category> category = presenter.GetAllCategories();
 
-            //If there's no content in the database
-            if (expenses.Count <= 0)
-            {
-                return;
-            }
+            myDataGrid.ItemsSource = expenses;
 
-            double sum = 0;
+            // clear all the columns.
+            myDataGrid.Columns.Clear();
 
-            int prevCategory = category[0].Id;
 
-            foreach (Expense expense in expenses)
-            {
-                string categoryName = category[expense.Category - 1].Description;
+            //create the columns
+            var date = new DataGridTextColumn();
+            date.Header = "Date";
+            date.Binding = new Binding("Date");
+            myDataGrid.Columns.Add(date);
 
-                //Sums the expenses for each category
-                if (expense.Category == prevCategory)
-                {
-                    sum += expense.Amount;
-                    //expenseListByCategory[expense.Category - 1].Items.Add(sum);                   
-                }
-                else
-                {
-                    prevCategory = category[expense.Category - 1].Id;
-                    sum = 0;
-                    sum += expense.Amount;
-                    //expenseListByCategory.Items.Add(categoryName, sum);
-                }
-            }
+
+
+            var category = new DataGridTextColumn();
+            category.Header = "Category";
+            category.Binding = new Binding("Category");
+            myDataGrid.Columns.Add(category);
+
+
+
+            var description = new DataGridTextColumn();
+            description.Header = "Description";
+            description.Binding = new Binding("Description");
+            myDataGrid.Columns.Add(description);
+
+
+
+            var amount = new DataGridTextColumn();
+            amount.Header = "Amount";
+            amount.Binding = new Binding("Amount");
+            myDataGrid.Columns.Add(amount);
+
+
+
+            var balance = new DataGridTextColumn();
+            balance.Header = "Balance";
+            myDataGrid.Columns.Add(balance);
         }
     
 

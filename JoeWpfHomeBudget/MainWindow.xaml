@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:JoeWpfHomeBudget"
         mc:Ignorable="d"        
         Title="MainWindow" Height="1000" Width="600">
-    <Grid>
+    <Grid>        
+
         <Grid.RowDefinitions>
             <RowDefinition Height="100"/>
             <RowDefinition Height="auto"/>
@@ -26,7 +27,8 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-
+        
+        <DataGrid Name="myDataGrid"></DataGrid>
 
         <Border Grid.RowSpan="10" Grid.ColumnSpan="5" Background="#FED9B7"/>
         
