@@ -149,28 +149,70 @@ namespace JoeWpfHomeBudget
             }
 
         }
-        // Get all the expenses and show the one needed in the gridView depending on the start date and the end date.
-        private void ShowExpenses()
-        {
-            List<Expense> expenses = presenter.GetAllExpenses();
 
-            listExpenses.ItemsSource = expenses;
-
-            // clear all the columns.
-            listExpenses.Columns.Clear();
-
-            //create the columns and bind them.
-
-            var date = new DataGridTextColumn();     // Create a text column object 
-            var category = new DataGridTextColumn();     // Create a text column object 
-            var description = new DataGridTextColumn();     // Create a text column object 
-            var amount = new DataGridTextColumn();     // Create a text column object 
-            var Balance = new DataGridTextColumn();     // Create a text column object 
-
-        }
         private void categoryList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
+
+        }
+
+        private void rbt_allExpenses_Checked(object sender, RoutedEventArgs e)
+        {
+            // get it from a specific date now
+            DateTime start = StartDate.SelectedDate.Value;
+            DateTime end = EndDate.SelectedDate.Value;
+            bool filter;
+            if(Filter.IsChecked== true) { filter=true;} else { filter=false;}
+            int categoryId = categoryList.SelectedIndex;
+
+            List<BudgetItem> items = presenter.GetAllBudgetItem(start, end, filter, categoryId);
+
+
+            // clear all the columns.
+            listExpenses.ItemsSource = items;
+            listExpenses.Columns.Clear();
+            
+
+            //create the columns
+            var date = new DataGridTextColumn();
+            date.Header = "Date";
+            date.Binding = new Binding("Date");
+            listExpenses.Columns.Add(date);
+
+            var category = new DataGridTextColumn();
+            category.Header = "Category";
+            category.Binding=new Binding("Category");
+            listExpenses.Columns.Add(category);
+
+            var description = new DataGridTextColumn();
+            description.Header = "Description";
+            description.Binding = new Binding("ShortDescription");
+            listExpenses.Columns.Add(description);
+
+            var amount = new DataGridTextColumn();
+            amount.Header = "Amount";
+            amount.Binding = new Binding("Amount");
+            listExpenses.Columns.Add(amount);
+
+            var balance = new DataGridTextColumn();
+            balance.Header = "Balance";
+            balance.Binding=new Binding("Balance");
+            listExpenses.Columns.Add(balance);
+
+        }
+
+        private void rbt_byMonth_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void rbt_byCategory_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void rbt_byMonthAndCategory_Checked(object sender, RoutedEventArgs e)
+        {
 
         }
     }

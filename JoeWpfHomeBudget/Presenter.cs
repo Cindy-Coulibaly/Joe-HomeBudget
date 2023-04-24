@@ -127,6 +127,29 @@ namespace JoeWpfHomeBudget
             }
             return false;
         }
+
+        /// <summary>
+        /// Get a list of budget item depending on the Date and if there is a filter
+        /// </summary>
+        /// <param name="start">the start date</param>
+        /// <param name="end"></param>
+        /// <param name="flag"></param>
+        /// <param name="CategoryId"></param>
+        /// <returns></returns>
+        public List<BudgetItem> GetAllBudgetItem(DateTime start, DateTime end,bool flag,int CategoryId)
+        {
+            try
+            {
+                List<BudgetItem> expenses=model.GetBudgetItems(start, end,flag,CategoryId);
+            }
+            catch(Exception err)
+            {
+                view.ShowError(err.Message);
+            }
+            
+
+            return model.GetBudgetItems(start, end, flag, CategoryId);
+        }
     }
 }
 
