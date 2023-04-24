@@ -44,6 +44,8 @@ namespace JoeWpfHomeBudget
         private void update_Click(object sender, RoutedEventArgs e)
         {
 
+
+
         }
 
         private void delete_Click(object sender, RoutedEventArgs e)
@@ -53,7 +55,7 @@ namespace JoeWpfHomeBudget
 
         private void cancel_Click(object sender, RoutedEventArgs e)
         {
-            CancelExpense();
+            Close();
         }
         public void ShowError(String err)
         {
@@ -89,16 +91,6 @@ namespace JoeWpfHomeBudget
 
 
             }
-        }
-        public void CancelExpense()
-        {
-
-            if (MessageBox.Show("Do you really want to cancel updating your Expense", "Cancel", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-            {
-                cancelled = true;
-                ClearExpense();
-            }
-
         }
         void SaveChangesValidationBeforeClosing(object sender, CancelEventArgs e)
         {

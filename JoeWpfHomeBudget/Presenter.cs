@@ -68,6 +68,17 @@ namespace JoeWpfHomeBudget
                 view.ShowError(err.Message);
             }
         }
+        public void UpdateExpense(int id, DateTime date, int category, Double amount, String description)
+        {
+            if(date == null)
+            {
+
+            }
+        }
+        public void DeleteExpense(int id)
+        {
+
+        }
         public List<Expense> GetAllExpenses()
         {
             try
