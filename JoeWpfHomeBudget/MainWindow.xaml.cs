@@ -120,6 +120,8 @@ namespace JoeWpfHomeBudget
         public void radio_ShowExpensesByMonth()
         {
             List<Expense> expenses = presenter.GetAllExpenses();
+            List<Category> category = presenter.GetAllCategories();
+            List<BudgetItemsByMonth> budgetItemsByMonths = new List<BudgetItemsByMonth>();
 
             //If there's no content in the database
             if(expenses.Count <= 0 ) 
@@ -136,11 +138,13 @@ namespace JoeWpfHomeBudget
             var date = new DataGridTextColumn();
             date.Header = "Date";
             date.Binding = new Binding("Date");
+            myDataGrid.Columns.Add(date);
 
             //Balance
             var balance = new DataGridTextColumn();
             balance.Header = "Balance";
-            balance.Binding = new Binding("Balance");
+            balance.Binding = new Binding("Balance");            
+            myDataGrid.Columns.Add(balance);
 
             double sum = 0;
             string prevMonth = expenses[0].Date.ToString("yyyy,MM");
@@ -155,8 +159,7 @@ namespace JoeWpfHomeBudget
                 {
                     prevMonth = expense.Date.ToString("yyyy,MM");
                     sum += expense.Amount;
-                    myDataGrid.Columns.Add(date);
-                    myDataGrid.Columns.Add(balance);
+
                 }
             }
         }
@@ -165,6 +168,7 @@ namespace JoeWpfHomeBudget
         {
             List<Expense> expenses = presenter.GetAllExpenses();
             List<Category> category = presenter.GetAllCategories();
+            List<BudgetItemsByMonth> budgetItemsByMonths = new List<BudgetItemsByMonth>();
 
             //If there's no content in the database
             if (expenses.Count <= 0)

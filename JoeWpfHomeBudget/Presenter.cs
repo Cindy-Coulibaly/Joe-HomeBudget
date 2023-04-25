@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -117,6 +118,20 @@ namespace JoeWpfHomeBudget
                 return false;
             }
             
+        }
+
+        public List<BudgetItemsByMonth> GetExpensesByMonth(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID)
+        {
+            List<BudgetItemsByMonth> budgetItemsByMonths = new List<BudgetItemsByMonth>();
+            try 
+            {
+                budgetItemsByMonths = model.GetBudgetItemsByMonth(Start,End,FilterFlag,CategoryID);
+            }
+            catch(Exception err)
+            {
+                view.ShowError(err.Message);
+            }
+            return budgetItemsByMonths;
         }
 
         public Boolean SaveBeforeClosing()
