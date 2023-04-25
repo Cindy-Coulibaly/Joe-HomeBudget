@@ -176,14 +176,8 @@ namespace JoeWpfHomeBudget
             }
 
 
-            bool filter;
+            bool filter=(bool)Filter.IsChecked;
             int categoryId=cmbCategories.SelectedIndex;
-
-            if(Filter.IsChecked== true) {
-              filter=true;
-            } else { 
-              filter=false;
-            }
             
             //get the list of items
             presenter.GetAllBudgetItem(start, end, filter, categoryId);
