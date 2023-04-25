@@ -157,6 +157,10 @@ namespace JoeWpfHomeBudget
             {
                 rbt_allExpenses_Checked(sender,e);
             }
+            else if (rbt_byMonthAndCategory.IsChecked == true)
+            {
+                rbt_byMonthAndCategory_Checked(sender, e);
+            }
 
 
         }
