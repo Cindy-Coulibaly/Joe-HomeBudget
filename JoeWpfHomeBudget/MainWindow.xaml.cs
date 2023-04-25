@@ -150,21 +150,25 @@ namespace JoeWpfHomeBudget
 
         }
 
-        private void categoryList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void input_Changed(object sender, SelectionChangedEventArgs e)
         {
-
+            if(StartDate.SelectedDate!=null && EndDate.SelectedDate != null && rbt_allExpenses.IsChecked==true)
+            {
+                rbt_allExpenses_Checked(sender,e);
+            }
 
         }
 
         private void rbt_allExpenses_Checked(object sender, RoutedEventArgs e)
         {
-            // get it from a specific date now
+            // get all the specificities
             DateTime start = StartDate.SelectedDate.Value;
             DateTime end = EndDate.SelectedDate.Value;
             bool filter;
             if(Filter.IsChecked== true) { filter=true;} else { filter=false;}
-            int categoryId = categoryList.SelectedIndex;
-
+            int categoryId = cmbCategories.SelectedIndex;
+            
+            //get the list of items
             List<BudgetItem> items = presenter.GetAllBudgetItem(start, end, filter, categoryId);
 
 
@@ -173,7 +177,7 @@ namespace JoeWpfHomeBudget
             listExpenses.Columns.Clear();
             
 
-            //create the columns
+            //create the columns and bind them
             var date = new DataGridTextColumn();
             date.Header = "Date";
             date.Binding = new Binding("Date");
