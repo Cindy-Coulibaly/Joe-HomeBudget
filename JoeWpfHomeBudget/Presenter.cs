@@ -20,15 +20,6 @@ namespace JoeWpfHomeBudget
             view = v;
         }
 
-        public void DeleteExpense(int id)
-        {
-		    if (id <0) {
-		        throw new Exception("There's no number");
-		    }			
-		    model.expenses.Delete(id);
-		}
-		
-
         public List<Category> GetAllCategories()
         {
             try
