@@ -22,19 +22,18 @@ namespace JoeWpfHomeBudget
     public partial class Update_Delete_Budget_Item : Window, Update_Delete_Interface
     {
         private readonly Presenter presenter;
-        Expense _selectedExpense;
         private Boolean submitted;
+        int _id;
         private Boolean cancelled;
 
-        public Update_Delete_Budget_Item(Presenter _presenter,Expense selectedExpense)
+        public Update_Delete_Budget_Item(Presenter _presenter,int id)
         {
 
             InitializeComponent();
 
             presenter = _presenter;
-            _selectedExpense = selectedExpense;
             submitted = false;
-            cancelled = false;
+            _id = id;
 
             SetDateDefault();
             PopulateCategoryInBox();
@@ -46,7 +45,7 @@ namespace JoeWpfHomeBudget
             DateTime date = date_expense.SelectedDate.Value;
             int categoryId = categoryList.SelectedIndex;
 
-            presenter.UpdateExpense(_selectedExpense.Id,date,categoryId, amount_expense.Text, description.Text);
+            presenter.UpdateExpense(_id,date,categoryId, amount_expense.Text, description.Text);
             submitted = true;
         }
 
