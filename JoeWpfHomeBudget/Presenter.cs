@@ -91,12 +91,12 @@ namespace JoeWpfHomeBudget
         {
             Category.CategoryType type;
             try {
-                int notNumeric;
+
                 if (description == string.Empty)
                 {
                     throw new Exception("Must provide Category Name");
                 }
-                else if (int.TryParse(description, out notNumeric))
+                else if (description.Any(c => char.IsDigit(c)))
                 {
                     throw new Exception("Category Name cannot contain numbers");
                 }
