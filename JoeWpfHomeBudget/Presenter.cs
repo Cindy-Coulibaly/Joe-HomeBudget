@@ -75,10 +75,6 @@ namespace JoeWpfHomeBudget
 
             }
         }
-        public void DeleteExpense(int id)
-        {
-
-        }
         public List<Expense> GetAllExpenses()
         {
             try

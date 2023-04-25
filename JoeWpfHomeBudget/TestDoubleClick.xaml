@@ -7,19 +7,13 @@
         mc:Ignorable="d"
         Title="TestDoubleClick" Height="450" Width="800">
     <Grid>
-        <ListBox x:Name="BudgetItems" ItemsSource="{Binding}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <ListBoxItem MouseDoubleClick="TextBlock_MouseDoubleClick">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Date, StringFormat='MM/dd/yyyy'}" Margin="5"/>
-                            <TextBlock Text="{Binding Category}" Margin="5"/>
-                            <TextBlock Text="{Binding Amount}" Margin="5"/>
-                            <TextBlock Text="{Binding Description}" Margin="5"/>
-                        </StackPanel>
-                    </ListBoxItem>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+        <DataGrid Name="expenseClick" AutoGenerateColumns="False" IsReadOnly="True" MouseDoubleClick="expense_MouseDoubleClick">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Date" Binding="{Binding Date, StringFormat='MM/dd/yyyy'}" />
+                <DataGridTextColumn Header="Category" Binding="{Binding Category}" />
+                <DataGridTextColumn Header="Amount" Binding="{Binding Amount}" />
+                <DataGridTextColumn Header="Description" Binding="{Binding Description}" />
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>

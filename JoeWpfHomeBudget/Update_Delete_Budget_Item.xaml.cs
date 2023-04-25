@@ -43,9 +43,8 @@ namespace JoeWpfHomeBudget
 
         private void update_Click(object sender, RoutedEventArgs e)
         {
-
-
-
+            presenter.UpdateExpense(_selectedExpense.Id,_selectedExpense.Date,_selectedExpense.Category,_selectedExpense.Amount,_selectedExpense.Description);
+            submitted = true;
         }
 
         private void delete_Click(object sender, RoutedEventArgs e)

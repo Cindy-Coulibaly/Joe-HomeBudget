@@ -1,16 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using Budget;
 
 namespace JoeWpfHomeBudget
@@ -21,23 +12,38 @@ namespace JoeWpfHomeBudget
     public partial class TestDoubleClick : Window
     {
         private readonly Presenter _presenter;
-        private Expense _selectedExpense;
+        private List<TempExpense> _expenses;
+
         public TestDoubleClick(Presenter presenter)
         {
             InitializeComponent();
             _presenter = presenter;
-            _selectedExpense = new Expense(1, new DateTime(2023, 4, 23), 1, 500, "movies");
-            DataContext = _selectedExpense;
-        }
-        private void TextBlock_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            if (BudgetItems.SelectedItem != null)
+
+            _expenses = new List<TempExpense>
             {
-                Update_Delete_Budget_Item updateDeleteBudgetItem = new Update_Delete_Budget_Item(_presenter,_selectedExpense);
+                new TempExpense { Id = 1, Date = new DateTime(2023, 4, 23), Category = 1, Amount = 500, Description = "movies" }
+            };
+
+            expenseClick.ItemsSource = _expenses;
+        }
+
+        private void expense_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (expenseClick.SelectedItem != null)
+            {
+                Expense selectedTempExpense = expenseClick.SelectedItem as Expense;
+                Update_Delete_Budget_Item updateDeleteBudgetItem = new Update_Delete_Budget_Item(_presenter, selectedTempExpense);
                 updateDeleteBudgetItem.ShowDialog();
             }
         }
 
-
+        public class TempExpense
+        {
+            public int Id { get; set; }
+            public DateTime Date { get; set; }
+            public int Category { get; set; }
+            public double Amount { get; set; }
+            public string Description { get; set; }
+        }
     }
 }
