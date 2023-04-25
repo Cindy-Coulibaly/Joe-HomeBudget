@@ -136,24 +136,19 @@ namespace JoeWpfHomeBudget
         /// <param name="flag"></param>
         /// <param name="CategoryId"></param>
         /// <returns></returns>
-        public List<BudgetItem> GetAllBudgetItem(DateTime start, DateTime end,bool filter,int categoryId)
+        public void GetAllBudgetItem(DateTime start, DateTime end,bool filter,int categoryId)
         {
             try
             {
-                if(filter == true&& categoryId == -1)
-                {
-                    throw new Exception("The filter is true, but there is no category there");
-                }
                 categoryId = categoryId + 1;
                 List<BudgetItem> expenses=model.GetBudgetItems(start, end, filter, categoryId);
+                view.GetBudgetItem(expenses);
             }
             catch(Exception err)
             {
                 view.ShowError(err.Message);
             }
             
-
-            return model.GetBudgetItems(start, end, filter, categoryId);
         }
     }
 }

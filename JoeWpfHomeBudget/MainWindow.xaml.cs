@@ -47,6 +47,7 @@ namespace JoeWpfHomeBudget
                 unsavedChanges = false;
             }
             else { this.Close(); }
+            rbt_allExpenses.IsChecked = true;
 
 
 
@@ -152,57 +153,40 @@ namespace JoeWpfHomeBudget
 
         private void input_Changed(object sender, SelectionChangedEventArgs e)
         {
-            if(StartDate.SelectedDate!=null && EndDate.SelectedDate != null && rbt_allExpenses.IsChecked==true)
+            if(rbt_allExpenses.IsChecked==true)
             {
                 rbt_allExpenses_Checked(sender,e);
             }
+
 
         }
 
         private void rbt_allExpenses_Checked(object sender, RoutedEventArgs e)
         {
             // get all the specificities
-            DateTime start = StartDate.SelectedDate.Value;
-            DateTime end = EndDate.SelectedDate.Value;
+            DateTime start= DateTime.MinValue;
+            DateTime end= DateTime.MaxValue;
+
+            if(StartDate.SelectedDate != null) {
+              start = StartDate.SelectedDate.Value; 
+            }
+
+            if(EndDate.SelectedDate != null) {
+             end = EndDate.SelectedDate.Value;
+            }
+
+
             bool filter;
-            if(Filter.IsChecked== true) { filter=true;} else { filter=false;}
-            int categoryId = cmbCategories.SelectedIndex;
+            int categoryId=cmbCategories.SelectedIndex;
+
+            if(Filter.IsChecked== true) {
+              filter=true;
+            } else { 
+              filter=false;
+            }
             
             //get the list of items
-            List<BudgetItem> items = presenter.GetAllBudgetItem(start, end, filter, categoryId);
-
-
-            // clear all the columns.
-            listExpenses.ItemsSource = items;
-            listExpenses.Columns.Clear();
-            
-
-            //create the columns and bind them
-            var date = new DataGridTextColumn();
-            date.Header = "Date";
-            date.Binding = new Binding("Date");
-            listExpenses.Columns.Add(date);
-
-            var category = new DataGridTextColumn();
-            category.Header = "Category";
-            category.Binding=new Binding("Category");
-            listExpenses.Columns.Add(category);
-
-            var description = new DataGridTextColumn();
-            description.Header = "Description";
-            description.Binding = new Binding("ShortDescription");
-            listExpenses.Columns.Add(description);
-
-            var amount = new DataGridTextColumn();
-            amount.Header = "Amount";
-            amount.Binding = new Binding("Amount");
-            listExpenses.Columns.Add(amount);
-
-            var balance = new DataGridTextColumn();
-            balance.Header = "Balance";
-            balance.Binding=new Binding("Balance");
-            listExpenses.Columns.Add(balance);
-
+            presenter.GetAllBudgetItem(start, end, filter, categoryId);
         }
 
         private void rbt_byMonth_Checked(object sender, RoutedEventArgs e)
@@ -218,6 +202,47 @@ namespace JoeWpfHomeBudget
         private void rbt_byMonthAndCategory_Checked(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void Filter_Checked(object sender, RoutedEventArgs e)
+        {
+            if(rbt_allExpenses.IsChecked == true)
+            {
+                rbt_allExpenses_Checked(sender, e);
+            }
+        }
+
+        public void GetBudgetItem(List<BudgetItem> items)
+        {
+            listExpenses.ItemsSource = items;
+            listExpenses.Columns.Clear();
+
+
+            //create the columns and bind them
+            var date = new DataGridTextColumn();
+            date.Header = "Date";
+            date.Binding = new Binding("Date");
+            listExpenses.Columns.Add(date);
+
+            var category = new DataGridTextColumn();
+            category.Header = "Category";
+            category.Binding = new Binding("Category");
+            listExpenses.Columns.Add(category);
+
+            var description = new DataGridTextColumn();
+            description.Header = "Description";
+            description.Binding = new Binding("ShortDescription");
+            listExpenses.Columns.Add(description);
+
+            var amount = new DataGridTextColumn();
+            amount.Header = "Amount";
+            amount.Binding = new Binding("Amount");
+            listExpenses.Columns.Add(amount);
+
+            var balance = new DataGridTextColumn();
+            balance.Header = "Balance";
+            balance.Binding = new Binding("Balance");
+            listExpenses.Columns.Add(balance);
         }
     }
 }
