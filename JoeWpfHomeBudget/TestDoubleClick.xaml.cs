@@ -29,10 +29,10 @@ namespace JoeWpfHomeBudget
 
         private void expense_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+            var selectedTempExpense = expenseClick.SelectedItem as TempExpense;
             if (expenseClick.SelectedItem != null)
             {
-                Expense selectedTempExpense = expenseClick.SelectedItem as Expense;
-                Update_Delete_Budget_Item updateDeleteBudgetItem = new Update_Delete_Budget_Item(_presenter, selectedTempExpense);
+                Update_Delete_Budget_Item updateDeleteBudgetItem = new Update_Delete_Budget_Item(_presenter, selectedTempExpense.Id);
                 updateDeleteBudgetItem.ShowDialog();
             }
         }
