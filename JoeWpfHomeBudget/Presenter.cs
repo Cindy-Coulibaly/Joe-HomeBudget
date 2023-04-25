@@ -21,7 +21,6 @@ namespace JoeWpfHomeBudget
             view = v;
         }
 
-
         public List<Category> GetAllCategories()
         {
             try

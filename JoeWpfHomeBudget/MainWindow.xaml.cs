@@ -44,7 +44,7 @@ namespace JoeWpfHomeBudget
                 ShowCats();
                 unsavedChanges = false;
                 //radio_ShowExpensesByCategory();
-                //radio_ShowExpensesByMonth();
+                radio_ShowExpensesByMonth();
                 //checkbox_FilterByCategory();
             }
             else { this.Close(); }
@@ -120,8 +120,9 @@ namespace JoeWpfHomeBudget
         public void radio_ShowExpensesByMonth()
         {
             List<Expense> expenses = presenter.GetAllExpenses();
-            List<Category> category = presenter.GetAllCategories();
+            List<Category> category = presenter.GetAllCategories();            
             List<BudgetItemsByMonth> budgetItemsByMonths = new List<BudgetItemsByMonth>();
+            List<BudgetItem> budgetItems = new List<BudgetItem>();
 
             //If there's no content in the database
             if(expenses.Count <= 0 ) 
@@ -129,7 +130,28 @@ namespace JoeWpfHomeBudget
                 return;
             }
             
-            myDataGrid.ItemsSource = expenses;
+            double sum = 0;
+            string prevMonth = expenses[0].Date.ToString("yyyy,MM");
+            
+            foreach (Expense expense in expenses)
+            {
+                //Sums the expenses for each month
+                if (expense.Date.ToString("yyyy,MM") == prevMonth)
+                {
+                    sum += expense.Amount;                                   
+                }
+                else
+                {
+                    budgetItemsByMonths = presenter.GetExpensesByMonth(DateTime.Today,DateTime.Today, true, expense.Category);                                     
+                    
+                    prevMonth = expense.Date.ToString("yyyy,MM");
+                    sum += expense.Amount;
+
+                }
+                budgetItemsByMonths = presenter.GetExpensesByMonth(DateTime.Today, DateTime.Today.AddDays(40), true, expense.Category);
+            }            
+            
+            myDataGrid.ItemsSource = budgetItemsByMonths;
 
             // clear all the columns and create rows
             myDataGrid.Columns.Clear();
@@ -144,24 +166,7 @@ namespace JoeWpfHomeBudget
             var balance = new DataGridTextColumn();
             balance.Header = "Balance";
             balance.Binding = new Binding("Balance");            
-            myDataGrid.Columns.Add(balance);
-
-            double sum = 0;
-            string prevMonth = expenses[0].Date.ToString("yyyy,MM");
-            foreach (Expense expense in myDataGrid.ItemsSource)
-            {
-                //Sums the expenses for each month
-                if (expense.Date.ToString("yyyy,MM") == prevMonth)
-                {
-                    sum += expense.Amount;                                   
-                }
-                else
-                {
-                    prevMonth = expense.Date.ToString("yyyy,MM");
-                    sum += expense.Amount;
-
-                }
-            }
+            myDataGrid.Columns.Add(balance);            
         }
 
         public void radio_ShowExpensesByCategory()
@@ -174,27 +179,10 @@ namespace JoeWpfHomeBudget
             if (expenses.Count <= 0)
             {
                 return;
-            }
-                           
-            myDataGrid.ItemsSource = expenses;
-
-            // clear all the columns and create rows
-            myDataGrid.Columns.Clear();
-                        
-            //Date
-            var date = new DataGridTextColumn();
-            date.Header = "Date";
-            date.Binding = new Binding("Date");
-
-            //Balance
-            var balance = new DataGridTextColumn();
-            balance.Header = "Balance";
-            balance.Binding = new Binding("Balance");
-
+            }            
             double sum = 0;
 
-            int prevCategory =expenses[0].Category;
-
+            int prevCategory = 0;
             foreach (Expense expense in myDataGrid.ItemsSource)
             {
                 string categoryName = category[expense.Category - 1].Description;
@@ -207,12 +195,28 @@ namespace JoeWpfHomeBudget
                 else
                 {
                     prevCategory = category[expense.Category - 1].Id;
+                    
                     sum = 0;
                     sum += expense.Amount;
-                    myDataGrid.Columns.Add(date);
-                    myDataGrid.Columns.Add(balance);
                 }
-            }
+            }        
+               
+            myDataGrid.ItemsSource = expenses;
+
+            // clear all the columns and create rows
+            myDataGrid.Columns.Clear();
+                        
+            //Date
+            var date = new DataGridTextColumn();
+            date.Header = "Date";
+            date.Binding = new Binding("Date");
+            myDataGrid.Columns.Add(date);
+            
+            //Balance
+            var balance = new DataGridTextColumn();
+            balance.Header = "Balance";
+            balance.Binding = new Binding("Balance");                    
+            myDataGrid.Columns.Add(balance);          
         }
 
         public void checkbox_FilterByCategory()
