@@ -45,9 +45,16 @@ namespace JoeWpfHomeBudget
                 unsavedChanges = false;
             }
             else { this.Close(); }
-           
+          
+        }
 
-
+        private void DeleteMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            //var selected = myDataGrid_tempName_TobeChange.SelectedItem as Expense;
+            //if (selected != null)
+            //{
+            //    presenter.DeleteExpense(selected.Id);
+            //}
         }
 
         private void Add_Expense_Click(object sender, RoutedEventArgs e)
