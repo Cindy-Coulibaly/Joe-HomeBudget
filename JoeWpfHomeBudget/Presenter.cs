@@ -42,19 +42,19 @@ namespace JoeWpfHomeBudget
             {
                 if (categoryId == -1)
                 {
-                    throw new Exception("you have not inputed for the category category");
+                    throw new Exception("No category to add has been provided.");
                 }
                 else if (!double.TryParse(amount, out amountTemp) || Double.IsNaN(amountTemp) || Double.IsInfinity(amountTemp))
                 {
-                    throw new Exception("the amount is not a valid value");
+                    throw new Exception("The amount to add is not a valid value.");
                 }
                 else if (double.TryParse(description, out badDescription))
                 {
-                    throw new Exception("the description is a number");
+                    throw new Exception("The description to add is a number");
                 }
                 else if (description == "")
                 {
-                    throw new Exception("the description is empty");
+                    throw new Exception("The description is empty.");
                 }
                 else
                 {
@@ -68,11 +68,38 @@ namespace JoeWpfHomeBudget
                 view.ShowError(err.Message);
             }
         }
-        public void UpdateExpense(int id, DateTime date, int category, Double amount, String description)
+        public void UpdateExpense(int id, DateTime date, int category, string amount, String description)
         {
-            if(date == null)
-            {
+            double amountTemp;
+            double badDescription;
 
+            try
+            {
+                if (category == -1)
+                {
+                    throw new Exception("No category to update has been provided");
+                }
+                else if (!double.TryParse(amount, out amountTemp) || Double.IsNaN(amountTemp) || Double.IsInfinity(amountTemp))
+                {
+                    throw new Exception("The amount to update is not a valid value.");
+                }
+                else if (double.TryParse(description, out badDescription))
+                {
+                    throw new Exception("The description to update is a number");
+                }
+                else if (description == "")
+                {
+                    throw new Exception("The description is empty.");
+                }
+                else
+                {
+                    model.expenses.UpdateProperties(id, date, category, amountTemp, description);
+                    view.ShowValid($"New expense just updated with properties:: Id: {id} Category: {category} Amount: {amount} Description: {description}");
+                }
+            }
+            catch (Exception err)
+            {
+                view.ShowError(err.Message);
             }
         }
         public List<Expense> GetAllExpenses()
