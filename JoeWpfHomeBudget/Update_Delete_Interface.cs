@@ -8,7 +8,6 @@ namespace JoeWpfHomeBudget
 {
     interface Update_Delete_Interface
     {
-        void SetDateDefault();
         void PopulateCategoryInBox();
     }
 }

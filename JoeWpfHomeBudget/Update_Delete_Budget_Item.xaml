@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JoeWpfHomeBudget"
         mc:Ignorable="d"
-        Closing="SaveChangesValidationBeforeClosing"
         Title="Add_Expense" Height="800" Width="1050">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -74,7 +73,7 @@
             <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="150,30,0,0" FontSize="40" 
                        FontWeight="DemiBold" >Date</TextBlock>
 
-            <StackPanel Grid.Row="0" Margin="10">
+            <StackPanel Grid.Row="0" Margin="10" >
                 <Grid>
                     <Ellipse Width="100" Height="100" Fill="#FED9B7" Grid.Row="1"/>
 
@@ -136,12 +135,6 @@
 
                 </ComboBox>
             </Border>
-
-            <Border Grid.Row="1" CornerRadius="10" BorderThickness="6" Margin="0,90,0,0" Background="#F07167">
-                <Button   FontSize="20" BorderThickness="0" Background="#F07167" Margin="2" Click="add_Category_Click">Add Category</Button>
-            </Border>
-
-
 
         </Grid>
 
@@ -233,11 +226,11 @@
             </Border>
 
             <Border Grid.Row="6" CornerRadius="20" BorderThickness="2"  Grid.Column="1"  Background="#F07167" Margin="10">
-                <Button BorderThickness="0"  FontSize="40" x:Name="delete" Click="delete_Click" Margin="10" Background="#F07167">Delete</Button>
+                <Button BorderThickness="0"  FontSize="40" x:Name="delete" Click="cancel_Click" Margin="10" Background="#F07167">Cancel</Button>
             </Border>
 
             <Border Grid.Row="6" CornerRadius="20" BorderThickness="2"  Grid.Column="2"  Background="#F07167" Margin="10">
-                <Button BorderThickness="0"  FontSize="40" x:Name="cancel" Click="cancel_Click" Margin="10" Background="#F07167">Cancel</Button>
+                <Button BorderThickness="0"  FontSize="40" x:Name="cancel" Click="delete_Click" Margin="10" Background="#F07167">Delete</Button>
             </Border>
         </Grid>
 

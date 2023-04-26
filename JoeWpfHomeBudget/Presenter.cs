@@ -68,7 +68,7 @@ namespace JoeWpfHomeBudget
                 view.ShowError(err.Message);
             }
         }
-        public void UpdateExpense(int id, DateTime date, int category, string amount, String description)
+        public void UpdateExpense(int id, DateTime date, int category, string amount, string description)
         {
             double amountTemp;
             double badDescription;

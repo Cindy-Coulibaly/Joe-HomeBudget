@@ -127,8 +127,12 @@
         <!--#region list all the expenses-->
 
         <Border Grid.Row="2" Grid.Column="6" Grid.ColumnSpan="1" Grid.RowSpan="6" >
-            <DataGrid Background="#F07167" BorderBrush="Black" Margin="10" x:Name="listExpenses">
-
+            <DataGrid Background="#F07167" BorderBrush="Black" Margin="10" x:Name="listExpenses" MouseDoubleClick="Update_Click" IsReadOnly="True">
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Click="Update_Click" Header="Update"></MenuItem>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
             </DataGrid>
         </Border>
         <!--#endregion-->
