@@ -165,6 +165,21 @@ namespace JoeWpfHomeBudget
                 view.ShowError(err.Message);
             }
         }
+
+        public void GetAllBudgetItemByMonth(DateTime start,DateTime end,bool filter,int categoryId)
+        {
+            try
+            {
+                categoryId = categoryId + 1;
+                List<BudgetItemsByMonth> expenses = model.GetBudgetItemsByMonth(start, end, filter, categoryId);
+                view.ShowBudgetItemByMonth(expenses);
+
+            }
+            catch (Exception err)
+            {
+                view.ShowError(err.Message);
+            }
+        }
     }
 }
 

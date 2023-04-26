@@ -15,6 +15,7 @@ namespace JoeWpfHomeBudget
         void CancelExpense();
         void ShowBudgetItem(List<BudgetItem> items);
         void ShowBudgetItemByMonthAndCategory(List<Dictionary<string, object>> items);
+        void ShowBudgetItemByMonth(List<BudgetItemsByMonth> items);
 
     }
 }

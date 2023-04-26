@@ -161,6 +161,10 @@ namespace JoeWpfHomeBudget
             {
                 rbt_byMonthAndCategory_Checked(sender, e);
             }
+            else if(rbt_byMonth.IsChecked == true)
+            {
+                rbt_byMonth_Checked(sender, e);
+            }
 
 
         }
@@ -190,7 +194,24 @@ namespace JoeWpfHomeBudget
 
         private void rbt_byMonth_Checked(object sender, RoutedEventArgs e)
         {
+                        // get all the specificities
+            DateTime start= DateTime.MinValue;
+            DateTime end= DateTime.MaxValue;
 
+            if(StartDate.SelectedDate != null) {
+              start = StartDate.SelectedDate.Value; 
+            }
+
+            if(EndDate.SelectedDate != null) {
+             end = EndDate.SelectedDate.Value;
+            }
+
+
+            bool filter=(bool)Filter.IsChecked;
+            int categoryId=cmbCategories.SelectedIndex;
+            
+            //get the list of items
+            presenter.GetAllBudgetItemByMonth(start, end, filter, categoryId);
         }
 
         private void rbt_byCategory_Checked(object sender, RoutedEventArgs e)
@@ -297,6 +318,7 @@ namespace JoeWpfHomeBudget
 
             
         }
+
         private bool NotContainsDuplicateColumns(string key)
         {
             for(int i=0;i<listExpenses.Columns.Count;i++)
@@ -305,6 +327,22 @@ namespace JoeWpfHomeBudget
             }
 
             return true;
+        }
+
+        public void ShowBudgetItemByMonth(List<BudgetItemsByMonth> items)
+        {
+            listExpenses.ItemsSource = items;
+            listExpenses.Columns.Clear();
+
+            var date = new DataGridTextColumn();
+            date.Header = "Date";
+            date.Binding = new Binding("Month");
+            listExpenses.Columns.Add(date);
+
+            var total = new DataGridTextColumn();
+            total.Header = "Total";
+            total.Binding = new Binding("Total");
+            listExpenses.Columns.Add(total);
         }
     }
 }
