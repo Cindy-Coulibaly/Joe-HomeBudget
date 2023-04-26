@@ -165,6 +165,10 @@ namespace JoeWpfHomeBudget
             {
                 rbt_byMonth_Checked(sender, e);
             }
+            else if(rbt_byCategory.IsChecked == true)
+            {
+                rbt_byCategory_Checked(sender, e);
+            }
 
 
         }
@@ -216,6 +220,26 @@ namespace JoeWpfHomeBudget
 
         private void rbt_byCategory_Checked(object sender, RoutedEventArgs e)
         {
+            // get all the specificities
+            DateTime start = DateTime.MinValue;
+            DateTime end = DateTime.MaxValue;
+
+            if (StartDate.SelectedDate != null)
+            {
+                start = StartDate.SelectedDate.Value;
+            }
+
+            if (EndDate.SelectedDate != null)
+            {
+                end = EndDate.SelectedDate.Value;
+            }
+
+
+            bool filter = (bool)Filter.IsChecked;
+            int categoryId = cmbCategories.SelectedIndex;
+
+            //get the list of items
+            presenter.GetAllBudgetItemByCategory(start, end, filter, categoryId);
 
         }
 
@@ -244,9 +268,21 @@ namespace JoeWpfHomeBudget
 
         private void Filter_Checked(object sender, RoutedEventArgs e)
         {
-            if(rbt_allExpenses.IsChecked == true)
+            if (rbt_allExpenses.IsChecked == true)
             {
                 rbt_allExpenses_Checked(sender, e);
+            }
+            else if (rbt_byMonthAndCategory.IsChecked == true)
+            {
+                rbt_byMonthAndCategory_Checked(sender, e);
+            }
+            else if (rbt_byMonth.IsChecked == true)
+            {
+                rbt_byMonth_Checked(sender, e);
+            }
+            else if (rbt_byCategory.IsChecked == true)
+            {
+                rbt_byCategory_Checked(sender, e);
             }
         }
 
@@ -337,6 +373,22 @@ namespace JoeWpfHomeBudget
             var date = new DataGridTextColumn();
             date.Header = "Date";
             date.Binding = new Binding("Month");
+            listExpenses.Columns.Add(date);
+
+            var total = new DataGridTextColumn();
+            total.Header = "Total";
+            total.Binding = new Binding("Total");
+            listExpenses.Columns.Add(total);
+        }
+
+        public void ShowBudgetItemByCategory(List<BudgetItemsByCategory> items)
+        {
+            listExpenses.ItemsSource = items;
+            listExpenses.Columns.Clear();
+
+            var date = new DataGridTextColumn();
+            date.Header = "Category";
+            date.Binding = new Binding("Category");
             listExpenses.Columns.Add(date);
 
             var total = new DataGridTextColumn();

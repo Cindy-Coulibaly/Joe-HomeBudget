@@ -180,6 +180,21 @@ namespace JoeWpfHomeBudget
                 view.ShowError(err.Message);
             }
         }
+
+        public void GetAllBudgetItemByCategory(DateTime start, DateTime end, bool filter, int categoryId)
+        {
+            try
+            {
+                categoryId = categoryId + 1;
+                List<BudgetItemsByCategory> expenses = model.GetBudgetItemsByCategory(start, end, filter, categoryId);
+                view.ShowBudgetItemByCategory(expenses);
+
+            }
+            catch (Exception err)
+            {
+                view.ShowError(err.Message);
+            }
+        }
     }
 }
 
