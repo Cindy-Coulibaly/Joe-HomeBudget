@@ -13,7 +13,8 @@ namespace JoeWpfHomeBudget
         void ShowValid(string message);
         void ClearExpense();
         void CancelExpense();
-        void GetBudgetItem(List<BudgetItem> items);
+        void ShowBudgetItem(List<BudgetItem> items);
+        void ShowBudgetItemByMonthAndCategory(List<Dictionary<string, object>> items);
 
     }
 }

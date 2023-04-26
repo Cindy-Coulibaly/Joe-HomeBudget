@@ -142,13 +142,28 @@ namespace JoeWpfHomeBudget
             {
                 categoryId = categoryId + 1;
                 List<BudgetItem> expenses=model.GetBudgetItems(start, end, filter, categoryId);
-                view.GetBudgetItem(expenses);
+                view.ShowBudgetItem(expenses);
             }
             catch(Exception err)
             {
                 view.ShowError(err.Message);
             }
             
+        }
+
+        public void GetAllBudgetItemByCategoryAndByMonth(DateTime start,DateTime end,bool filter,int categoryId)
+        {
+            try
+            {
+                categoryId = categoryId + 1;
+                List<Dictionary<string,object>> expenses = model.GetBudgetDictionaryByCategoryAndMonth(start, end, filter, categoryId);
+                view.ShowBudgetItemByMonthAndCategory(expenses);
+
+            }
+            catch (Exception err)
+            {
+                view.ShowError(err.Message);
+            }
         }
     }
 }

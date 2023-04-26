@@ -185,6 +185,7 @@ namespace JoeWpfHomeBudget
             
             //get the list of items
             presenter.GetAllBudgetItem(start, end, filter, categoryId);
+            
         }
 
         private void rbt_byMonth_Checked(object sender, RoutedEventArgs e)
@@ -199,6 +200,24 @@ namespace JoeWpfHomeBudget
 
         private void rbt_byMonthAndCategory_Checked(object sender, RoutedEventArgs e)
         {
+            DateTime start = DateTime.MinValue;
+            DateTime end = DateTime.MaxValue;
+
+            if (StartDate.SelectedDate != null)
+            {
+                start = StartDate.SelectedDate.Value;
+            }
+
+            if (EndDate.SelectedDate != null)
+            {
+                end = EndDate.SelectedDate.Value;
+            }
+
+
+            bool filter = (bool)Filter.IsChecked;
+            int categoryId = cmbCategories.SelectedIndex;
+
+            presenter.GetAllBudgetItemByCategoryAndByMonth(start,end,filter, categoryId);
 
         }
 
@@ -210,7 +229,7 @@ namespace JoeWpfHomeBudget
             }
         }
 
-        public void GetBudgetItem(List<BudgetItem> items)
+        public void ShowBudgetItem(List<BudgetItem> items)
         {
             listExpenses.ItemsSource = items;
             listExpenses.Columns.Clear();
@@ -241,6 +260,51 @@ namespace JoeWpfHomeBudget
             balance.Header = "Balance";
             balance.Binding = new Binding("Balance");
             listExpenses.Columns.Add(balance);
+        }
+
+        public void ShowBudgetItemByMonthAndCategory(List<Dictionary<string, object>> items)
+        {
+            listExpenses.ItemsSource = items;
+            listExpenses.Columns.Clear();
+
+            var month = new DataGridTextColumn();
+            month.Header = "Month";
+            month.Binding = new Binding("[Month]");
+            listExpenses.Columns.Add(month);
+
+            var total = new DataGridTextColumn();
+            total.Header = "Total";
+            total.Binding = new Binding("[Total]");
+            listExpenses.Columns.Add(total);
+
+
+
+            for (int i=0;i<items.Count; i++)
+            {            
+                foreach (string key in items[i].Keys)
+                {
+                    if (key != "Month" && key != "Total" && !key.Contains("details") && NotContainsDuplicateColumns(key))
+                    {
+                        var column = new DataGridTextColumn();
+                        column.Header = key;
+                        column.Binding = new Binding($"[{key}]"); // Notice the square brackets!
+                        listExpenses.Columns.Add(column);
+                        
+                    }
+                }
+
+            }
+
+            
+        }
+        private bool NotContainsDuplicateColumns(string key)
+        {
+            for(int i=0;i<listExpenses.Columns.Count;i++)
+            {
+                if (listExpenses.Columns[i].Header.ToString() == key) return false;
+            }
+
+            return true;
         }
     }
 }
