@@ -71,7 +71,9 @@ namespace JoeWpfHomeBudget
             AddCategory addCategory = new AddCategory(presenter);
             addCategory.ShowDialog();
         }
-
+        /// <summary>
+        /// Show all the categories and put in the comboBox
+        /// </summary>
         public void ShowCats()
         {
             List<Category> categories = presenter.GetAllCategories();
@@ -83,7 +85,9 @@ namespace JoeWpfHomeBudget
 
             }
         }
-
+        /// <summary>
+        /// Let the user choose a file where they want to use the database on
+        /// </summary>
         public void ChooseDB()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -99,8 +103,9 @@ namespace JoeWpfHomeBudget
                 MessageBox.Show(filePath + " file is now in uses", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
-
-        //make the user choose whether they are working on a new or old database
+        /// <summary>
+        /// make the user choose whether they are working on a new or old database
+        /// </summary>
         public void initializeDatabase()
         {
             loadDatabase selectDatabase = new loadDatabase();
@@ -113,34 +118,51 @@ namespace JoeWpfHomeBudget
         //https://learn.microsoft.com/en-us/dotnet/api/system.windows.window.closing?view=windowsdesktop-7.0
         //How to check if user wants to save changes before closing the window
 
-
+        /// <summary>
+        /// How to check if user wants to save changes before closing the window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void ChooseDatabase_btn(object sender, RoutedEventArgs e)
         {
 
             ChooseDB();
 
         }
-
+        
         private void close_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
 
+        /// <summary>
+        /// Show a message if there is a error with the operation
+        /// </summary>
+        /// <param name="err">the error message</param>
         public void ShowError(string err)
         {
             MessageBox.Show(err, "Invalid input", MessageBoxButton.OK, MessageBoxImage.Error);
         }
-
+        /// <summary>
+        /// Show a message if the operation was successful
+        /// </summary>
+        /// <param name="message">The success message</param>
         public void ShowValid(string message)
         {
             MessageBox.Show(message, "Information", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        /// <summary>
+        /// Calls expense.clear
+        /// </summary>
         public void ClearExpense()
         {
             expense.ClearExpense();
         }
 
+        /// <summary>
+        /// Show message to make sure that the user really want to cancel an expense
+        /// </summary>
         public void CancelExpense()
         {
 
@@ -184,8 +206,7 @@ namespace JoeWpfHomeBudget
             }
 
             if(EndDate.SelectedDate != null) {
-             end = EndDate.SelectedDate.Value;
-            }
+             end = EndDate.SelectedDate.Value;            }
 
 
             bool filter=(bool)Filter.IsChecked;
@@ -285,6 +306,7 @@ namespace JoeWpfHomeBudget
                 rbt_byCategory_Checked(sender, e);
             }
         }
+
         /// <summary>
         /// Show all the expenses every in this file, depending on the user input
         /// </summary>
