@@ -44,8 +44,8 @@ namespace JoeWpfHomeBudget
                 ShowCats();
                 unsavedChanges = false;
                 //radio_ShowExpensesByCategory();
-                radio_ShowExpensesByMonth();
-                //checkbox_FilterByCategory();
+                //radio_ShowExpensesByMonth();
+                checkbox_FilterByCategory();
             }
             else { this.Close(); }
         }
@@ -184,53 +184,46 @@ namespace JoeWpfHomeBudget
         public void checkbox_FilterByCategory()
         {
             List<Expense> expenses = presenter.GetAllExpenses();
+            List<BudgetItem> budgetItems;
+
+            budgetItems = presenter.GetBudgetItems(DateTime.Today,DateTime.Today.AddDays(200),false, expenses[0].Category);
 
             myDataGrid.ItemsSource = expenses;
 
             // clear all the columns.
             myDataGrid.Columns.Clear();
 
-
             //create the columns
             //Date
             var date = new DataGridTextColumn();
             date.Header = "Date";
             date.Binding = new Binding("Date");
+            myDataGrid.Columns.Add(date);
 
-            
+
             //Category
             var category = new DataGridTextColumn();
             category.Header = "Category";
             category.Binding = new Binding("Category");
+            myDataGrid.Columns.Add(category);
 
             //Description
             var description = new DataGridTextColumn();
             description.Header = "Description";
             description.Binding = new Binding("Description");
+            myDataGrid.Columns.Add(description);
 
             //Amount
             var amount = new DataGridTextColumn();
             amount.Header = "Amount";
             amount.Binding = new Binding("Amount");
+            myDataGrid.Columns.Add(amount);
 
             //Balance
             var balance = new DataGridTextColumn();
             balance.Header = "Balance";
             balance.Binding = new Binding("Balance");
-
-
-            //Makes sure to show what the user wishes to see
-            foreach (Expense expense in myDataGrid.ItemsSource)
-            {
-                if (expense.Category == categoryList.SelectedIndex)
-                {
-                    myDataGrid.Columns.Add(date);
-                    myDataGrid.Columns.Add(category);
-                    myDataGrid.Columns.Add(description);
-                    myDataGrid.Columns.Add(amount);
-                    myDataGrid.Columns.Add(balance);
-                }
-            }
+            myDataGrid.Columns.Add(balance);           
         }
     
 

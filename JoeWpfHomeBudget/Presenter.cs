@@ -119,6 +119,20 @@ namespace JoeWpfHomeBudget
             
         }
 
+        public List<BudgetItem> GetBudgetItems(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID)
+        {
+            List<BudgetItem> budgetItem = new List<BudgetItem>();
+            try
+            {
+                budgetItem = model.GetBudgetItems(Start, End, FilterFlag, CategoryID);
+            }
+            catch (Exception err)
+            {
+                view.ShowError(err.Message);
+            }
+            return budgetItem;           
+        }        
+
         public List<BudgetItemsByMonth> GetBudgetItemsByMonth(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID)
         {
             List<BudgetItemsByMonth> budgetItemsByMonths = new List<BudgetItemsByMonth>();
