@@ -62,7 +62,7 @@ namespace JoeWpfHomeBudget
 
         private void delete_Click(object sender, RoutedEventArgs e)
         {
-           // presenter.Delete_Expense(_id);
+           presenter.Delete_Expense(_id);
         }
 
         private void cancel_Click(object sender, RoutedEventArgs e)

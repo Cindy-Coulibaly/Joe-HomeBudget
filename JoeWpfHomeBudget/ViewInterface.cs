@@ -14,6 +14,7 @@ namespace JoeWpfHomeBudget
         void ClearExpense();
         void CancelExpense();
         void GetBudgetItem(List<BudgetItem> items);
-
+        void Refresh_allExpenses();
+        void closingAfterUpdate();
     }
 }
