@@ -94,6 +94,8 @@ namespace JoeWpfHomeBudget
                 {
                     model.expenses.UpdateProperties(id, date, category, amountTemp, description);
                     view.ShowValid($"New expense just updated with properties:: Id: {id} Category: {category} Amount: {amount} Description: {description}");
+                    view.closingAfterUpdate();
+                    view.Refresh_allExpenses();
                 }
             }
             catch (Exception err)
@@ -173,7 +175,7 @@ namespace JoeWpfHomeBudget
         {
             try
             {
-                //categoryId = categoryId + 1;
+                categoryId = categoryId + 1;
                 List<BudgetItem> expenses=model.GetBudgetItems(start, end, filter, categoryId);
                 view.GetBudgetItem(expenses);
             }
@@ -190,11 +192,12 @@ namespace JoeWpfHomeBudget
             {
                 if (id < 0)
                 {
-                    throw new Exception("There;s no number");
+                    throw new Exception("There's no number");
                 }
 
                 model.expenses.Delete(id);
-                view.Refresh();
+                view.closingAfterUpdate();
+                view.Refresh_allExpenses();
             }
             catch (Exception err)
             {

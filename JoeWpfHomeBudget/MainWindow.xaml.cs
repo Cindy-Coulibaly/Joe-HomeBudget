@@ -46,9 +46,10 @@ namespace JoeWpfHomeBudget
                 presenter = new Presenter(this, filePath, newDb);
                 ShowCats();
                 unsavedChanges = false;
+                rbt_allExpenses.IsChecked = true;
             }
             else { this.Close(); }
-            rbt_allExpenses.IsChecked = true;
+            
 
 
         }
@@ -183,7 +184,8 @@ namespace JoeWpfHomeBudget
 
         private void rbt_allExpenses_Checked(object sender, RoutedEventArgs e)
         {
-            Refresh();
+            listExpenses.IsEnabled = true;
+            Refresh_allExpenses();
         }
 
         private void rbt_byMonth_Checked(object sender, RoutedEventArgs e)
@@ -242,7 +244,7 @@ namespace JoeWpfHomeBudget
             listExpenses.Columns.Add(balance);
         }
 
-        public void Refresh()
+        public void Refresh_allExpenses()
         {
             // get all the specificities
             DateTime start = DateTime.MinValue;
@@ -264,6 +266,11 @@ namespace JoeWpfHomeBudget
 
             //get the list of items
             presenter.GetAllBudgetItem(start, end, filter, categoryId);
+        }
+
+        public void closingAfterUpdate()
+        {
+            updateExpense.Close();
         }
     }
 }
