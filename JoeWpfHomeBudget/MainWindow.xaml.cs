@@ -33,6 +33,7 @@ namespace JoeWpfHomeBudget
         string filePath = string.Empty;
         bool newDb = false;
         private Boolean unsavedChanges;
+        private Update_Delete_Budget_Item updateExpense;
         private Add_Expense expense;
 
         public MainWindow()
@@ -50,9 +51,18 @@ namespace JoeWpfHomeBudget
             rbt_allExpenses.IsChecked = true;
 
 
-
         }
+        private void Update_Click(object sender, RoutedEventArgs e)
+        {
 
+            var selected = listExpenses.SelectedItem as BudgetItem;
+            if (selected != null)
+            {
+                Update_Delete_Budget_Item _expense = new Update_Delete_Budget_Item(presenter, selected.ExpenseID, selected.Date, selected.CategoryID, selected.Amount, selected.ShortDescription);
+                updateExpense = _expense;
+                updateExpense.Show();
+            }
+        }
         private void Add_Expense_Click(object sender, RoutedEventArgs e)
         {
 
