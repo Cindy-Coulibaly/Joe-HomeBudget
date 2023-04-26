@@ -285,7 +285,10 @@ namespace JoeWpfHomeBudget
                 rbt_byCategory_Checked(sender, e);
             }
         }
-
+        /// <summary>
+        /// Show all the expenses every in this file, depending on the user input
+        /// </summary>
+        /// <param name="items">The list of expenses of needed with the balance </param>
         public void ShowBudgetItem(List<BudgetItem> items)
         {
             listExpenses.ItemsSource = items;
@@ -319,12 +322,19 @@ namespace JoeWpfHomeBudget
             listExpenses.Columns.Add(balance);
         }
 
+        /// <summary>
+        /// Show all the items grouped by category and by month,depending on the user input
+        /// </summary>
+        /// <param name="items">The list of all the expense grouped by month and cateogry</param>
         public void ShowBudgetItemByMonthAndCategory(List<Dictionary<string, object>> items)
         {
             listExpenses.ItemsSource = items;
             listExpenses.Columns.Clear();
 
-            var month = new DataGridTextColumn();
+            // get the list of category 
+            List<Category> categories=presenter.GetAllCategories();
+
+            var month= new DataGridTextColumn();
             month.Header = "Month";
             month.Binding = new Binding("[Month]");
             listExpenses.Columns.Add(month);
@@ -334,37 +344,21 @@ namespace JoeWpfHomeBudget
             total.Binding = new Binding("[Total]");
             listExpenses.Columns.Add(total);
 
-
-
-            for (int i=0;i<items.Count; i++)
-            {            
-                foreach (string key in items[i].Keys)
-                {
-                    if (key != "Month" && key != "Total" && !key.Contains("details") && NotContainsDuplicateColumns(key))
-                    {
-                        var column = new DataGridTextColumn();
-                        column.Header = key;
-                        column.Binding = new Binding($"[{key}]"); // Notice the square brackets!
-                        listExpenses.Columns.Add(column);
-                        
-                    }
-                }
-
+            foreach (var category in categories)
+            {
+                var column = new DataGridTextColumn();
+                column.Header = category;
+                column.Binding = new Binding($"[{category}]"); // Notice the square brackets!
+                listExpenses.Columns.Add(column);
             }
 
             
         }
 
-        private bool NotContainsDuplicateColumns(string key)
-        {
-            for(int i=0;i<listExpenses.Columns.Count;i++)
-            {
-                if (listExpenses.Columns[i].Header.ToString() == key) return false;
-            }
-
-            return true;
-        }
-
+        /// <summary>
+        /// Show all month and the total expenses of that given month,depending on the user input
+        /// </summary>
+        /// <param name="items">The list of months with their total amount of expenses</param>
         public void ShowBudgetItemByMonth(List<BudgetItemsByMonth> items)
         {
             listExpenses.ItemsSource = items;
@@ -381,6 +375,10 @@ namespace JoeWpfHomeBudget
             listExpenses.Columns.Add(total);
         }
 
+        /// <summary>
+        /// Show all categories and the total expenses of that given cateogry, depending on the user input
+        /// </summary>
+        /// <param name="items">The list of categories with their total amount of expenses</param>
         public void ShowBudgetItemByCategory(List<BudgetItemsByCategory> items)
         {
             listExpenses.ItemsSource = items;
