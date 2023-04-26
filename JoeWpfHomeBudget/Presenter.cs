@@ -125,12 +125,12 @@ namespace JoeWpfHomeBudget
         {
             Category.CategoryType type;
             try {
-                int notNumeric;
+
                 if (description == string.Empty)
                 {
                     throw new Exception("Must provide Category Name");
                 }
-                else if (int.TryParse(description, out notNumeric))
+                else if (description.Any(c => char.IsDigit(c)))
                 {
                     throw new Exception("Category Name cannot contain numbers");
                 }
@@ -160,6 +160,29 @@ namespace JoeWpfHomeBudget
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Get a list of budget item depending on the Date and if there is a filter
+        /// </summary>
+        /// <param name="start">the start date</param>
+        /// <param name="end"></param>
+        /// <param name="flag"></param>
+        /// <param name="CategoryId"></param>
+        /// <returns></returns>
+        public void GetAllBudgetItem(DateTime start, DateTime end,bool filter,int categoryId)
+        {
+            try
+            {
+                categoryId = categoryId + 1;
+                List<BudgetItem> expenses=model.GetBudgetItems(start, end, filter, categoryId);
+                view.GetBudgetItem(expenses);
+            }
+            catch(Exception err)
+            {
+                view.ShowError(err.Message);
+            }
+            
         }
     }
 }
