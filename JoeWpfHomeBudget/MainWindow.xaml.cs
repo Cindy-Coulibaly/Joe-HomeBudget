@@ -18,7 +18,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml.Linq;
 using System.ComponentModel;
-
+using System.Windows.Media.Media3D;
 
 namespace JoeWpfHomeBudget
 {
@@ -129,7 +129,7 @@ namespace JoeWpfHomeBudget
                 return;
             }
 
-            budgetItemsByMonths = presenter.GetExpensesByMonth(DateTime.Today, DateTime.Today.AddDays(200), false, expenses[0].Category);         
+            budgetItemsByMonths = presenter.GetBudgetItemsByMonth(DateTime.Today, DateTime.Today.AddDays(200), false, expenses[0].Category);         
             
             //Put data in datagrid
             myDataGrid.ItemsSource = budgetItemsByMonths;
@@ -152,37 +152,18 @@ namespace JoeWpfHomeBudget
 
         public void radio_ShowExpensesByCategory()
         {
-            List<Expense> expenses = presenter.GetAllExpenses();
-            List<Category> category = presenter.GetAllCategories();
-            List<BudgetItemsByMonth> budgetItemsByMonths = new List<BudgetItemsByMonth>();
+            List<Expense> expenses = presenter.GetAllExpenses();           
+            List<BudgetItemsByCategory> budgetItemsByCategory;
 
             //If there's no content in the database
             if (expenses.Count <= 0)
             {
                 return;
-            }            
-            double sum = 0;
+            }
 
-            int prevCategory = 0;
-            foreach (Expense expense in myDataGrid.ItemsSource)
-            {
-                string categoryName = category[expense.Category - 1].Description;
-
-                //Sums the expenses for each category
-                if (expense.Category == prevCategory)
-                {
-                    sum += expense.Amount;                                 
-                }
-                else
-                {
-                    prevCategory = category[expense.Category - 1].Id;
-                    
-                    sum = 0;
-                    sum += expense.Amount;
-                }
-            }        
-               
-            myDataGrid.ItemsSource = expenses;
+            budgetItemsByCategory = presenter.GetBudgetItemsByCategories(DateTime.Today, DateTime.Today.AddDays(200), false, expenses[0].Category);
+            
+            myDataGrid.ItemsSource = budgetItemsByCategory;
 
             // clear all the columns and create rows
             myDataGrid.Columns.Clear();

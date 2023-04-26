@@ -119,7 +119,7 @@ namespace JoeWpfHomeBudget
             
         }
 
-        public List<BudgetItemsByMonth> GetExpensesByMonth(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID)
+        public List<BudgetItemsByMonth> GetBudgetItemsByMonth(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID)
         {
             List<BudgetItemsByMonth> budgetItemsByMonths = new List<BudgetItemsByMonth>();
             try 
@@ -131,6 +131,20 @@ namespace JoeWpfHomeBudget
                 view.ShowError(err.Message);
             }
             return budgetItemsByMonths;
+        }
+
+        public List<BudgetItemsByCategory> GetBudgetItemsByCategories(DateTime? Start, DateTime? End, bool FilterFlag, int CategoryID)
+        {
+            List<BudgetItemsByCategory> budgetItemsByCategories = new List<BudgetItemsByCategory>();
+            try
+            {
+                budgetItemsByCategories = model.GetBudgetItemsByCategory(Start, End, FilterFlag, CategoryID); 
+            }
+            catch (Exception err)
+            {
+                view.ShowError(err.Message);
+            }
+            return budgetItemsByCategories;
         }
 
         public Boolean SaveBeforeClosing()
