@@ -120,38 +120,18 @@ namespace JoeWpfHomeBudget
 
         public void radio_ShowExpensesByMonth()
         {
-            List<Expense> expenses = presenter.GetAllExpenses();
-            List<Category> category = presenter.GetAllCategories();            
-            List<BudgetItemsByMonth> budgetItemsByMonths = new List<BudgetItemsByMonth>();
-            List<BudgetItem> budgetItems = new List<BudgetItem>();
+            List<Expense> expenses = presenter.GetAllExpenses();                       
+            List<BudgetItemsByMonth> budgetItemsByMonths;           
 
             //If there's no content in the database
             if(expenses.Count <= 0 ) 
             {
                 return;
             }
-            
-            double sum = 0;
-            string prevMonth = expenses[0].Date.ToString("yyyy,MM");
-            
-            foreach (Expense expense in expenses)
-            {
-                //Sums the expenses for each month
-                if (expense.Date.ToString("yyyy,MM") == prevMonth)
-                {
-                    sum += expense.Amount;                                   
-                }
-                else
-                {
-                    budgetItemsByMonths = presenter.GetExpensesByMonth(DateTime.Today,DateTime.Today, true, expense.Category);                                     
-                    
-                    prevMonth = expense.Date.ToString("yyyy,MM");
-                    sum += expense.Amount;
 
-                }
-                budgetItemsByMonths = presenter.GetExpensesByMonth(DateTime.Today, DateTime.Today.AddDays(40), true, expense.Category);
-            }            
+            budgetItemsByMonths = presenter.GetExpensesByMonth(DateTime.Today, DateTime.Today.AddDays(200), false, expenses[0].Category);         
             
+            //Put data in datagrid
             myDataGrid.ItemsSource = budgetItemsByMonths;
 
             // clear all the columns and create rows
@@ -164,10 +144,10 @@ namespace JoeWpfHomeBudget
             myDataGrid.Columns.Add(date);
 
             //Balance
-            var balance = new DataGridTextColumn();
-            balance.Header = "Balance";
-            balance.Binding = new Binding("Balance");            
-            myDataGrid.Columns.Add(balance);            
+            var total = new DataGridTextColumn();
+            total.Header = "Balance";
+            total.Binding = new Binding("Total");            
+            myDataGrid.Columns.Add(total);            
         }
 
         public void radio_ShowExpensesByCategory()
