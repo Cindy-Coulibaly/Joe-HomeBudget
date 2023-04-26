@@ -139,7 +139,7 @@ namespace JoeWpfHomeBudget
         {
             try
             {
-                categoryId = categoryId + 1;
+                //categoryId = categoryId + 1;
                 List<BudgetItem> expenses=model.GetBudgetItems(start, end, filter, categoryId);
                 view.GetBudgetItem(expenses);
             }
@@ -148,6 +148,25 @@ namespace JoeWpfHomeBudget
                 view.ShowError(err.Message);
             }
             
+        }
+
+        public void Delete_Expense(int id)
+        {
+            try
+            {
+                if (id < 0)
+                {
+                    throw new Exception("There;s no number");
+                }
+
+                model.expenses.Delete(id);
+                view.Refresh();
+            }
+            catch (Exception err)
+            {
+                view.ShowError(err.Message);
+            }
+
         }
     }
 }

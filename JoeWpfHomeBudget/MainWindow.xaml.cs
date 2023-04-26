@@ -52,6 +52,15 @@ namespace JoeWpfHomeBudget
 
 
         }
+        private void Delete_Click(object sender, RoutedEventArgs e)
+        {
+
+            var selected = listExpenses.SelectedItem as BudgetItem;
+            if (selected != null)
+            {
+                presenter.Delete_Expense(selected.ExpenseID);
+            }
+        }
 
         private void Add_Expense_Click(object sender, RoutedEventArgs e)
         {
@@ -163,24 +172,7 @@ namespace JoeWpfHomeBudget
 
         private void rbt_allExpenses_Checked(object sender, RoutedEventArgs e)
         {
-            // get all the specificities
-            DateTime start= DateTime.MinValue;
-            DateTime end= DateTime.MaxValue;
-
-            if(StartDate.SelectedDate != null) {
-              start = StartDate.SelectedDate.Value; 
-            }
-
-            if(EndDate.SelectedDate != null) {
-             end = EndDate.SelectedDate.Value;
-            }
-
-
-            bool filter=(bool)Filter.IsChecked;
-            int categoryId=cmbCategories.SelectedIndex;
-            
-            //get the list of items
-            presenter.GetAllBudgetItem(start, end, filter, categoryId);
+            Refresh();
         }
 
         private void rbt_byMonth_Checked(object sender, RoutedEventArgs e)
@@ -237,6 +229,30 @@ namespace JoeWpfHomeBudget
             balance.Header = "Balance";
             balance.Binding = new Binding("Balance");
             listExpenses.Columns.Add(balance);
+        }
+
+        public void Refresh()
+        {
+            // get all the specificities
+            DateTime start = DateTime.MinValue;
+            DateTime end = DateTime.MaxValue;
+
+            if (StartDate.SelectedDate != null)
+            {
+                start = StartDate.SelectedDate.Value;
+            }
+
+            if (EndDate.SelectedDate != null)
+            {
+                end = EndDate.SelectedDate.Value;
+            }
+
+
+            bool filter = (bool)Filter.IsChecked;
+            int categoryId = cmbCategories.SelectedIndex;
+
+            //get the list of items
+            presenter.GetAllBudgetItem(start, end, filter, categoryId);
         }
     }
 }
