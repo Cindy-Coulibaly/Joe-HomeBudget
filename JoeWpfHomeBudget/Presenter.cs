@@ -42,25 +42,61 @@ namespace JoeWpfHomeBudget
             {
                 if (categoryId == -1)
                 {
-                    throw new Exception("you have not inputed for the category category");
+                    throw new Exception("No category to add has been provided.");
                 }
                 else if (!double.TryParse(amount, out amountTemp) || Double.IsNaN(amountTemp) || Double.IsInfinity(amountTemp))
                 {
-                    throw new Exception("the amount is not a valid value");
+                    throw new Exception("The amount to add is not a valid value.");
                 }
                 else if (double.TryParse(description, out badDescription))
                 {
-                    throw new Exception("the description is a number");
+                    throw new Exception("The description to add is a number");
                 }
                 else if (description == "")
                 {
-                    throw new Exception("the description is empty");
+                    throw new Exception("The description is empty.");
                 }
                 else
                 {
                     model.expenses.Add(date, categoryId, amountTemp, description);
                     view.ShowValid($"New expense just added named: {description}");
                     view.ClearExpense();
+                }
+            }
+            catch (Exception err)
+            {
+                view.ShowError(err.Message);
+            }
+        }
+        public void UpdateExpense(int id, DateTime date, int category, string amount, string description)
+        {
+            double amountTemp;
+            double badDescription;
+
+            try
+            {
+                if (category == -1)
+                {
+                    throw new Exception("No category to update has been provided");
+                }
+                else if (!double.TryParse(amount, out amountTemp) || Double.IsNaN(amountTemp) || Double.IsInfinity(amountTemp))
+                {
+                    throw new Exception("The amount to update is not a valid value.");
+                }
+                else if (double.TryParse(description, out badDescription))
+                {
+                    throw new Exception("The description to update is a number");
+                }
+                else if (description == "")
+                {
+                    throw new Exception("The description is empty.");
+                }
+                else
+                {
+                    model.expenses.UpdateProperties(id, date, category, amountTemp, description);
+                    view.ShowValid($"New expense just updated with properties:: Id: {id} Category: {category} Amount: {amount} Description: {description}");
+                    view.closingAfterUpdate();
+                    view.Refresh_allExpenses();
                 }
             }
             catch (Exception err)
@@ -91,12 +127,12 @@ namespace JoeWpfHomeBudget
         {
             Category.CategoryType type;
             try {
-                int notNumeric;
+
                 if (description == string.Empty)
                 {
                     throw new Exception("Must provide Category Name");
                 }
-                else if (int.TryParse(description, out notNumeric))
+                else if (description.Any(c => char.IsDigit(c)))
                 {
                     throw new Exception("Category Name cannot contain numbers");
                 }
@@ -168,6 +204,49 @@ namespace JoeWpfHomeBudget
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Get a list of budget item depending on the Date and if there is a filter
+        /// </summary>
+        /// <param name="start">the start date</param>
+        /// <param name="end"></param>
+        /// <param name="flag"></param>
+        /// <param name="CategoryId"></param>
+        /// <returns></returns>
+        public void GetAllBudgetItem(DateTime start, DateTime end,bool filter,int categoryId)
+        {
+            try
+            {
+                categoryId = categoryId + 1;
+                List<BudgetItem> expenses=model.GetBudgetItems(start, end, filter, categoryId);
+                view.GetBudgetItem(expenses);
+            }
+            catch(Exception err)
+            {
+                view.ShowError(err.Message);
+            }
+            
+        }
+
+        public void Delete_Expense(int id)
+        {
+            try
+            {
+                if (id < 0)
+                {
+                    throw new Exception("There's no number");
+                }
+
+                model.expenses.Delete(id);
+                view.closingAfterUpdate();
+                view.Refresh_allExpenses();
+            }
+            catch (Exception err)
+            {
+                view.ShowError(err.Message);
+            }
+
         }
     }
 }

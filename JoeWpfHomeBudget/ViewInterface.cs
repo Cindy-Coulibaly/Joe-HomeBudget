@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Budget;
 
 namespace JoeWpfHomeBudget
 {
@@ -12,6 +13,8 @@ namespace JoeWpfHomeBudget
         void ShowValid(string message);
         void ClearExpense();
         void CancelExpense();
-
+        void GetBudgetItem(List<BudgetItem> items);
+        void Refresh_allExpenses();
+        void closingAfterUpdate();
     }
 }

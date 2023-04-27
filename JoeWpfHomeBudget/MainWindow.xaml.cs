@@ -33,6 +33,7 @@ namespace JoeWpfHomeBudget
         string filePath = string.Empty;
         bool newDb = false;
         private Boolean unsavedChanges;
+        private Update_Delete_Budget_Item updateExpense;
         private Add_Expense expense;
 
         public MainWindow()
@@ -40,7 +41,9 @@ namespace JoeWpfHomeBudget
             InitializeComponent();
             initializeDatabase();
             //if the user hasn't choose or created a database then close the main window
-            if (filePath != null) { presenter = new Presenter(this, filePath, newDb);
+            if (filePath != null)
+            {
+                presenter = new Presenter(this, filePath, newDb);
                 ShowCats();
                 unsavedChanges = false;
                 //radio_ShowExpensesByCategory();
@@ -49,13 +52,33 @@ namespace JoeWpfHomeBudget
             }
             else { this.Close(); }
         }
+        private void Update_Click(object sender, RoutedEventArgs e)
+        {
+
+            var selected = listExpenses.SelectedItem as BudgetItem;
+            if (selected != null)
+            {
+                Update_Delete_Budget_Item _expense = new Update_Delete_Budget_Item(presenter, selected.ExpenseID, selected.Date, selected.CategoryID, selected.Amount, selected.ShortDescription);
+                updateExpense = _expense;
+                updateExpense.Show();
+            }
+        }
+        private void Delete_Click(object sender, RoutedEventArgs e)
+        {
+
+            var selected = listExpenses.SelectedItem as BudgetItem;
+            if (selected != null)
+            {
+                presenter.Delete_Expense(selected.ExpenseID);
+            }
+        }
 
         private void Add_Expense_Click(object sender, RoutedEventArgs e)
         {
 
             Add_Expense _expense = new Add_Expense(presenter);
-            expense=_expense;
-            expense.Show();           
+            expense = _expense;
+            expense.Show();
         }
 
         private void Remove_Expense_Click(object sender, RoutedEventArgs e)
@@ -66,7 +89,7 @@ namespace JoeWpfHomeBudget
         public void btn_AddNewCategory(object sender, RoutedEventArgs e)
         {
             AddCategory addCategory = new AddCategory(presenter);
-            addCategory.ShowDialog();           
+            addCategory.ShowDialog();
         }
 
         public void ShowCats()
@@ -249,17 +272,113 @@ namespace JoeWpfHomeBudget
 
         public void CancelExpense()
         {
-            
-            if ( MessageBox.Show("Do you really want to cancel your Expense", "Cancel", MessageBoxButton.YesNo,MessageBoxImage.Question)==MessageBoxResult.Yes)
+
+            if (MessageBox.Show("Do you really want to cancel your Expense", "Cancel", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 ClearExpense();
             }
 
         }
 
-        private void categoryList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void input_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            if(rbt_allExpenses.IsChecked==true)
+            {
+                rbt_allExpenses_Checked(sender,e);
+            }
+
+
+        }
+
+        private void rbt_allExpenses_Checked(object sender, RoutedEventArgs e)
+        {
+            listExpenses.IsEnabled = true;
+            Refresh_allExpenses();
+        }
+
+        private void rbt_byMonth_Checked(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void rbt_byCategory_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void rbt_byMonthAndCategory_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Filter_Checked(object sender, RoutedEventArgs e)
+        {
+            if(rbt_allExpenses.IsChecked == true)
+            {
+                rbt_allExpenses_Checked(sender, e);
+            }
+        }
+
+        public void GetBudgetItem(List<BudgetItem> items)
+        {
+            listExpenses.ItemsSource = items;
+            listExpenses.Columns.Clear();
+
+
+            //create the columns and bind them
+            var date = new DataGridTextColumn();
+            date.Header = "Date";
+            date.Binding = new Binding("Date");
+            listExpenses.Columns.Add(date);
+
+            var category = new DataGridTextColumn();
+            category.Header = "Category";
+            category.Binding = new Binding("Category");
+            listExpenses.Columns.Add(category);
+
+            var description = new DataGridTextColumn();
+            description.Header = "Description";
+            description.Binding = new Binding("ShortDescription");
+            listExpenses.Columns.Add(description);
+
+            var amount = new DataGridTextColumn();
+            amount.Header = "Amount";
+            amount.Binding = new Binding("Amount");
+            listExpenses.Columns.Add(amount);
+
+            var balance = new DataGridTextColumn();
+            balance.Header = "Balance";
+            balance.Binding = new Binding("Balance");
+            listExpenses.Columns.Add(balance);
+        }
+
+        public void Refresh_allExpenses()
+        {
+            // get all the specificities
+            DateTime start = DateTime.MinValue;
+            DateTime end = DateTime.MaxValue;
+
+            if (StartDate.SelectedDate != null)
+            {
+                start = StartDate.SelectedDate.Value;
+            }
+
+            if (EndDate.SelectedDate != null)
+            {
+                end = EndDate.SelectedDate.Value;
+            }
+
+
+            bool filter = (bool)Filter.IsChecked;
+            int categoryId = cmbCategories.SelectedIndex;
+
+            //get the list of items
+            presenter.GetAllBudgetItem(start, end, filter, categoryId);
+        }
+
+        public void closingAfterUpdate()
+        {
+            updateExpense.Close();
         }
     }
 }
