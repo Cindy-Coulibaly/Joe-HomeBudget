@@ -19,5 +19,7 @@ namespace JoeWpfHomeBudget
         void ShowBudgetItemByCategory(List<BudgetItemsByCategory> items);
         void Refresh_allExpenses();
         void closingAfterUpdate();
+
+        void CalledRefresh();
     }
 }

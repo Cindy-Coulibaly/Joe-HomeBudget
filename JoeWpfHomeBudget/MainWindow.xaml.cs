@@ -18,6 +18,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml.Linq;
 using System.ComponentModel;
+using System.Reflection;
 
 
 namespace JoeWpfHomeBudget
@@ -36,6 +37,9 @@ namespace JoeWpfHomeBudget
         private Update_Delete_Budget_Item updateExpense;
         private Add_Expense expense;
 
+        /// <summary>
+        /// initalize all component of main window
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
@@ -59,7 +63,6 @@ namespace JoeWpfHomeBudget
 
             listExpenses.SelectedItem = null;
         }
-
 
         private void Update_Click(object sender, RoutedEventArgs e)
         {
@@ -90,12 +93,7 @@ namespace JoeWpfHomeBudget
             expense.Show();
         }
 
-        private void Remove_Expense_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        public void btn_AddNewCategory(object sender, RoutedEventArgs e)
+        private void btn_AddNewCategory(object sender, RoutedEventArgs e)
         {
             AddCategory addCategory = new AddCategory(presenter);
             addCategory.ShowDialog();
@@ -237,26 +235,7 @@ namespace JoeWpfHomeBudget
             menuItem_Update.IsEnabled = false;
             menuItem_Delete.IsEnabled = false;
 
-            // get all the specificities
-            DateTime start = DateTime.MinValue;
-            DateTime end = DateTime.MaxValue;
-
-            if (StartDate.SelectedDate != null)
-            {
-                start = StartDate.SelectedDate.Value;
-            }
-
-            if (EndDate.SelectedDate != null)
-            {
-                end = EndDate.SelectedDate.Value;
-            }
-
-
-            bool filter = (bool)Filter.IsChecked;
-            int categoryId = cmbCategories.SelectedIndex;
-
-            //get the list of items
-            presenter.GetAllBudgetItemByMonth(start, end, filter, categoryId);
+            Refresh_MonthExpenses();
         }
 
         private void rbt_byCategory_Checked(object sender, RoutedEventArgs e)
@@ -264,26 +243,7 @@ namespace JoeWpfHomeBudget
             menuItem_Update.IsEnabled = false;
             menuItem_Delete.IsEnabled = false;
 
-            // get all the specificities
-            DateTime start = DateTime.MinValue;
-            DateTime end = DateTime.MaxValue;
-
-            if (StartDate.SelectedDate != null)
-            {
-                start = StartDate.SelectedDate.Value;
-            }
-
-            if (EndDate.SelectedDate != null)
-            {
-                end = EndDate.SelectedDate.Value;
-            }
-
-
-            bool filter = (bool)Filter.IsChecked;
-            int categoryId = cmbCategories.SelectedIndex;
-
-            //get the list of items
-            presenter.GetAllBudgetItemByCategory(start, end, filter, categoryId);
+            Refresh_CategoryExpenses();
 
         }
 
@@ -292,24 +252,7 @@ namespace JoeWpfHomeBudget
             menuItem_Update.IsEnabled = false;
             menuItem_Delete.IsEnabled = false;
 
-            DateTime start = DateTime.MinValue;
-            DateTime end = DateTime.MaxValue;
-
-            if (StartDate.SelectedDate != null)
-            {
-                start = StartDate.SelectedDate.Value;
-            }
-
-            if (EndDate.SelectedDate != null)
-            {
-                end = EndDate.SelectedDate.Value;
-            }
-
-
-            bool filter = (bool)Filter.IsChecked;
-            int categoryId = cmbCategories.SelectedIndex;
-
-            presenter.GetAllBudgetItemByCategoryAndByMonth(start, end, filter, categoryId);
+            Refresh_MonthCategoryExpenses();
 
         }
 
@@ -347,6 +290,7 @@ namespace JoeWpfHomeBudget
             var date = new DataGridTextColumn();
             date.Header = "Date";
             date.Binding = new Binding("Date");
+            date.Binding.StringFormat = "dd/MM/yyyy";
             listExpenses.Columns.Add(date);
 
             var category = new DataGridTextColumn();
@@ -443,6 +387,10 @@ namespace JoeWpfHomeBudget
             total.Binding = new Binding("Total");
             listExpenses.Columns.Add(total);
         }
+        
+        /// <summary>
+        /// Refresh the display of all the expenses in the datagrid 
+        /// </summary>
         public void Refresh_allExpenses()
         {
             // get all the specificities
@@ -467,10 +415,115 @@ namespace JoeWpfHomeBudget
             presenter.GetAllBudgetItem(start, end, filter, categoryId);
         }
 
+        /// <summary>
+        /// closing the update window after it updating
+        /// </summary>
         public void closingAfterUpdate()
         {
             updateExpense.Close();
 
+        }
+
+        /// <summary>
+        /// Refresh the display of all the expenses by month in the datagrid 
+        /// </summary>
+        public void Refresh_MonthExpenses() 
+        {
+            // get all the specificities
+            DateTime start = DateTime.MinValue;
+            DateTime end = DateTime.MaxValue;
+
+            if (StartDate.SelectedDate != null)
+            {
+                start = StartDate.SelectedDate.Value;
+            }
+
+            if (EndDate.SelectedDate != null)
+            {
+                end = EndDate.SelectedDate.Value;
+            }
+
+
+            bool filter = (bool)Filter.IsChecked;
+            int categoryId = cmbCategories.SelectedIndex;
+
+            //get the list of items
+            presenter.GetAllBudgetItemByMonth(start, end, filter, categoryId);
+        }
+
+        /// <summary>
+        /// Refresh the display of all the expenses by Category in the datagrid 
+        /// </summary>
+        public void Refresh_CategoryExpenses() 
+        {
+            // get all the specificities
+            DateTime start = DateTime.MinValue;
+            DateTime end = DateTime.MaxValue;
+
+            if (StartDate.SelectedDate != null)
+            {
+                start = StartDate.SelectedDate.Value;
+            }
+
+            if (EndDate.SelectedDate != null)
+            {
+                end = EndDate.SelectedDate.Value;
+            }
+
+
+            bool filter = (bool)Filter.IsChecked;
+            int categoryId = cmbCategories.SelectedIndex;
+
+            //get the list of items
+            presenter.GetAllBudgetItemByCategory(start, end, filter, categoryId);
+        }
+
+        /// <summary>
+        /// Refresh the display of all the expenses by Month and Category in the datagrid 
+        /// </summary>
+        public void Refresh_MonthCategoryExpenses() 
+        {
+            DateTime start = DateTime.MinValue;
+            DateTime end = DateTime.MaxValue;
+
+            if (StartDate.SelectedDate != null)
+            {
+                start = StartDate.SelectedDate.Value;
+            }
+
+            if (EndDate.SelectedDate != null)
+            {
+                end = EndDate.SelectedDate.Value;
+            }
+
+
+            bool filter = (bool)Filter.IsChecked;
+            int categoryId = cmbCategories.SelectedIndex;
+
+            presenter.GetAllBudgetItemByCategoryAndByMonth(start, end, filter, categoryId);
+        }
+
+        /// <summary>
+        /// Refresh the expense list of datagrid
+        /// </summary>
+        public void CalledRefresh()
+        {
+            if (rbt_allExpenses.IsChecked == true)
+            {
+                Refresh_allExpenses();
+            }
+            else if (rbt_byMonthAndCategory.IsChecked == true)
+            {
+                Refresh_MonthCategoryExpenses();
+            }
+            else if (rbt_byMonth.IsChecked == true)
+            {
+                Refresh_MonthExpenses();
+            }
+            else if (rbt_byCategory.IsChecked == true)
+            {
+                Refresh_CategoryExpenses();
+            }
         }
     }
 }
