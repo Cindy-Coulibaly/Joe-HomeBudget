@@ -19,30 +19,33 @@ namespace JoeWpfHomeBudget
     /// <summary>
     /// Interaction logic for Update_Delete_Budget_Item.xaml
     /// </summary>
-    public partial class Update_Delete_Budget_Item : Window, Update_Delete_Interface
+    public partial class Update_Delete_Budget_Item : Window
     {
         private readonly Presenter presenter;
 
         int _id;
 
-
+        /// <summary>
+        /// Update an Expense window to let the user update an expense
+        /// </summary>
+        /// <param name="_presenter"> The presenter of this project.</param>
+        /// <param name="id"> the expenses's Id</param>
+        /// <param name="date"> the expense's date</param>
+        /// <param name="categoryId"> the expense's category Id</param>
+        /// <param name="amount">the expense's amount</param>
+        /// <param name="description"> the expense's description</param>
         public Update_Delete_Budget_Item(Presenter _presenter,int id, DateTime date, int categoryId, double amount, string description)
         {
-
             InitializeComponent();
 
             _id = id;
             presenter = _presenter;
+
             SetDateDefault(date, categoryId, amount, description);
-
             PopulateCategoryInBox();
-
         }
 
-        /// <summary>
-        /// sets the value default value of an expense to be today.
-        /// </summary>
-        public void SetDateDefault(DateTime _date, int _categoryId, double _amount, string _desc)
+        private void SetDateDefault(DateTime _date, int _categoryId, double _amount, string _desc)
         {
 
             date_expense.DisplayDate = _date;
@@ -70,7 +73,7 @@ namespace JoeWpfHomeBudget
             this.Close();
         }
 
-        public void PopulateCategoryInBox()
+        private void PopulateCategoryInBox()
         {
             List<Category> categories = presenter.GetAllCategories();
 

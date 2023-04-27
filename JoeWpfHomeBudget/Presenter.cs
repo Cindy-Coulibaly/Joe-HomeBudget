@@ -14,12 +14,23 @@ namespace JoeWpfHomeBudget
         private readonly ViewInterface view;
         private HomeBudget model { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="v">The view Interface.</param>
+        /// <param name="databaseFile">The database file.</param>
+        /// <param name="newDb">if true then it's a new database, false otherwise</param>
         public Presenter(ViewInterface v, string databaseFile, bool newDb)
         {
             model = new HomeBudget(databaseFile, newDb);
             view = v;
         }
 
+
+        /// <summary>
+        /// Get all the categories in the database from the model
+        /// </summary>
+        /// <returns> the list of categories</returns>
         public List<Category> GetAllCategories()
         {
             try
@@ -33,6 +44,13 @@ namespace JoeWpfHomeBudget
             return model.categories.List();
         }
 
+        /// <summary>
+        /// Add a new expenses to the database
+        /// </summary>
+        /// <param name="date"> the expense's date</param>
+        /// <param name="amount"> the expense's amount</param>
+        /// <param name="categoryId">the expense's category's id</param>
+        /// <param name="description">the expense's description</param>
         public void AddExpense(DateTime date, string amount, int categoryId, string description)
         {
             double amountTemp;
@@ -67,6 +85,14 @@ namespace JoeWpfHomeBudget
                 view.ShowError(err.Message);
             }
         }
+
+        /// <summary>
+        /// Update a new expenses to the database
+        /// </summary>
+        /// <param name="date"> the expense's date</param>
+        /// <param name="amount"> the expense's amount</param>
+        /// <param name="categoryId">the expense's category's id</param>
+        /// <param name="description">the expense's description</param>
         public void UpdateExpense(int id, DateTime date, int category, string amount, string description)
         {
             double amountTemp;
@@ -103,6 +129,11 @@ namespace JoeWpfHomeBudget
                 view.ShowError(err.Message);
             }
         }
+
+        /// <summary>
+        /// Get all the Expenses in the database from the model
+        /// </summary>
+        /// <returns> the list of Expenses</returns>
         public List<Expense> GetAllExpenses()
         {
             try
@@ -116,18 +147,27 @@ namespace JoeWpfHomeBudget
             return model.expenses.List();
         }
 
+        /// <summary>
+        /// Load a new database file
+        /// </summary>
+        /// <param name="databaseFile">the database file to load</param>
         public void loadNewDatabase(string databaseFile)
         {
             //loading doesn't create a new database so bool is always false
             model = new HomeBudget(databaseFile, false);
         }
 
+        /// <summary>
+        /// Add a new category to the database
+        /// </summary>
+        /// <param name="description"> the category's description</param>
+        /// <param name="categoryType">the category's type</param>
+        /// <returns></returns>
         public bool AddCategory(string description, int categoryType)
         {
             Category.CategoryType type;
             try
             {
-
                 if (description == string.Empty)
                 {
                     throw new Exception("Must provide Category Name");
@@ -156,13 +196,13 @@ namespace JoeWpfHomeBudget
 
         }
 
+        /// <summary>
+        /// a message that ask the user if they really want to quit
+        /// </summary>
+        /// <returns> message showing if it true or false</returns>
         public Boolean SaveBeforeClosing()
         {
-            if (MessageBox.Show("Are you sure you want to quit? All unsaved changes will be lost.", "Unsaved Changes", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
-            {
-                return true;
-            }
-            return false;
+            return MessageBox.Show("Are you sure you want to quit? All unsaved changes will be lost.", "Unsaved Changes", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes;
         }
 
         /// <summary>
@@ -188,6 +228,13 @@ namespace JoeWpfHomeBudget
 
         }
 
+        /// <summary>
+        /// Get a list of all the budget item by category and by month
+        /// </summary>
+        /// <param name="start">The start of date</param>
+        /// <param name="end">the end of date</param>
+        /// <param name="filter"> if true, the the filter is on, false otherwise</param>
+        /// <param name="categoryId">the category'id to filter</param>
         public void GetAllBudgetItemByCategoryAndByMonth(DateTime start, DateTime end, bool filter, int categoryId)
         {
             try
@@ -203,6 +250,13 @@ namespace JoeWpfHomeBudget
             }
         }
 
+        /// <summary>
+        /// Get a list of all the budget item  by month
+        /// </summary>
+        /// <param name="start">The start of date</param>
+        /// <param name="end">the end of date</param>
+        /// <param name="filter"> if true, the the filter is on, false otherwise</param>
+        /// <param name="categoryId">the category'id to filter</param>
         public void GetAllBudgetItemByMonth(DateTime start, DateTime end, bool filter, int categoryId)
         {
             try
@@ -218,6 +272,13 @@ namespace JoeWpfHomeBudget
             }
         }
 
+        /// <summary>
+        /// Get a list of all the budget item  by category
+        /// </summary>
+        /// <param name="start">The start of date</param>
+        /// <param name="end">the end of date</param>
+        /// <param name="filter"> if true, the the filter is on, false otherwise</param>
+        /// <param name="categoryId">the category'id to filter</param>
         public void GetAllBudgetItemByCategory(DateTime start, DateTime end, bool filter, int categoryId)
         {
             try
@@ -233,6 +294,11 @@ namespace JoeWpfHomeBudget
                 view.ShowError(err.Message);
             }
         }
+
+        /// <summary>
+        /// Delete an expense in the database
+        /// </summary>
+        /// <param name="id">the expense's id</param>
         public void Delete_Expense(int id)
         {
             try
@@ -250,6 +316,14 @@ namespace JoeWpfHomeBudget
             {
                 view.ShowError(err.Message);
             }
+        }
+
+        /// <summary>
+        /// refresh the display table with new expense
+        /// </summary>
+        public void RefreshWithNewExpense()
+        {
+            view.CalledRefresh();
         }
     }
 }

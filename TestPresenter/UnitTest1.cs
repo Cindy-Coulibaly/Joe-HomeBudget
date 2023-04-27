@@ -13,6 +13,10 @@ namespace TestPresenter
         public bool calledGetBudgetItem;
         public bool calledRefresh_allExpenses;
         public bool calledclosingAfterUpdate;
+        public bool calledShowBudgetItemByMonthAndCategory;
+        public bool calledShowBudgetItemByMonth;
+        public bool calledShowBudgetItemByCategory;
+        public bool calledcalledRefresh;
 
         public void ShowError(string msg)
         {
@@ -51,19 +55,25 @@ namespace TestPresenter
 
         public void ShowBudgetItemByMonthAndCategory(List<Dictionary<string, object>> items)
         {
-            throw new NotImplementedException();
+            calledShowBudgetItemByMonthAndCategory = true;
         }
 
         public void ShowBudgetItemByMonth(List<BudgetItemsByMonth> items)
         {
-            throw new NotImplementedException();
+            calledShowBudgetItemByMonth = true;
         }
 
         public void ShowBudgetItemByCategory(List<BudgetItemsByCategory> items)
         {
-            throw new NotImplementedException();
+            calledShowBudgetItemByCategory = true;
+        }
+
+        public void CalledRefresh()
+        {
+            calledcalledRefresh = true;
         }
     }
+
     public class UnitTest1
     {
 
@@ -505,6 +515,63 @@ namespace TestPresenter
         }
 
         [Fact]
+        public void Test_GetAllBudgetItemByCategoryAndByMonth_Success()
+        {
+            //Arrange
+            string dummyFile = "./dummyFile.db";
+            bool newDb = false;
+            TestView view = new TestView();
+            Presenter p = new Presenter(view, dummyFile, newDb);
+            DateTime dateNow = DateTime.Now;
+            DateTime dateThen = DateTime.Now;
+            bool filter = true;
+            int categoryId = 1;
+            //Act
+            p.GetAllBudgetItemByCategoryAndByMonth(dateNow, dateThen, filter, categoryId);
+
+            //Assert
+            Assert.True(view.calledShowBudgetItemByMonthAndCategory);
+        }
+
+        [Fact]
+        public void Test_GetAllBudgetItemByMonth_Success()
+        {
+            //Arrange
+            string dummyFile = "./dummyFile.db";
+            bool newDb = false;
+            TestView view = new TestView();
+            Presenter p = new Presenter(view, dummyFile, newDb);
+            DateTime dateNow = DateTime.Now;
+            DateTime dateThen = DateTime.Now;
+            bool filter = true;
+            int categoryId = 1;
+            //Act
+            p.GetAllBudgetItemByMonth(dateNow, dateThen, filter, categoryId);
+
+            //Assert
+            Assert.True(view.calledShowBudgetItemByMonth);
+        }
+
+        [Fact]
+        public void Test_GetAllBudgetItemByCategory_Success()
+        {
+            //Arrange
+            string dummyFile = "./dummyFile.db";
+            bool newDb = false;
+            TestView view = new TestView();
+            Presenter p = new Presenter(view, dummyFile, newDb);
+            DateTime dateNow = DateTime.Now;
+            DateTime dateThen = DateTime.Now;
+            bool filter = true;
+            int categoryId = 1;
+            //Act
+            p.GetAllBudgetItemByCategory(dateNow, dateThen, filter, categoryId);
+
+            //Assert
+            Assert.True(view.calledShowBudgetItemByCategory);
+        }
+
+        [Fact]
         public void Test_DeleteExpense_Success()
         {
             //Arrange
@@ -537,6 +604,21 @@ namespace TestPresenter
 
             //Assert
             Assert.True(view.calledShowError);
+        }
+
+        public void Test_RefreshWithNewExpense_Success()
+        {
+            //Arrange
+            string dummyFile = "./dummyFile.db";
+            bool newDb = false;
+            TestView view = new TestView();
+            Presenter p = new Presenter(view, dummyFile, newDb);
+
+            //Act
+            p.RefreshWithNewExpense();
+
+            //Assert
+            Assert.True(view.calledcalledRefresh);
         }
 
 

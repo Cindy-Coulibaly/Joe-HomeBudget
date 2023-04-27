@@ -26,6 +26,10 @@ namespace JoeWpfHomeBudget
         private Boolean cancelled;
 
 
+        /// <summary>
+        /// Create an Expense window to let the user add an expense
+        /// </summary>
+        /// <param name="_presenter">The presenter of this project</param>
         public Add_Expense(Presenter _presenter)
         {
             InitializeComponent();
@@ -114,14 +118,9 @@ namespace JoeWpfHomeBudget
             CancelExpense();
         }
 
-        public void ShowError(String err)
-        {
-            MessageBox.Show(err, "Invalid input", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-        public void ShowValid(string message)
-        {
-            MessageBox.Show(message, "Information", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
+        /// <summary>
+        /// Clear all the user inputs in the window.
+        /// </summary>
         public void ClearExpense()
         {
             SetDateDefault();
@@ -129,6 +128,10 @@ namespace JoeWpfHomeBudget
             categoryList.SelectedIndex= -1;
             description.Clear();
         }
+
+        /// <summary>
+        /// Ask the user a confirmation if they want to clear all that they have inputed
+        /// </summary>
         public void CancelExpense()
         {
 
@@ -142,7 +145,9 @@ namespace JoeWpfHomeBudget
 
         private void close_Click(object sender, RoutedEventArgs e)
         {
+            presenter.RefreshWithNewExpense();
             this.Close();
+            
         }
     }
 }
