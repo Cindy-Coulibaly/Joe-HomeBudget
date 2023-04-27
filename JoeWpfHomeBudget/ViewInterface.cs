@@ -17,6 +17,7 @@ namespace JoeWpfHomeBudget
         void ShowBudgetItemByMonthAndCategory(List<Dictionary<string, object>> items);
         void ShowBudgetItemByMonth(List<BudgetItemsByMonth> items);
         void ShowBudgetItemByCategory(List<BudgetItemsByCategory> items);
-
+        void Refresh_allExpenses();
+        void closingAfterUpdate();
     }
 }

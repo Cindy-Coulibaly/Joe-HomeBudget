@@ -20,7 +20,6 @@ namespace JoeWpfHomeBudget
             view = v;
         }
 
-
         public List<Category> GetAllCategories()
         {
             try
@@ -42,19 +41,19 @@ namespace JoeWpfHomeBudget
             {
                 if (categoryId == -1)
                 {
-                    throw new Exception("you have not inputed for the category category");
+                    throw new Exception("No category to add has been provided.");
                 }
                 else if (!double.TryParse(amount, out amountTemp) || Double.IsNaN(amountTemp) || Double.IsInfinity(amountTemp))
                 {
-                    throw new Exception("the amount is not a valid value");
+                    throw new Exception("The amount to add is not a valid value.");
                 }
                 else if (double.TryParse(description, out badDescription))
                 {
-                    throw new Exception("the description is a number");
+                    throw new Exception("The description to add is a number");
                 }
                 else if (description == "")
                 {
-                    throw new Exception("the description is empty");
+                    throw new Exception("The description is empty.");
                 }
                 else
                 {
@@ -68,13 +67,49 @@ namespace JoeWpfHomeBudget
                 view.ShowError(err.Message);
             }
         }
+        public void UpdateExpense(int id, DateTime date, int category, string amount, string description)
+        {
+            double amountTemp;
+            double badDescription;
+
+            try
+            {
+                if (category == -1)
+                {
+                    throw new Exception("No category to update has been provided");
+                }
+                else if (!double.TryParse(amount, out amountTemp) || Double.IsNaN(amountTemp) || Double.IsInfinity(amountTemp))
+                {
+                    throw new Exception("The amount to update is not a valid value.");
+                }
+                else if (double.TryParse(description, out badDescription))
+                {
+                    throw new Exception("The description to update is a number");
+                }
+                else if (description == "")
+                {
+                    throw new Exception("The description is empty.");
+                }
+                else
+                {
+                    model.expenses.UpdateProperties(id, date, category, amountTemp, description);
+                    view.ShowValid($"New expense just updated with properties:: Id: {id} Category: {category} Amount: {amount} Description: {description}");
+                    view.closingAfterUpdate();
+                    view.Refresh_allExpenses();
+                }
+            }
+            catch (Exception err)
+            {
+                view.ShowError(err.Message);
+            }
+        }
         public List<Expense> GetAllExpenses()
         {
             try
             {
                 var listOfExpenses = model.expenses.List();
             }
-            catch(Exception err)
+            catch (Exception err)
             {
                 view.ShowError(err.Message);
             }
@@ -90,7 +125,8 @@ namespace JoeWpfHomeBudget
         public bool AddCategory(string description, int categoryType)
         {
             Category.CategoryType type;
-            try {
+            try
+            {
 
                 if (description == string.Empty)
                 {
@@ -102,21 +138,22 @@ namespace JoeWpfHomeBudget
                 }
                 else if (categoryType == -1)
                 {
-                    throw new Exception ("Must Select Category Type");
+                    throw new Exception("Must Select Category Type");
                 }
                 else
                 {
-                    type= (Category.CategoryType)categoryType;
+                    type = (Category.CategoryType)categoryType;
                     model.categories.Add(description, type);
                     view.ShowValid("New Category Added");
                     return true;
                 }
             }
-            catch(Exception err) {
+            catch (Exception err)
+            {
                 view.ShowError(err.Message);
                 return false;
             }
-            
+
         }
 
         public Boolean SaveBeforeClosing()
@@ -136,27 +173,27 @@ namespace JoeWpfHomeBudget
         /// <param name="flag"></param>
         /// <param name="CategoryId"></param>
         /// <returns></returns>
-        public void GetAllBudgetItem(DateTime start, DateTime end,bool filter,int categoryId)
+        public void GetAllBudgetItem(DateTime start, DateTime end, bool filter, int categoryId)
         {
             try
             {
                 categoryId = categoryId + 1;
-                List<BudgetItem> expenses=model.GetBudgetItems(start, end, filter, categoryId);
+                List<BudgetItem> expenses = model.GetBudgetItems(start, end, filter, categoryId);
                 view.ShowBudgetItem(expenses);
             }
-            catch(Exception err)
+            catch (Exception err)
             {
                 view.ShowError(err.Message);
             }
-            
+
         }
 
-        public void GetAllBudgetItemByCategoryAndByMonth(DateTime start,DateTime end,bool filter,int categoryId)
+        public void GetAllBudgetItemByCategoryAndByMonth(DateTime start, DateTime end, bool filter, int categoryId)
         {
             try
             {
                 categoryId = categoryId + 1;
-                List<Dictionary<string,object>> expenses = model.GetBudgetDictionaryByCategoryAndMonth(start, end, filter, categoryId);
+                List<Dictionary<string, object>> expenses = model.GetBudgetDictionaryByCategoryAndMonth(start, end, filter, categoryId);
                 view.ShowBudgetItemByMonthAndCategory(expenses);
 
             }
@@ -166,7 +203,7 @@ namespace JoeWpfHomeBudget
             }
         }
 
-        public void GetAllBudgetItemByMonth(DateTime start,DateTime end,bool filter,int categoryId)
+        public void GetAllBudgetItemByMonth(DateTime start, DateTime end, bool filter, int categoryId)
         {
             try
             {
@@ -189,6 +226,25 @@ namespace JoeWpfHomeBudget
                 List<BudgetItemsByCategory> expenses = model.GetBudgetItemsByCategory(start, end, filter, categoryId);
                 view.ShowBudgetItemByCategory(expenses);
 
+
+            }
+            catch (Exception err)
+            {
+                view.ShowError(err.Message);
+            }
+        }
+        public void Delete_Expense(int id)
+        {
+            try
+            {
+                if (id < 0)
+                {
+                    throw new Exception("There's no number");
+                }
+
+                model.expenses.Delete(id);
+                view.closingAfterUpdate();
+                view.Refresh_allExpenses();
             }
             catch (Exception err)
             {
