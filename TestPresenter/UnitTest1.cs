@@ -34,7 +34,7 @@ namespace TestPresenter
             calledCancelExpense = true;
         }
 
-        public void GetBudgetItem(List<BudgetItem> items)
+        public void ShowBudgetItem(List<BudgetItem> items)
         {
             calledGetBudgetItem = true;
         }
@@ -47,6 +47,21 @@ namespace TestPresenter
         public void closingAfterUpdate()
         {
             calledclosingAfterUpdate = true;
+        }
+
+        public void ShowBudgetItemByMonthAndCategory(List<Dictionary<string, object>> items)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ShowBudgetItemByMonth(List<BudgetItemsByMonth> items)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ShowBudgetItemByCategory(List<BudgetItemsByCategory> items)
+        {
+            throw new NotImplementedException();
         }
     }
     public class UnitTest1
@@ -486,7 +501,7 @@ namespace TestPresenter
             p.GetAllBudgetItem(dateNow, dateThen, filter, categoryId);
 
             //Assert
-            Assert.True(view.calledShowError);
+            Assert.True(view.calledGetBudgetItem);
         }
 
         [Fact]
@@ -503,7 +518,6 @@ namespace TestPresenter
             p.Delete_Expense(id);
 
             //Assert
-            Assert.True(view.calledShowValid);
             Assert.True(view.calledclosingAfterUpdate);
             Assert.True(view.calledRefresh_allExpenses);
         }

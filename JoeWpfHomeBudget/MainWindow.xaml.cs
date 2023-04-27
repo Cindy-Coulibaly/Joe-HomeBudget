@@ -226,6 +226,7 @@ namespace JoeWpfHomeBudget
 
         private void rbt_byMonth_Checked(object sender, RoutedEventArgs e)
         {
+            listExpenses.IsEnabled = false;
             // get all the specificities
             DateTime start = DateTime.MinValue;
             DateTime end = DateTime.MaxValue;
@@ -250,6 +251,7 @@ namespace JoeWpfHomeBudget
 
         private void rbt_byCategory_Checked(object sender, RoutedEventArgs e)
         {
+            listExpenses.IsEnabled = false;
             // get all the specificities
             DateTime start = DateTime.MinValue;
             DateTime end = DateTime.MaxValue;
@@ -275,6 +277,7 @@ namespace JoeWpfHomeBudget
 
         private void rbt_byMonthAndCategory_Checked(object sender, RoutedEventArgs e)
         {
+            listExpenses.IsEnabled = false;
             DateTime start = DateTime.MinValue;
             DateTime end = DateTime.MaxValue;
 
@@ -397,7 +400,7 @@ namespace JoeWpfHomeBudget
             listExpenses.Columns.Clear();
 
             var date = new DataGridTextColumn();
-            date.Header = "Date";
+            date.Header = "Month";
             date.Binding = new Binding("Month");
             listExpenses.Columns.Add(date);
 
