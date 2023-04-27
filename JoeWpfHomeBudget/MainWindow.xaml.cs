@@ -53,6 +53,14 @@ namespace JoeWpfHomeBudget
 
 
         }
+
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+
+            listExpenses.SelectedItem = null;
+        }
+
+
         private void Update_Click(object sender, RoutedEventArgs e)
         {
 
@@ -218,15 +226,17 @@ namespace JoeWpfHomeBudget
 
         private void rbt_allExpenses_Checked(object sender, RoutedEventArgs e)
         {
-
-            listExpenses.IsEnabled = true;
+            menuItem_Update.IsEnabled = true;
+            menuItem_Delete.IsEnabled = true;
             Refresh_allExpenses();
 
         }
 
         private void rbt_byMonth_Checked(object sender, RoutedEventArgs e)
         {
-            listExpenses.IsEnabled = false;
+            menuItem_Update.IsEnabled = false;
+            menuItem_Delete.IsEnabled = false;
+
             // get all the specificities
             DateTime start = DateTime.MinValue;
             DateTime end = DateTime.MaxValue;
@@ -251,7 +261,9 @@ namespace JoeWpfHomeBudget
 
         private void rbt_byCategory_Checked(object sender, RoutedEventArgs e)
         {
-            listExpenses.IsEnabled = false;
+            menuItem_Update.IsEnabled = false;
+            menuItem_Delete.IsEnabled = false;
+
             // get all the specificities
             DateTime start = DateTime.MinValue;
             DateTime end = DateTime.MaxValue;
@@ -277,7 +289,9 @@ namespace JoeWpfHomeBudget
 
         private void rbt_byMonthAndCategory_Checked(object sender, RoutedEventArgs e)
         {
-            listExpenses.IsEnabled = false;
+            menuItem_Update.IsEnabled = false;
+            menuItem_Delete.IsEnabled = false;
+
             DateTime start = DateTime.MinValue;
             DateTime end = DateTime.MaxValue;
 

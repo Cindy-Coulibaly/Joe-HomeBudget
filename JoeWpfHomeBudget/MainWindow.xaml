@@ -130,8 +130,9 @@
             <DataGrid Background="#F07167" BorderBrush="Black" Margin="10" x:Name="listExpenses" MouseDoubleClick="Update_Click" IsReadOnly="True">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Click="Update_Click" Header="Update"></MenuItem>
-                        <MenuItem Click="Delete_Click" Header="Delete"></MenuItem>
+                        <MenuItem Click="Update_Click" Header="Update" x:Name="menuItem_Update"></MenuItem>
+                        <MenuItem Click="Delete_Click" Header="Delete" x:Name="menuItem_Delete"></MenuItem>
+                        <MenuItem Click="Cancel_Click" Header="Cancel" x:Name="menuItem_Cancel"></MenuItem>
                     </ContextMenu>
                 </DataGrid.ContextMenu>
             </DataGrid>
