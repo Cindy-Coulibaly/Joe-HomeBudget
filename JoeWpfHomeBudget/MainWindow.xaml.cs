@@ -49,7 +49,7 @@ namespace JoeWpfHomeBudget
                 rbt_allExpenses.IsChecked = true;
             }
             else { this.Close(); }
-            
+
 
 
         }
@@ -92,7 +92,9 @@ namespace JoeWpfHomeBudget
             AddCategory addCategory = new AddCategory(presenter);
             addCategory.ShowDialog();
         }
-
+        /// <summary>
+        /// Show all the categories and put in the comboBox
+        /// </summary>
         public void ShowCats()
         {
             List<Category> categories = presenter.GetAllCategories();
@@ -104,7 +106,9 @@ namespace JoeWpfHomeBudget
 
             }
         }
-
+        /// <summary>
+        /// Let the user choose a file where they want to use the database on
+        /// </summary>
         public void ChooseDB()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -120,8 +124,9 @@ namespace JoeWpfHomeBudget
                 MessageBox.Show(filePath + " file is now in uses", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
-
-        //make the user choose whether they are working on a new or old database
+        /// <summary>
+        /// make the user choose whether they are working on a new or old database
+        /// </summary>
         public void initializeDatabase()
         {
             loadDatabase selectDatabase = new loadDatabase();
@@ -134,7 +139,11 @@ namespace JoeWpfHomeBudget
         //https://learn.microsoft.com/en-us/dotnet/api/system.windows.window.closing?view=windowsdesktop-7.0
         //How to check if user wants to save changes before closing the window
 
-
+        /// <summary>
+        /// How to check if user wants to save changes before closing the window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void ChooseDatabase_btn(object sender, RoutedEventArgs e)
         {
 
@@ -147,21 +156,34 @@ namespace JoeWpfHomeBudget
             this.Close();
         }
 
+        /// <summary>
+        /// Show a message if there is a error with the operation
+        /// </summary>
+        /// <param name="err">the error message</param>
         public void ShowError(string err)
         {
             MessageBox.Show(err, "Invalid input", MessageBoxButton.OK, MessageBoxImage.Error);
         }
-
+        /// <summary>
+        /// Show a message if the operation was successful
+        /// </summary>
+        /// <param name="message">The success message</param>
         public void ShowValid(string message)
         {
             MessageBox.Show(message, "Information", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        /// <summary>
+        /// Calls expense.clear
+        /// </summary>
         public void ClearExpense()
         {
             expense.ClearExpense();
         }
 
+        /// <summary>
+        /// Show message to make sure that the user really want to cancel an expense
+        /// </summary>
         public void CancelExpense()
         {
 
@@ -174,9 +196,21 @@ namespace JoeWpfHomeBudget
 
         private void input_Changed(object sender, SelectionChangedEventArgs e)
         {
-            if(rbt_allExpenses.IsChecked==true)
+            if (rbt_allExpenses.IsChecked == true)
             {
-                rbt_allExpenses_Checked(sender,e);
+                rbt_allExpenses_Checked(sender, e);
+            }
+            else if (rbt_byMonthAndCategory.IsChecked == true)
+            {
+                rbt_byMonthAndCategory_Checked(sender, e);
+            }
+            else if (rbt_byMonth.IsChecked == true)
+            {
+                rbt_byMonth_Checked(sender, e);
+            }
+            else if (rbt_byCategory.IsChecked == true)
+            {
+                rbt_byCategory_Checked(sender, e);
             }
 
 
@@ -184,34 +218,112 @@ namespace JoeWpfHomeBudget
 
         private void rbt_allExpenses_Checked(object sender, RoutedEventArgs e)
         {
+
             listExpenses.IsEnabled = true;
             Refresh_allExpenses();
+
         }
 
         private void rbt_byMonth_Checked(object sender, RoutedEventArgs e)
         {
+            listExpenses.IsEnabled = false;
+            // get all the specificities
+            DateTime start = DateTime.MinValue;
+            DateTime end = DateTime.MaxValue;
 
+            if (StartDate.SelectedDate != null)
+            {
+                start = StartDate.SelectedDate.Value;
+            }
+
+            if (EndDate.SelectedDate != null)
+            {
+                end = EndDate.SelectedDate.Value;
+            }
+
+
+            bool filter = (bool)Filter.IsChecked;
+            int categoryId = cmbCategories.SelectedIndex;
+
+            //get the list of items
+            presenter.GetAllBudgetItemByMonth(start, end, filter, categoryId);
         }
 
         private void rbt_byCategory_Checked(object sender, RoutedEventArgs e)
         {
+            listExpenses.IsEnabled = false;
+            // get all the specificities
+            DateTime start = DateTime.MinValue;
+            DateTime end = DateTime.MaxValue;
+
+            if (StartDate.SelectedDate != null)
+            {
+                start = StartDate.SelectedDate.Value;
+            }
+
+            if (EndDate.SelectedDate != null)
+            {
+                end = EndDate.SelectedDate.Value;
+            }
+
+
+            bool filter = (bool)Filter.IsChecked;
+            int categoryId = cmbCategories.SelectedIndex;
+
+            //get the list of items
+            presenter.GetAllBudgetItemByCategory(start, end, filter, categoryId);
 
         }
 
         private void rbt_byMonthAndCategory_Checked(object sender, RoutedEventArgs e)
         {
+            listExpenses.IsEnabled = false;
+            DateTime start = DateTime.MinValue;
+            DateTime end = DateTime.MaxValue;
+
+            if (StartDate.SelectedDate != null)
+            {
+                start = StartDate.SelectedDate.Value;
+            }
+
+            if (EndDate.SelectedDate != null)
+            {
+                end = EndDate.SelectedDate.Value;
+            }
+
+
+            bool filter = (bool)Filter.IsChecked;
+            int categoryId = cmbCategories.SelectedIndex;
+
+            presenter.GetAllBudgetItemByCategoryAndByMonth(start, end, filter, categoryId);
 
         }
 
         private void Filter_Checked(object sender, RoutedEventArgs e)
         {
-            if(rbt_allExpenses.IsChecked == true)
+            if (rbt_allExpenses.IsChecked == true)
             {
                 rbt_allExpenses_Checked(sender, e);
             }
+            else if (rbt_byMonthAndCategory.IsChecked == true)
+            {
+                rbt_byMonthAndCategory_Checked(sender, e);
+            }
+            else if (rbt_byMonth.IsChecked == true)
+            {
+                rbt_byMonth_Checked(sender, e);
+            }
+            else if (rbt_byCategory.IsChecked == true)
+            {
+                rbt_byCategory_Checked(sender, e);
+            }
         }
 
-        public void GetBudgetItem(List<BudgetItem> items)
+        /// <summary>
+        /// Show all the expenses every in this file, depending on the user input
+        /// </summary>
+        /// <param name="items">The list of expenses of needed with the balance </param>
+        public void ShowBudgetItem(List<BudgetItem> items)
         {
             listExpenses.ItemsSource = items;
             listExpenses.Columns.Clear();
@@ -244,6 +356,79 @@ namespace JoeWpfHomeBudget
             listExpenses.Columns.Add(balance);
         }
 
+
+        /// <summary>
+        /// Show all the items grouped by category and by month,depending on the user input
+        /// </summary>
+        /// <param name="items">The list of all the expense grouped by month and cateogry</param>
+        public void ShowBudgetItemByMonthAndCategory(List<Dictionary<string, object>> items)
+        {
+            listExpenses.ItemsSource = items;
+            listExpenses.Columns.Clear();
+
+            // get the list of category 
+            List<Category> categories = presenter.GetAllCategories();
+
+            var month = new DataGridTextColumn();
+            month.Header = "Month";
+            month.Binding = new Binding("[Month]");
+            listExpenses.Columns.Add(month);
+
+            var total = new DataGridTextColumn();
+            total.Header = "Total";
+            total.Binding = new Binding("[Total]");
+            listExpenses.Columns.Add(total);
+
+            foreach (var category in categories)
+            {
+                var column = new DataGridTextColumn();
+                column.Header = category;
+                column.Binding = new Binding($"[{category}]"); // Notice the square brackets!
+                listExpenses.Columns.Add(column);
+            }
+
+
+        }
+
+        /// <summary>
+        /// Show all month and the total expenses of that given month,depending on the user input
+        /// </summary>
+        /// <param name="items">The list of months with their total amount of expenses</param>
+        public void ShowBudgetItemByMonth(List<BudgetItemsByMonth> items)
+        {
+            listExpenses.ItemsSource = items;
+            listExpenses.Columns.Clear();
+
+            var date = new DataGridTextColumn();
+            date.Header = "Month";
+            date.Binding = new Binding("Month");
+            listExpenses.Columns.Add(date);
+
+            var total = new DataGridTextColumn();
+            total.Header = "Total";
+            total.Binding = new Binding("Total");
+            listExpenses.Columns.Add(total);
+        }
+
+        /// <summary>
+        /// Show all categories and the total expenses of that given cateogry, depending on the user input
+        /// </summary>
+        /// <param name="items">The list of categories with their total amount of expenses</param>
+        public void ShowBudgetItemByCategory(List<BudgetItemsByCategory> items)
+        {
+            listExpenses.ItemsSource = items;
+            listExpenses.Columns.Clear();
+
+            var date = new DataGridTextColumn();
+            date.Header = "Category";
+            date.Binding = new Binding("Category");
+            listExpenses.Columns.Add(date);
+
+            var total = new DataGridTextColumn();
+            total.Header = "Total";
+            total.Binding = new Binding("Total");
+            listExpenses.Columns.Add(total);
+        }
         public void Refresh_allExpenses()
         {
             // get all the specificities
@@ -271,6 +456,7 @@ namespace JoeWpfHomeBudget
         public void closingAfterUpdate()
         {
             updateExpense.Close();
+
         }
     }
 }

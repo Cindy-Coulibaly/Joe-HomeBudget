@@ -109,7 +109,7 @@ namespace JoeWpfHomeBudget
             {
                 var listOfExpenses = model.expenses.List();
             }
-            catch(Exception err)
+            catch (Exception err)
             {
                 view.ShowError(err.Message);
             }
@@ -125,7 +125,8 @@ namespace JoeWpfHomeBudget
         public bool AddCategory(string description, int categoryType)
         {
             Category.CategoryType type;
-            try {
+            try
+            {
 
                 if (description == string.Empty)
                 {
@@ -137,21 +138,22 @@ namespace JoeWpfHomeBudget
                 }
                 else if (categoryType == -1)
                 {
-                    throw new Exception ("Must Select Category Type");
+                    throw new Exception("Must Select Category Type");
                 }
                 else
                 {
-                    type= (Category.CategoryType)categoryType;
+                    type = (Category.CategoryType)categoryType;
                     model.categories.Add(description, type);
                     view.ShowValid("New Category Added");
                     return true;
                 }
             }
-            catch(Exception err) {
+            catch (Exception err)
+            {
                 view.ShowError(err.Message);
                 return false;
             }
-            
+
         }
 
         public Boolean SaveBeforeClosing()
@@ -171,21 +173,66 @@ namespace JoeWpfHomeBudget
         /// <param name="flag"></param>
         /// <param name="CategoryId"></param>
         /// <returns></returns>
-        public void GetAllBudgetItem(DateTime start, DateTime end,bool filter,int categoryId)
+        public void GetAllBudgetItem(DateTime start, DateTime end, bool filter, int categoryId)
         {
             try
             {
                 categoryId = categoryId + 1;
-                List<BudgetItem> expenses=model.GetBudgetItems(start, end, filter, categoryId);
-                view.GetBudgetItem(expenses);
+                List<BudgetItem> expenses = model.GetBudgetItems(start, end, filter, categoryId);
+                view.ShowBudgetItem(expenses);
             }
-            catch(Exception err)
+            catch (Exception err)
             {
                 view.ShowError(err.Message);
             }
-            
+
         }
 
+        public void GetAllBudgetItemByCategoryAndByMonth(DateTime start, DateTime end, bool filter, int categoryId)
+        {
+            try
+            {
+                categoryId = categoryId + 1;
+                List<Dictionary<string, object>> expenses = model.GetBudgetDictionaryByCategoryAndMonth(start, end, filter, categoryId);
+                view.ShowBudgetItemByMonthAndCategory(expenses);
+
+            }
+            catch (Exception err)
+            {
+                view.ShowError(err.Message);
+            }
+        }
+
+        public void GetAllBudgetItemByMonth(DateTime start, DateTime end, bool filter, int categoryId)
+        {
+            try
+            {
+                categoryId = categoryId + 1;
+                List<BudgetItemsByMonth> expenses = model.GetBudgetItemsByMonth(start, end, filter, categoryId);
+                view.ShowBudgetItemByMonth(expenses);
+
+            }
+            catch (Exception err)
+            {
+                view.ShowError(err.Message);
+            }
+        }
+
+        public void GetAllBudgetItemByCategory(DateTime start, DateTime end, bool filter, int categoryId)
+        {
+            try
+            {
+                categoryId = categoryId + 1;
+                List<BudgetItemsByCategory> expenses = model.GetBudgetItemsByCategory(start, end, filter, categoryId);
+                view.ShowBudgetItemByCategory(expenses);
+
+
+            }
+            catch (Exception err)
+            {
+                view.ShowError(err.Message);
+            }
+        }
         public void Delete_Expense(int id)
         {
             try
@@ -203,7 +250,6 @@ namespace JoeWpfHomeBudget
             {
                 view.ShowError(err.Message);
             }
-
         }
     }
 }
