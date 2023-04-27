@@ -75,6 +75,7 @@ namespace JoeWpfHomeBudget
                 }
                 else
                 {
+                    categoryId = categoryId + 1;
                     model.expenses.Add(date, categoryId, amountTemp, description);
                     view.ShowValid($"New expense just added named: {description}");
                     view.ClearExpense();
@@ -118,7 +119,8 @@ namespace JoeWpfHomeBudget
                 }
                 else
                 {
-                    model.expenses.UpdateProperties(id, date, category, amountTemp, description);
+                    //category = category + 1;
+                    model.expenses.UpdateProperties(id, date, category +1, amountTemp, description);
                     view.ShowValid($"New expense just updated with properties:: Id: {id} Category: {category} Amount: {amount} Description: {description}");
                     view.closingAfterUpdate();
                     view.Refresh_allExpenses();
@@ -309,13 +311,23 @@ namespace JoeWpfHomeBudget
                 }
 
                 model.expenses.Delete(id);
-                view.closingAfterUpdate();
+               // view.closingAfterUpdate();
                 view.Refresh_allExpenses();
             }
             catch (Exception err)
             {
                 view.ShowError(err.Message);
             }
+        }
+
+        /// <summary>
+        /// delete expense after update and refresh it
+        /// </summary>
+        /// <param name="id">the expenses id</param>
+        public void Delete_Expense_InUpdate(int id)
+        {
+            Delete_Expense(id);
+            view.closingAfterUpdate();
         }
 
         /// <summary>
@@ -326,5 +338,6 @@ namespace JoeWpfHomeBudget
             view.CalledRefresh();
         }
     }
+
 }
 

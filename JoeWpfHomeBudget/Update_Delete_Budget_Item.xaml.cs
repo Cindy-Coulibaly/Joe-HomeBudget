@@ -51,7 +51,7 @@ namespace JoeWpfHomeBudget
             date_expense.DisplayDate = _date;
             date_expense.SelectedDate = _date;
             description.Text = _desc;
-            categoryList.SelectedIndex = _categoryId;
+            categoryList.SelectedIndex = _categoryId -1;
             amount_expense.Text = _amount.ToString();
         }
 
@@ -65,7 +65,7 @@ namespace JoeWpfHomeBudget
 
         private void delete_Click(object sender, RoutedEventArgs e)
         {
-           presenter.Delete_Expense(_id);
+           presenter.Delete_Expense_InUpdate(_id);
         }
 
         private void cancel_Click(object sender, RoutedEventArgs e)

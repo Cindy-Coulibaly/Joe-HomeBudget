@@ -21,5 +21,6 @@ namespace JoeWpfHomeBudget
         void closingAfterUpdate();
 
         void CalledRefresh();
+
     }
 }

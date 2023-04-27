@@ -17,6 +17,7 @@ namespace TestPresenter
         public bool calledShowBudgetItemByMonth;
         public bool calledShowBudgetItemByCategory;
         public bool calledcalledRefresh;
+        public bool calleddeleteAdterUpdate;
 
         public void ShowError(string msg)
         {
@@ -71,6 +72,11 @@ namespace TestPresenter
         public void CalledRefresh()
         {
             calledcalledRefresh = true;
+        }
+
+        public void Delete_Expense_InUpdate()
+        {
+            calleddeleteAdterUpdate = true;
         }
     }
 
@@ -585,6 +591,25 @@ namespace TestPresenter
             p.Delete_Expense(id);
 
             //Assert
+           
+            Assert.True(view.calledRefresh_allExpenses);
+        }
+
+        [Fact]
+        public void Test_DeleteExpenseAfterUpdate_Success()
+        {
+            //Arrange
+            string dummyFile = "./dummyFile.db";
+            bool newDb = false;
+            TestView view = new TestView();
+            Presenter p = new Presenter(view, dummyFile, newDb);
+            int id = 1;
+
+            //Act
+            p.Delete_Expense_InUpdate(id);
+
+            //Assert
+
             Assert.True(view.calledclosingAfterUpdate);
             Assert.True(view.calledRefresh_allExpenses);
         }
