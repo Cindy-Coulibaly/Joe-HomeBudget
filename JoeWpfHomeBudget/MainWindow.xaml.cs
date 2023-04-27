@@ -272,12 +272,10 @@ namespace JoeWpfHomeBudget
 
         public void CancelExpense()
         {
-
             if (MessageBox.Show("Do you really want to cancel your Expense", "Cancel", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 ClearExpense();
             }
-
         }
 
         private void input_Changed(object sender, SelectionChangedEventArgs e)
@@ -286,8 +284,6 @@ namespace JoeWpfHomeBudget
             {
                 rbt_allExpenses_Checked(sender,e);
             }
-
-
         }
 
         private void rbt_allExpenses_Checked(object sender, RoutedEventArgs e)
@@ -298,17 +294,20 @@ namespace JoeWpfHomeBudget
 
         private void rbt_byMonth_Checked(object sender, RoutedEventArgs e)
         {
-
+            listExpenses.IsEnabled = true;
+            radio_ShowExpensesByMonth();
         }
 
         private void rbt_byCategory_Checked(object sender, RoutedEventArgs e)
         {
-
+            listExpenses.IsEnabled = true;
+            radio_ShowExpensesByCategory();
         }
 
         private void rbt_byMonthAndCategory_Checked(object sender, RoutedEventArgs e)
         {
-
+            listExpenses.IsEnabled = true;
+            
         }
 
         private void Filter_Checked(object sender, RoutedEventArgs e)
