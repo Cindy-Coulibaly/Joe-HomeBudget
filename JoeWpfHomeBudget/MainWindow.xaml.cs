@@ -19,6 +19,7 @@ using System.Windows.Shapes;
 using System.Xml.Linq;
 using System.ComponentModel;
 using System.Reflection;
+using System.Windows.Controls.Primitives;
 
 
 namespace JoeWpfHomeBudget
@@ -224,6 +225,7 @@ namespace JoeWpfHomeBudget
 
         private void rbt_allExpenses_Checked(object sender, RoutedEventArgs e)
         {
+            search_btn.IsEnabled = true;
             menuItem_Update.IsEnabled = true;
             menuItem_Delete.IsEnabled = true;
             Refresh_allExpenses();
@@ -232,6 +234,7 @@ namespace JoeWpfHomeBudget
 
         private void rbt_byMonth_Checked(object sender, RoutedEventArgs e)
         {
+            search_btn.IsEnabled = false;
             menuItem_Update.IsEnabled = false;
             menuItem_Delete.IsEnabled = false;
 
@@ -240,6 +243,7 @@ namespace JoeWpfHomeBudget
 
         private void rbt_byCategory_Checked(object sender, RoutedEventArgs e)
         {
+            search_btn.IsEnabled = false;
             menuItem_Update.IsEnabled = false;
             menuItem_Delete.IsEnabled = false;
 
@@ -249,6 +253,7 @@ namespace JoeWpfHomeBudget
 
         private void rbt_byMonthAndCategory_Checked(object sender, RoutedEventArgs e)
         {
+            search_btn.IsEnabled = false;
             menuItem_Update.IsEnabled = false;
             menuItem_Delete.IsEnabled = false;
 
@@ -524,6 +529,20 @@ namespace JoeWpfHomeBudget
             {
                 Refresh_CategoryExpenses();
             }
+        }
+
+        public void Search_btn_Click(object sender, RoutedEventArgs e)
+        {
+
+            foreach(BudgetItem a in listExpenses.Items )
+            {
+                if (a.ShortDescription.Contains(txb_search.Text) == true)
+                {
+                    MessageBox.Show("Unable to save file, try again.", "Save error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+
+
         }
     }
 }

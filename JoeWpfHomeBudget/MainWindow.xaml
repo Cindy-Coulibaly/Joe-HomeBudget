@@ -165,6 +165,9 @@
            
 
         </Border>
+        <Button x:Name="search_btn" Grid.Row="7" Grid.Column="2" FontWeight="SemiBold"   FontSize="30" BorderThickness="0" Background="#00AFB9" Margin="0,50,0,0" Click="Search_btn_Click">Search</Button>
+        <TextBox x:Name="txb_search" Grid.Row="7" Grid.Column="3" Grid.ColumnSpan="2" Margin="0,50,0,0" FontSize="30" 
+                       FontWeight="DemiBold" ></TextBox>
         
 
         <Border Grid.Row="8" Grid.ColumnSpan="5" CornerRadius="10" BorderThickness="6"  Background="#00AFB9">
