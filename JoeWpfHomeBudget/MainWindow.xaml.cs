@@ -50,12 +50,9 @@ namespace JoeWpfHomeBudget
                 presenter = new Presenter(this, filePath, newDb);
                 ShowCats();
                 unsavedChanges = false;
-                rbt_allExpenses.IsChecked = true;
+                rbt_allExpenses.IsChecked = true;               
             }
             else { this.Close(); }
-
-
-
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
@@ -152,9 +149,7 @@ namespace JoeWpfHomeBudget
         /// <param name="e"></param>
         public void ChooseDatabase_btn(object sender, RoutedEventArgs e)
         {
-
             ChooseDB();
-
         }
 
         private void close_Click(object sender, RoutedEventArgs e)
@@ -275,6 +270,18 @@ namespace JoeWpfHomeBudget
                 rbt_byCategory_Checked(sender, e);
             }
         }
+
+        //https://support.syncfusion.com/kb/article/10470/how-to-change-the-back-color-of-cell-when-editing-in-wpf-datagrid-sfdatagrid
+        private void FoundItem()
+        {
+            listExpenses.Background = new SolidColorBrush(Colors.Blue);
+        }
+
+        private void ItemDoubleClicked(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
 
         /// <summary>
         /// Show all the expenses every in this file, depending on the user input
