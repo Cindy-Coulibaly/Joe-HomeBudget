@@ -272,6 +272,7 @@ namespace JoeWpfHomeBudget
         }
 
         //https://support.syncfusion.com/kb/article/10470/how-to-change-the-back-color-of-cell-when-editing-in-wpf-datagrid-sfdatagrid
+        //For later
         private void FoundItem()
         {
             listExpenses.Background = new SolidColorBrush(Colors.Blue);
@@ -279,9 +280,11 @@ namespace JoeWpfHomeBudget
 
         private void ItemDoubleClicked(object sender, SelectionChangedEventArgs e)
         {
-
+            if ((bool)rbt_byMonth.IsChecked)
+            {
+                //presenter.GetAllBudgetItemByMonth();
+            }
         }
-
 
         /// <summary>
         /// Show all the expenses every in this file, depending on the user input
