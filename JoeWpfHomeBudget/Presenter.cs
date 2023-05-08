@@ -337,6 +337,14 @@ namespace JoeWpfHomeBudget
         {
             view.CalledRefresh();
         }
+
+        public void ValidUpdate_Delete(BudgetItem item)
+        {
+            if (item == null)
+            {
+                view.ShowError("The item you've been trying to update/ delete is null");
+            }
+        }
     }
 
 }
