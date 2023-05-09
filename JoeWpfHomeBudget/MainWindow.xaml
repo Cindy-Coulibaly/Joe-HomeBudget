@@ -155,10 +155,13 @@
                   DisplayDate="{x:Static sys:DateTime.Now}" 
                   FirstDayOfWeek="Monday"></DatePicker>
 
-                <RadioButton x:Name="rbt_allExpenses" Checked="rbt_allExpenses_Checked" FontWeight="SemiBold" Margin="0,10,0,0">All expenses</RadioButton>
-                <RadioButton x:Name="rbt_byMonth" Checked="rbt_byMonth_Checked" FontWeight="SemiBold">By Month</RadioButton>
-                <RadioButton x:Name="rbt_byCategory" Checked="rbt_byCategory_Checked" FontWeight="SemiBold">By Category</RadioButton>
-                <RadioButton x:Name="rbt_byMonthAndCategory" Checked="rbt_byMonthAndCategory_Checked" FontWeight="SemiBold" >By Month and Category</RadioButton>
+                <StackPanel x:Name="listButton">
+                    <RadioButton x:Name="rbt_allExpenses" Checked="rbt_allExpenses_Checked" FontWeight="SemiBold" Margin="0,10,0,0">All expenses</RadioButton>
+                    <RadioButton x:Name="rbt_byMonth" Checked="rbt_byMonth_Checked" FontWeight="SemiBold">By Month</RadioButton>
+                    <RadioButton x:Name="rbt_byCategory" Checked="rbt_byCategory_Checked" FontWeight="SemiBold">By Category</RadioButton>
+                    <RadioButton x:Name="rbt_byMonthAndCategory" Checked="rbt_byMonthAndCategory_Checked" FontWeight="SemiBold" >By Month and Category</RadioButton>
+                </StackPanel>
+                
                 <CheckBox x:Name="Filter" Content="Filters" Checked="Filter_Checked" Unchecked="Filter_Checked" Margin="0,10,0,3"/>
                 <ComboBox x:Name="cmbCategories" SelectionChanged="input_Changed"/>
             </StackPanel>

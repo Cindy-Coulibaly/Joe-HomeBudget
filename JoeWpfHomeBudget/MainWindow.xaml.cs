@@ -196,7 +196,11 @@ namespace JoeWpfHomeBudget
 
         private void input_Changed(object sender, SelectionChangedEventArgs e)
         {
-            //change this but think about it later
+            //change this to put it in the presenter
+            var checkedValue = listButton.Children.OfType<RadioButton>()
+                 .FirstOrDefault(r => r.IsChecked.HasValue && r.IsChecked.Value);
+
+
             if (rbt_allExpenses.IsChecked == true)
             {
                 rbt_allExpenses_Checked(sender, e);
