@@ -197,16 +197,6 @@ namespace JoeWpfHomeBudget
             }
 
         }
-
-        /// <summary>
-        /// a message that ask the user if they really want to quit
-        /// </summary>
-        /// <returns> message showing if it true or false</returns>
-        public Boolean SaveBeforeClosing()
-        {
-            return MessageBox.Show("Are you sure you want to quit? All unsaved changes will be lost.", "Unsaved Changes", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes;
-        }
-
         /// <summary>
         /// Get a list of budget item depending on the Date and if there is a filter
         /// </summary>
@@ -344,6 +334,12 @@ namespace JoeWpfHomeBudget
             {
                 view.ShowError("The item you've been trying to update/ delete is null");
             }
+        }
+
+        public bool changedExpenses(string amount,string description,int categoryId)
+        {
+            return (amount != string.Empty || description != string.Empty) ||
+                    (categoryId != -1 && (amount == string.Empty || description== string.Empty));
         }
     }
 

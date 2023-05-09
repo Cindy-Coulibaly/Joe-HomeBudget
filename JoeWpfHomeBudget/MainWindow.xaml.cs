@@ -66,21 +66,17 @@ namespace JoeWpfHomeBudget
         {
 
             var selected = listExpenses.SelectedItem as BudgetItem;
-            if (selected != null)
-            {
-                Update_Delete_Budget_Item _expense = new Update_Delete_Budget_Item(presenter, selected);
-                updateExpense = _expense;
-                updateExpense.Show();
-            }
+            Update_Delete_Budget_Item _expense = new Update_Delete_Budget_Item(presenter, selected);
+            updateExpense = _expense;
+            updateExpense.Show();
+            
         }
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
 
             var selected = listExpenses.SelectedItem as BudgetItem;
-            if (selected != null)
-            {
-                presenter.Delete_Expense(selected.ExpenseID);
-            }
+            presenter.Delete_Expense(selected.ExpenseID);
+            
         }
 
         private void Add_Expense_Click(object sender, RoutedEventArgs e)

@@ -64,7 +64,7 @@ namespace JoeWpfHomeBudget
             {
                 if (categoryName.Text != string.Empty || (categoryList.SelectedIndex != -1 && categoryName.Text == string.Empty))
                 {
-                    if (_presenter.SaveBeforeClosing())
+                    if (MessageBox.Show("Are you sure you want to quit? All unsaved changes will be lost.", "Unsaved Changes", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
                     {
                         e.Cancel = false;                    
                     }

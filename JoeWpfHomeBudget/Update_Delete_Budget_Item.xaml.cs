@@ -40,7 +40,6 @@ namespace JoeWpfHomeBudget
             presenter = _presenter;
 
             presenter.ValidUpdate_Delete(item);
-
             _id = item.ExpenseID;
             
 
