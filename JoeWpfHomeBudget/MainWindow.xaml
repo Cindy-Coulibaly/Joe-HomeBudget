@@ -22,6 +22,7 @@
  
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="150"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
@@ -127,7 +128,7 @@
         <!--#region list all the expenses-->
 
         <Border Grid.Row="2" Grid.Column="6" Grid.ColumnSpan="1" Grid.RowSpan="6" >
-            <DataGrid Background="#F07167" BorderBrush="Black" Margin="10" x:Name="listExpenses" MouseDoubleClick="Update_Click" IsReadOnly="True">
+            <DataGrid Background="#F07167" BorderBrush="Black" Margin="10" x:Name="listExpenses" AutoGenerateColumns="False" MouseDoubleClick="Update_Click" IsReadOnly="True">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
                         <MenuItem Click="Update_Click" Header="Update" x:Name="menuItem_Update"></MenuItem>
