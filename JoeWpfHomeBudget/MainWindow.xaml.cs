@@ -99,7 +99,7 @@ namespace JoeWpfHomeBudget
         {
             List<Category> categories = presenter.GetAllCategories();
 
-            foreach (Category category in categories)
+            foreach(Category category in categories)
             {
                 categoryList.Items.Add(category.Description);
                 cmbCategories.Items.Add(category.Description);
@@ -196,6 +196,7 @@ namespace JoeWpfHomeBudget
 
         private void input_Changed(object sender, SelectionChangedEventArgs e)
         {
+            //change this but think about it later
             if (rbt_allExpenses.IsChecked == true)
             {
                 rbt_allExpenses_Checked(sender, e);
@@ -252,6 +253,7 @@ namespace JoeWpfHomeBudget
 
         private void Filter_Checked(object sender, RoutedEventArgs e)
         {
+            //change later 
             if (rbt_allExpenses.IsChecked == true)
             {
                 rbt_allExpenses_Checked(sender, e);
@@ -278,10 +280,6 @@ namespace JoeWpfHomeBudget
         {
             listExpenses.ItemsSource = items;
             listExpenses.Columns.Clear();
-
-
-
-            //create the columns and bind them
             var date = new DataGridTextColumn();
             date.Header = "Date";
             date.Binding = new Binding("Date");
@@ -310,9 +308,6 @@ namespace JoeWpfHomeBudget
             amount.CellStyle = s;
 
             listExpenses.Columns.Add(amount);
-
-
-
             var balance = new DataGridTextColumn();
             balance.Header = "Balance";
             balance.Binding = new Binding("Balance");
@@ -333,7 +328,6 @@ namespace JoeWpfHomeBudget
             listExpenses.ItemsSource = items;
             listExpenses.Columns.Clear();
 
-            // get the list of category 
             List<Category> categories = presenter.GetAllCategories();
 
             var month = new DataGridTextColumn();

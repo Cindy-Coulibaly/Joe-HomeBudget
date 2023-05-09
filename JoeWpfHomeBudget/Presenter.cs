@@ -59,19 +59,19 @@ namespace JoeWpfHomeBudget
             {
                 if (categoryId == -1)
                 {
-                    throw new Exception("No category to add has been provided.");
+                    view.ShowError("No category to add has been provided.");
                 }
                 else if (!double.TryParse(amount, out amountTemp) || Double.IsNaN(amountTemp) || Double.IsInfinity(amountTemp))
                 {
-                    throw new Exception("The amount to add is not a valid value.");
+                    view.ShowError("The amount to add is not a valid value.");
                 }
                 else if (double.TryParse(description, out badDescription))
                 {
-                    throw new Exception("The description to add is a number");
+                    view.ShowError("The description to add is a number");
                 }
                 else if (description == "")
                 {
-                    throw new Exception("The description is empty.");
+                    view.ShowError("The description is empty.");
                 }
                 else
                 {
@@ -103,19 +103,19 @@ namespace JoeWpfHomeBudget
             {
                 if (category == -1)
                 {
-                    throw new Exception("No category to update has been provided");
+                    view.ShowError("No category to update has been provided");
                 }
                 else if (!double.TryParse(amount, out amountTemp) || Double.IsNaN(amountTemp) || Double.IsInfinity(amountTemp))
                 {
-                    throw new Exception("The amount to update is not a valid value.");
+                    view.ShowError("The amount to update is not a valid value.");
                 }
                 else if (double.TryParse(description, out badDescription))
                 {
-                    throw new Exception("The description to update is a number");
+                    view.ShowError("The description to update is a number");
                 }
                 else if (description == "")
                 {
-                    throw new Exception("The description is empty.");
+                    view.ShowError("The description is empty.");
                 }
                 else
                 {
@@ -172,15 +172,18 @@ namespace JoeWpfHomeBudget
             {
                 if (description == string.Empty)
                 {
-                    throw new Exception("Must provide Category Name");
+                    view.ShowError("Must provide Category Name");
+                    return false;
                 }
                 else if (description.Any(c => char.IsDigit(c)))
                 {
-                    throw new Exception("Category Name cannot contain numbers");
+                    view.ShowError("Category Name cannot contain numbers");
+                    return false;
                 }
                 else if (categoryType == -1)
                 {
-                    throw new Exception("Must Select Category Type");
+                    view.ShowError("Must Select Category Type");
+                    return false;
                 }
                 else
                 {
@@ -296,12 +299,9 @@ namespace JoeWpfHomeBudget
             try
             {
                 if (id < 0)
-                {
-                    throw new Exception("There's no number");
-                }
-
+                    view.ShowError("There's no number");
+                
                 model.expenses.Delete(id);
-               // view.closingAfterUpdate();
                 view.Refresh_allExpenses();
             }
             catch (Exception err)
