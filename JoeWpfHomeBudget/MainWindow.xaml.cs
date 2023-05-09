@@ -51,12 +51,9 @@ namespace JoeWpfHomeBudget
                 presenter = new Presenter(this, filePath, newDb);
                 ShowCats();
                 unsavedChanges = false;
-                rbt_allExpenses.IsChecked = true;
+                rbt_allExpenses.IsChecked = true;               
             }
             else { this.Close(); }
-
-
-
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
@@ -74,6 +71,36 @@ namespace JoeWpfHomeBudget
                 Update_Delete_Budget_Item _expense = new Update_Delete_Budget_Item(presenter, selected.ExpenseID, selected.Date, selected.CategoryID, selected.Amount, selected.ShortDescription);
                 updateExpense = _expense;
                 updateExpense.Show();
+            }
+
+            if ((bool)rbt_byMonth.IsChecked)
+            {
+                var showExpenseSelectedByMonth = listExpenses.SelectedItem as BudgetItemsByMonth;
+
+                string[] month = showExpenseSelectedByMonth.Month.Split('-');                
+
+                int daysInMonth = DateTime.DaysInMonth(Convert.ToInt16(month[0]), Convert.ToInt16(month[1]));
+
+                DateTime start = DateTime.Now;
+
+                if (start.Month != Convert.ToInt16(month[1]))
+                {
+                    int monthDiff = start.Month - Convert.ToInt16(month[1]);
+
+                    start= start.AddMonths(-monthDiff);
+                }
+
+                for(int i = start.Day; i < daysInMonth; i++)
+                {
+                    start = start.AddDays(1);
+                }
+
+                start = start.AddDays(-daysInMonth);
+                start = start.AddDays(1);
+                var end = start.AddDays(daysInMonth);
+                int categoryId = cmbCategories.SelectedIndex;
+
+                presenter.GetAllBudgetItem(start,end,false,categoryId);
             }
         }
         private void Delete_Click(object sender, RoutedEventArgs e)
@@ -153,9 +180,7 @@ namespace JoeWpfHomeBudget
         /// <param name="e"></param>
         public void ChooseDatabase_btn(object sender, RoutedEventArgs e)
         {
-
             ChooseDB();
-
         }
 
         private void close_Click(object sender, RoutedEventArgs e)
@@ -280,6 +305,14 @@ namespace JoeWpfHomeBudget
                 rbt_byCategory_Checked(sender, e);
             }
         }
+
+        //https://support.syncfusion.com/kb/article/10470/how-to-change-the-back-color-of-cell-when-editing-in-wpf-datagrid-sfdatagrid
+        //For later
+        private void FoundItem()
+        {
+            listExpenses.Background = new SolidColorBrush(Colors.Blue);
+        }
+
 
         /// <summary>
         /// Show all the expenses every in this file, depending on the user input
