@@ -101,6 +101,7 @@ namespace JoeWpfHomeBudget
                 int categoryId = cmbCategories.SelectedIndex;
 
                 presenter.GetAllBudgetItem(start,end,false,categoryId);
+                
             }
         }
         private void Delete_Click(object sender, RoutedEventArgs e)
