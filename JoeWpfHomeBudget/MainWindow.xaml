@@ -154,6 +154,7 @@
                 <DatePicker SelectedDateChanged="input_Changed" x:Name="EndDate" SelectedDateFormat="Long"
                   DisplayDate="{x:Static sys:DateTime.Now}" 
                   FirstDayOfWeek="Monday"></DatePicker>
+                
 
                 <RadioButton x:Name="rbt_allExpenses" Checked="rbt_allExpenses_Checked" FontWeight="SemiBold" FontSize="15" Margin="0,10,0,0">All expenses</RadioButton>
                 <RadioButton x:Name="rbt_byMonth" Checked="rbt_byMonth_Checked" FontSize="15" FontWeight="SemiBold">By Month</RadioButton>
