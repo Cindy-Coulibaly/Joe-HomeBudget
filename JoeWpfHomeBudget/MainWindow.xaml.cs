@@ -291,6 +291,7 @@ namespace JoeWpfHomeBudget
             listExpenses.Columns.Clear();
 
 
+
             //create the columns and bind them
             var date = new DataGridTextColumn();
             date.Header = "Date";
@@ -311,11 +312,25 @@ namespace JoeWpfHomeBudget
             var amount = new DataGridTextColumn();
             amount.Header = "Amount";
             amount.Binding = new Binding("Amount");
+
+            amount.Binding = new Binding("Amount");
+            amount.Binding.StringFormat = "F2";
+            Style s = new Style();
+            s.Setters.Add(new Setter(TextBlock.TextAlignmentProperty,
+                                    TextAlignment.Right));
+            amount.CellStyle = s;
+
             listExpenses.Columns.Add(amount);
+
+
 
             var balance = new DataGridTextColumn();
             balance.Header = "Balance";
             balance.Binding = new Binding("Balance");
+            balance.Binding = new Binding("Amount");
+            balance.Binding.StringFormat = "F2";
+            balance.CellStyle = s;
+
             listExpenses.Columns.Add(balance);
         }
 
@@ -340,6 +355,12 @@ namespace JoeWpfHomeBudget
             var total = new DataGridTextColumn();
             total.Header = "Total";
             total.Binding = new Binding("[Total]");
+            total.Binding.StringFormat = "F2";
+            Style s = new Style();
+            s.Setters.Add(new Setter(TextBlock.TextAlignmentProperty,
+                                    TextAlignment.Right));
+            total.CellStyle = s;
+
             listExpenses.Columns.Add(total);
 
             foreach (var category in categories)
@@ -347,6 +368,9 @@ namespace JoeWpfHomeBudget
                 var column = new DataGridTextColumn();
                 column.Header = category;
                 column.Binding = new Binding($"[{category}]"); // Notice the square brackets!
+                column.Binding.StringFormat = "F2";
+                column.CellStyle = s;
+
                 listExpenses.Columns.Add(column);
             }
 
@@ -370,6 +394,13 @@ namespace JoeWpfHomeBudget
             var total = new DataGridTextColumn();
             total.Header = "Total";
             total.Binding = new Binding("Total");
+
+            total.Binding.StringFormat = "F2";
+            Style s = new Style();
+            s.Setters.Add(new Setter(TextBlock.TextAlignmentProperty,
+                                    TextAlignment.Right));
+            total.CellStyle = s;
+ 
             listExpenses.Columns.Add(total);
         }
 
@@ -390,6 +421,12 @@ namespace JoeWpfHomeBudget
             var total = new DataGridTextColumn();
             total.Header = "Total";
             total.Binding = new Binding("Total");
+            total.Binding.StringFormat = "F2";
+            Style s = new Style();
+            s.Setters.Add(new Setter(TextBlock.TextAlignmentProperty,
+                                    TextAlignment.Right));
+            total.CellStyle = s;
+
             listExpenses.Columns.Add(total);
         }
         
