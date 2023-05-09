@@ -341,6 +341,13 @@ namespace JoeWpfHomeBudget
             return (amount != string.Empty || description != string.Empty) ||
                     (categoryId != -1 && (amount == string.Empty || description== string.Empty));
         }
+        public bool changedCategory(string categoryName,int typeId)
+        {
+            if (categoryName != string.Empty && typeId != -1)
+                return false;
+
+            return categoryName!=string.Empty ||  typeId!=-1;
+        }
     }
 
 }

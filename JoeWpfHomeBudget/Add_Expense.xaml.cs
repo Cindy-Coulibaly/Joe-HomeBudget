@@ -98,14 +98,8 @@ namespace JoeWpfHomeBudget
             {
                 if (presenter.changedExpenses(amount_expense.Text, description.Text, categoryList.SelectedIndex))
                 {
-                    if (MessageBox.Show("Are you sure you want to quit? All unsaved changes will be lost.", "Unsaved Changes", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
-                    {
-                        e.Cancel = false;
-                    }
-                    else
-                    {
-                        e.Cancel = true;
-                    }
+                    var result= MessageBox.Show("Are you sure you want to quit? All unsaved changes will be lost.", "Unsaved Changes", MessageBoxButton.YesNo, MessageBoxImage.Information);
+                    e.Cancel = (result.Equals(MessageBoxResult.Yes)) ? false : true;
                 }
             }
         }
@@ -131,7 +125,6 @@ namespace JoeWpfHomeBudget
         /// </summary>
         public void CancelExpense()
         {
-
             if (MessageBox.Show("Do you really want to cancel your Expense", "Cancel", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 cancelled = true;
