@@ -71,6 +71,36 @@ namespace JoeWpfHomeBudget
                 updateExpense = _expense;
                 updateExpense.Show();
             }
+
+            if ((bool)rbt_byMonth.IsChecked)
+            {
+                var showExpenseSelectedByMonth = listExpenses.SelectedItem as BudgetItemsByMonth;
+
+                string[] month = showExpenseSelectedByMonth.Month.Split('-');                
+
+                int daysInMonth = DateTime.DaysInMonth(Convert.ToInt16(month[0]), Convert.ToInt16(month[1]));
+
+                DateTime start = DateTime.Now;
+
+                if (start.Month != Convert.ToInt16(month[1]))
+                {
+                    int monthDiff = start.Month - Convert.ToInt16(month[1]);
+
+                    start= start.AddMonths(-monthDiff);
+                }
+
+                for(int i = start.Day; i < daysInMonth; i++)
+                {
+                    start = start.AddDays(1);
+                }
+
+                start = start.AddDays(-daysInMonth);
+                start = start.AddDays(1);
+                var end = start.AddDays(daysInMonth);
+                int categoryId = cmbCategories.SelectedIndex;
+
+                presenter.GetAllBudgetItem(start,end,false,categoryId);
+            }
         }
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
@@ -278,13 +308,6 @@ namespace JoeWpfHomeBudget
             listExpenses.Background = new SolidColorBrush(Colors.Blue);
         }
 
-        private void ItemDoubleClicked(object sender, SelectionChangedEventArgs e)
-        {
-            if ((bool)rbt_byMonth.IsChecked)
-            {
-                //presenter.GetAllBudgetItemByMonth();
-            }
-        }
 
         /// <summary>
         /// Show all the expenses every in this file, depending on the user input
