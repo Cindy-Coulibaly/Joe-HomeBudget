@@ -533,16 +533,30 @@ namespace JoeWpfHomeBudget
 
         public void Search_btn_Click(object sender, RoutedEventArgs e)
         {
+            int startingPoint = 0;
+            if (listExpenses.SelectedItem != null) { startingPoint = listExpenses.SelectedIndex + 1; }
 
-            foreach(BudgetItem a in listExpenses.Items )
+            int counter = 0;
+            for (int i = startingPoint; i < listExpenses.Items.Count+1; i = ((i + 1) % listExpenses.Items.Count))
             {
-                if (a.ShortDescription.Contains(txb_search.Text) == true)
+                if (counter == listExpenses.Items.Count)
                 {
-                    MessageBox.Show("Unable to save file, try again.", "Save error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("don't exist, try again.", "Save error", MessageBoxButton.OK, MessageBoxImage.Error);
+                break;
                 }
+
+                if(i == listExpenses.Items.Count) { i = 0; }
+                BudgetItem bi = (BudgetItem)listExpenses.Items[i];
+                if (bi.ShortDescription.ToLower().Contains(txb_search.Text.ToLower()) == true || (bi.Amount.ToString().Contains(txb_search.Text) == true)||
+                bi.Category.ToLower().Contains(txb_search.Text.ToLower()) == true)
+                {
+                    //MessageBox.Show("Found it, try again.", "Save error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    listExpenses.SelectedItem = bi;
+                        listExpenses.ScrollIntoView(bi);
+                        break;
+                }
+                counter++;
             }
-
-
         }
     }
 }
