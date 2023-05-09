@@ -28,6 +28,9 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="15*"/>
+      
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="3*"/>
 
         </Grid.ColumnDefinitions>
 
@@ -127,7 +130,7 @@
 
         <!--#region list all the expenses-->
 
-        <Border Grid.Row="2" Grid.Column="6" Grid.ColumnSpan="1" Grid.RowSpan="6" >
+        <Border Grid.Row="2" Grid.Column="6" Grid.ColumnSpan="3" Grid.RowSpan="6" >
             <DataGrid Background="#F07167" BorderBrush="Black" Margin="10" x:Name="listExpenses" AutoGenerateColumns="False" MouseDoubleClick="Update_Click" IsReadOnly="True">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
@@ -172,8 +175,8 @@
 
 
         </Border>
-        <Button x:Name="search_btn" Grid.Row="7" Grid.Column="2" FontWeight="SemiBold"   FontSize="30" BorderThickness="0" Background="#00AFB9" Margin="0,50,0,0" Click="Search_btn_Click">Search</Button>
-        <TextBox x:Name="txb_search" Grid.Row="7" Grid.Column="3" Grid.ColumnSpan="2" Margin="0,50,0,0" FontSize="30" 
+        <Button x:Name="search_btn" Grid.Row="1" Grid.Column="7" FontWeight="SemiBold"   FontSize="30" BorderThickness="0" Background="#00AFB9" Margin="0,50,0,0" Click="Search_btn_Click">Search</Button>
+        <TextBox x:Name="txb_search" BorderThickness="10" Grid.Row="1" Grid.Column="8" Grid.ColumnSpan="2" Margin="5,50,15,0" FontSize="30" 
                        FontWeight="DemiBold" ></TextBox>
         
 
