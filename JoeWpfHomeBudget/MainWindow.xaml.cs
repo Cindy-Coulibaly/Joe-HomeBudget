@@ -419,19 +419,8 @@ namespace JoeWpfHomeBudget
         public void Refresh_allExpenses()
         {
             // get all the specificities
-            DateTime start = DateTime.MinValue;
-            DateTime end = DateTime.MaxValue;
-
-            if (StartDate.SelectedDate != null)
-            {
-                start = StartDate.SelectedDate.Value;
-            }
-
-            if (EndDate.SelectedDate != null)
-            {
-                end = EndDate.SelectedDate.Value;
-            }
-
+            DateTime start = StartDate.SelectedDate!=null ? StartDate.SelectedDate.Value:DateTime.MinValue;
+            DateTime end = EndDate.SelectedDate != null ? EndDate.SelectedDate.Value : DateTime.MaxValue;
 
             bool filter = (bool)Filter.IsChecked;
             int categoryId = cmbCategories.SelectedIndex;
@@ -455,18 +444,8 @@ namespace JoeWpfHomeBudget
         public void Refresh_MonthExpenses() 
         {
             // get all the specificities
-            DateTime start = DateTime.MinValue;
-            DateTime end = DateTime.MaxValue;
-
-            if (StartDate.SelectedDate != null)
-            {
-                start = StartDate.SelectedDate.Value;
-            }
-
-            if (EndDate.SelectedDate != null)
-            {
-                end = EndDate.SelectedDate.Value;
-            }
+            DateTime start = StartDate.SelectedDate != null ? StartDate.SelectedDate.Value : DateTime.MinValue;
+            DateTime end = EndDate.SelectedDate != null ? EndDate.SelectedDate.Value : DateTime.MaxValue;
 
 
             bool filter = (bool)Filter.IsChecked;
@@ -482,18 +461,8 @@ namespace JoeWpfHomeBudget
         public void Refresh_CategoryExpenses() 
         {
             // get all the specificities
-            DateTime start = DateTime.MinValue;
-            DateTime end = DateTime.MaxValue;
-
-            if (StartDate.SelectedDate != null)
-            {
-                start = StartDate.SelectedDate.Value;
-            }
-
-            if (EndDate.SelectedDate != null)
-            {
-                end = EndDate.SelectedDate.Value;
-            }
+            DateTime start = StartDate.SelectedDate != null ? StartDate.SelectedDate.Value : DateTime.MinValue;
+            DateTime end = EndDate.SelectedDate != null ? EndDate.SelectedDate.Value : DateTime.MaxValue;
 
 
             bool filter = (bool)Filter.IsChecked;
@@ -508,18 +477,8 @@ namespace JoeWpfHomeBudget
         /// </summary>
         public void Refresh_MonthCategoryExpenses() 
         {
-            DateTime start = DateTime.MinValue;
-            DateTime end = DateTime.MaxValue;
-
-            if (StartDate.SelectedDate != null)
-            {
-                start = StartDate.SelectedDate.Value;
-            }
-
-            if (EndDate.SelectedDate != null)
-            {
-                end = EndDate.SelectedDate.Value;
-            }
+            DateTime start = StartDate.SelectedDate != null ? StartDate.SelectedDate.Value : DateTime.MinValue;
+            DateTime end = EndDate.SelectedDate != null ? EndDate.SelectedDate.Value : DateTime.MaxValue;
 
 
             bool filter = (bool)Filter.IsChecked;
