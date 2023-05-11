@@ -18,8 +18,10 @@ namespace JoeWpfHomeBudget
         void ShowBudgetItemByMonth(List<BudgetItemsByMonth> items);
         void ShowBudgetItemByCategory(List<BudgetItemsByCategory> items);
         void Refresh_allExpenses();
+        void Refresh_MonthCategoryExpenses();
+        void Refresh_MonthExpenses();
+        void Refresh_CategoryExpenses();
         void closingAfterUpdate();
-
         void CalledRefresh();
 
     }
