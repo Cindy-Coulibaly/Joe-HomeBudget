@@ -19,6 +19,7 @@ using System.Windows.Shapes;
 using System.Xml.Linq;
 using System.ComponentModel;
 using System.Reflection;
+using System.Windows.Controls.Primitives;
 
 
 namespace JoeWpfHomeBudget
@@ -100,6 +101,7 @@ namespace JoeWpfHomeBudget
                 int categoryId = cmbCategories.SelectedIndex;
 
                 presenter.GetAllBudgetItem(start,end,false,categoryId);
+                
             }
         }
         private void Delete_Click(object sender, RoutedEventArgs e)
@@ -249,6 +251,7 @@ namespace JoeWpfHomeBudget
 
         private void rbt_allExpenses_Checked(object sender, RoutedEventArgs e)
         {
+            search_btn.IsEnabled = true;
             menuItem_Update.IsEnabled = true;
             menuItem_Delete.IsEnabled = true;
             Refresh_allExpenses();
@@ -257,6 +260,7 @@ namespace JoeWpfHomeBudget
 
         private void rbt_byMonth_Checked(object sender, RoutedEventArgs e)
         {
+            search_btn.IsEnabled = false;
             menuItem_Update.IsEnabled = false;
             menuItem_Delete.IsEnabled = false;
 
@@ -265,6 +269,7 @@ namespace JoeWpfHomeBudget
 
         private void rbt_byCategory_Checked(object sender, RoutedEventArgs e)
         {
+            search_btn.IsEnabled = false;
             menuItem_Update.IsEnabled = false;
             menuItem_Delete.IsEnabled = false;
 
@@ -274,6 +279,7 @@ namespace JoeWpfHomeBudget
 
         private void rbt_byMonthAndCategory_Checked(object sender, RoutedEventArgs e)
         {
+            search_btn.IsEnabled = false;
             menuItem_Update.IsEnabled = false;
             menuItem_Delete.IsEnabled = false;
 
@@ -593,6 +599,33 @@ namespace JoeWpfHomeBudget
             else if (rbt_byCategory.IsChecked == true)
             {
                 Refresh_CategoryExpenses();
+            }
+        }
+
+        public void Search_btn_Click(object sender, RoutedEventArgs e)
+        {
+            int startingPoint = 0;
+            if (listExpenses.SelectedItem != null) { startingPoint = listExpenses.SelectedIndex + 1; }
+
+            int counter = 0;
+            for (int i = startingPoint; i < listExpenses.Items.Count+1; i = ((i + 1) % listExpenses.Items.Count))
+            {
+                if (counter == listExpenses.Items.Count)
+                {
+                MessageBox.Show("don't exist, try again.", "Save error", MessageBoxButton.OK, MessageBoxImage.Error);
+                break;
+                }
+
+                if(i == listExpenses.Items.Count) { i = 0; }
+                BudgetItem bi = (BudgetItem)listExpenses.Items[i];
+                if (bi.ShortDescription.ToLower().Contains(txb_search.Text.ToLower()) == true || (bi.Amount.ToString().Contains(txb_search.Text) == true)||
+                bi.Category.ToLower().Contains(txb_search.Text.ToLower()) == true)
+                {
+                    listExpenses.SelectedItem = bi;
+                        listExpenses.ScrollIntoView(bi);
+                        break;
+                }
+                counter++;
             }
         }
     }
