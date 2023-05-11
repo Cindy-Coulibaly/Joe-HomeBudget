@@ -6,7 +6,8 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:JoeWpfHomeBudget"
         mc:Ignorable="d"        
-        Title="MainWindow" Height="1000" Width="2000">
+        Title="MainWindow" Height="1000" Width="2000" 
+        >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="100"/>
@@ -19,21 +20,24 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
- 
+
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="150"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="15*"/>
+      
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="3*"/>
 
         </Grid.ColumnDefinitions>
 
 
         <Border Grid.RowSpan="10" Grid.ColumnSpan="15" Background="#FED9B7"/>
-        
+
         <!--#region title-->
         <Border Grid.Column="0" 
                    Grid.Row="0" Grid.ColumnSpan="10"
@@ -57,7 +61,7 @@
             </Grid>
         </StackPanel>
         <!--#endregion-->
-        
+
         <!--#region Expenses add-->
         <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="70,10,0,0" FontSize="30" 
                        FontWeight="DemiBold" >Expenses</TextBlock>
@@ -127,7 +131,7 @@
 
         <!--#region list all the expenses-->
 
-        <Border Grid.Row="2" Grid.Column="6" Grid.ColumnSpan="1" Grid.RowSpan="6" >
+        <Border Grid.Row="2" Grid.Column="6" Grid.ColumnSpan="3" Grid.RowSpan="6" >
             <DataGrid Background="#F07167" BorderBrush="Black" Margin="10" x:Name="listExpenses" AutoGenerateColumns="False" MouseDoubleClick="Update_Click" IsReadOnly="True">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
@@ -136,21 +140,27 @@
                         <MenuItem Click="Cancel_Click" Header="Cancel" x:Name="menuItem_Cancel"></MenuItem>
                     </ContextMenu>
                 </DataGrid.ContextMenu>
+                <DataGrid.Resources>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="LightBlue" />
+                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="LightBlue" />
+                </DataGrid.Resources>
             </DataGrid>
         </Border>
+        
+        
         <!--#endregion-->
         <Border Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" CornerRadius="10" BorderThickness="6"  Background="#00AFB9">
             <Button FontWeight="SemiBold"   FontSize="30" BorderThickness="0" Background="#00AFB9" Margin="2" Click="ChooseDatabase_btn">Load</Button>
         </Border>
 
 
-        <Border Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" CornerRadius="10" BorderThickness="6"  Background="#00AFB9" Padding="8">
+        <Border Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4" Grid.RowSpan="3" CornerRadius="10" BorderThickness="6"  Background="#00AFB9" Padding="8" Margin="0,59,97,0">
 
             <StackPanel>
-                <TextBlock FontWeight="SemiBold">Start Date</TextBlock>
+                <TextBlock FontWeight="SemiBold" FontSize="30">Start Date</TextBlock>
                 <DatePicker SelectedDateChanged="input_Changed"   x:Name="StartDate" SelectedDateFormat="Long"
                   FirstDayOfWeek="Monday"></DatePicker>
-                <TextBlock FontWeight="SemiBold">End Date</TextBlock>
+                <TextBlock FontWeight="SemiBold" FontSize="30">End Date</TextBlock>
                 <DatePicker SelectedDateChanged="input_Changed" x:Name="EndDate" SelectedDateFormat="Long"
                   DisplayDate="{x:Static sys:DateTime.Now}" 
                   FirstDayOfWeek="Monday"></DatePicker>
@@ -165,14 +175,18 @@
                 <CheckBox x:Name="Filter" Content="Filters" Checked="Filter_Checked" Unchecked="Filter_Checked" Margin="0,10,0,3"/>
                 <ComboBox x:Name="cmbCategories" SelectionChanged="input_Changed"/>
             </StackPanel>
-           
+
 
         </Border>
+        <Button x:Name="search_btn" Grid.Row="1" Grid.Column="7" FontWeight="SemiBold"   FontSize="30" BorderThickness="0" Background="#00AFB9" Margin="0,50,0,0" Click="Search_btn_Click">Search</Button>
+        <TextBox x:Name="txb_search" BorderThickness="10" Grid.Row="1" Grid.Column="8" Grid.ColumnSpan="2" Margin="5,50,15,0" FontSize="30" 
+                       FontWeight="DemiBold" ></TextBox>
         
 
         <Border Grid.Row="8" Grid.ColumnSpan="5" CornerRadius="10" BorderThickness="6"  Background="#00AFB9">
             <Button FontWeight="SemiBold"   FontSize="30" BorderThickness="0" Background="#00AFB9" Margin="2" Click="close_Click">Close</Button>
         </Border>
+
 
 
     </Grid>

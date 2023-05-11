@@ -19,6 +19,7 @@ using System.Windows.Shapes;
 using System.Xml.Linq;
 using System.ComponentModel;
 using System.Reflection;
+using System.Windows.Controls.Primitives;
 
 
 namespace JoeWpfHomeBudget
@@ -51,9 +52,6 @@ namespace JoeWpfHomeBudget
                 rbt_allExpenses.IsChecked = true;
             }
             else { this.Close(); }
-
-
-
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
@@ -66,10 +64,43 @@ namespace JoeWpfHomeBudget
         {
 
             var selected = listExpenses.SelectedItem as BudgetItem;
-            Update_Delete_Budget_Item _expense = new Update_Delete_Budget_Item(presenter, selected);
-            updateExpense = _expense;
-            updateExpense.Show();
-            
+            if (selected != null)
+            {
+                Update_Delete_Budget_Item _expense = new Update_Delete_Budget_Item(presenter, selected);
+                updateExpense = _expense;
+                updateExpense.Show();
+            }
+
+            if ((bool)rbt_byMonth.IsChecked)
+            {
+                var showExpenseSelectedByMonth = listExpenses.SelectedItem as BudgetItemsByMonth;
+
+                string[] month = showExpenseSelectedByMonth.Month.Split('-');                
+
+                int daysInMonth = DateTime.DaysInMonth(Convert.ToInt16(month[0]), Convert.ToInt16(month[1]));
+
+                DateTime start = DateTime.Now;
+
+                if (start.Month != Convert.ToInt16(month[1]))
+                {
+                    int monthDiff = start.Month - Convert.ToInt16(month[1]);
+
+                    start= start.AddMonths(-monthDiff);
+                }
+
+                for(int i = start.Day; i < daysInMonth; i++)
+                {
+                    start = start.AddDays(1);
+                }
+
+                start = start.AddDays(-daysInMonth);
+                start = start.AddDays(1);
+                var end = start.AddDays(daysInMonth);
+                int categoryId = cmbCategories.SelectedIndex;
+
+                presenter.GetAllBudgetItem(start,end,false,categoryId);
+                
+            }
         }
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
@@ -146,9 +177,7 @@ namespace JoeWpfHomeBudget
         /// <param name="e"></param>
         public void ChooseDatabase_btn(object sender, RoutedEventArgs e)
         {
-
             ChooseDB();
-
         }
 
         private void close_Click(object sender, RoutedEventArgs e)
@@ -205,22 +234,29 @@ namespace JoeWpfHomeBudget
 
         private void rbt_allExpenses_Checked(object sender, RoutedEventArgs e)
         {
+            search_btn.IsEnabled = true;
             Refresh_allExpenses();
         }
 
         private void rbt_byMonth_Checked(object sender, RoutedEventArgs e)
         {
+            search_btn.IsEnabled = false;
+
             Refresh_MonthExpenses();
         }
 
         private void rbt_byCategory_Checked(object sender, RoutedEventArgs e)
         {
+            search_btn.IsEnabled = false;
+
             Refresh_CategoryExpenses();
 
         }
 
         private void rbt_byMonthAndCategory_Checked(object sender, RoutedEventArgs e)
         {
+            search_btn.IsEnabled = false;
+
             Refresh_MonthCategoryExpenses();
 
         }
@@ -232,6 +268,7 @@ namespace JoeWpfHomeBudget
 
             presenter.GetButtonChecked(checkedValue.Name);
         }
+
 
         /// <summary>
         /// Show all the expenses every in this file, depending on the user input
@@ -469,6 +506,33 @@ namespace JoeWpfHomeBudget
                  .FirstOrDefault(r => r.IsChecked.HasValue && r.IsChecked.Value);
 
             presenter.GetButtonChecked(checkedValue.Name);
+        }
+
+        public void Search_btn_Click(object sender, RoutedEventArgs e)
+        {
+            int startingPoint = 0;
+            if (listExpenses.SelectedItem != null) { startingPoint = listExpenses.SelectedIndex + 1; }
+
+            int counter = 0;
+            for (int i = startingPoint; i < listExpenses.Items.Count+1; i = ((i + 1) % listExpenses.Items.Count))
+            {
+                if (counter == listExpenses.Items.Count)
+                {
+                MessageBox.Show("don't exist, try again.", "Save error", MessageBoxButton.OK, MessageBoxImage.Error);
+                break;
+                }
+
+                if(i == listExpenses.Items.Count) { i = 0; }
+                BudgetItem bi = (BudgetItem)listExpenses.Items[i];
+                if (bi.ShortDescription.ToLower().Contains(txb_search.Text.ToLower()) == true || (bi.Amount.ToString().Contains(txb_search.Text) == true)||
+                bi.Category.ToLower().Contains(txb_search.Text.ToLower()) == true)
+                {
+                    listExpenses.SelectedItem = bi;
+                        listExpenses.ScrollIntoView(bi);
+                        break;
+                }
+                counter++;
+            }
         }
     }
 }
