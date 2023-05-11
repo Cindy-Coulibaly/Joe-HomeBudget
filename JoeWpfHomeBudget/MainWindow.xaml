@@ -6,7 +6,7 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:JoeWpfHomeBudget"
         mc:Ignorable="d"        
-        Title="MainWindow" Height="1000" Width="2000">
+        Title="MainWindow" MinHeight="500" MinWidth="700" Height="1000" Width="2000">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="100"/>
