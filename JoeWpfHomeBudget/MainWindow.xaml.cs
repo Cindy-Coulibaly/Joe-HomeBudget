@@ -621,7 +621,6 @@ namespace JoeWpfHomeBudget
                 if (bi.ShortDescription.ToLower().Contains(txb_search.Text.ToLower()) == true || (bi.Amount.ToString().Contains(txb_search.Text) == true)||
                 bi.Category.ToLower().Contains(txb_search.Text.ToLower()) == true)
                 {
-                    //MessageBox.Show("Found it, try again.", "Save error", MessageBoxButton.OK, MessageBoxImage.Error);
                     listExpenses.SelectedItem = bi;
                         listExpenses.ScrollIntoView(bi);
                         break;
