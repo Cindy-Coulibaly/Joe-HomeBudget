@@ -59,19 +59,19 @@ namespace JoeWpfHomeBudget
             {
                 if (categoryId == -1)
                 {
-                    throw new Exception("No category to add has been provided.");
+                    view.ShowError("No category to add has been provided.");
                 }
                 else if (!double.TryParse(amount, out amountTemp) || Double.IsNaN(amountTemp) || Double.IsInfinity(amountTemp))
                 {
-                    throw new Exception("The amount to add is not a valid value.");
+                    view.ShowError("The amount to add is not a valid value.");
                 }
                 else if (double.TryParse(description, out badDescription))
                 {
-                    throw new Exception("The description to add is a number");
+                    view.ShowError("The description to add is a number");
                 }
                 else if (description == "")
                 {
-                    throw new Exception("The description is empty.");
+                    view.ShowError("The description is empty.");
                 }
                 else
                 {
@@ -103,19 +103,19 @@ namespace JoeWpfHomeBudget
             {
                 if (category == -1)
                 {
-                    throw new Exception("No category to update has been provided");
+                    view.ShowError("No category to update has been provided");
                 }
                 else if (!double.TryParse(amount, out amountTemp) || Double.IsNaN(amountTemp) || Double.IsInfinity(amountTemp))
                 {
-                    throw new Exception("The amount to update is not a valid value.");
+                    view.ShowError("The amount to update is not a valid value.");
                 }
                 else if (double.TryParse(description, out badDescription))
                 {
-                    throw new Exception("The description to update is a number");
+                    view.ShowError("The description to update is a number");
                 }
                 else if (description == "")
                 {
-                    throw new Exception("The description is empty.");
+                    view.ShowError("The description is empty.");
                 }
                 else
                 {
@@ -172,15 +172,18 @@ namespace JoeWpfHomeBudget
             {
                 if (description == string.Empty)
                 {
-                    throw new Exception("Must provide Category Name");
+                    view.ShowError("Must provide Category Name");
+                    return false;
                 }
                 else if (description.Any(c => char.IsDigit(c)))
                 {
-                    throw new Exception("Category Name cannot contain numbers");
+                    view.ShowError("Category Name cannot contain numbers");
+                    return false;
                 }
                 else if (categoryType == -1)
                 {
-                    throw new Exception("Must Select Category Type");
+                    view.ShowError("Must Select Category Type");
+                    return false;
                 }
                 else
                 {
@@ -197,16 +200,6 @@ namespace JoeWpfHomeBudget
             }
 
         }
-
-        /// <summary>
-        /// a message that ask the user if they really want to quit
-        /// </summary>
-        /// <returns> message showing if it true or false</returns>
-        public Boolean SaveBeforeClosing()
-        {
-            return MessageBox.Show("Are you sure you want to quit? All unsaved changes will be lost.", "Unsaved Changes", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes;
-        }
-
         /// <summary>
         /// Get a list of budget item depending on the Date and if there is a filter
         /// </summary>
@@ -306,12 +299,9 @@ namespace JoeWpfHomeBudget
             try
             {
                 if (id < 0)
-                {
-                    throw new Exception("There's no number");
-                }
-
+                    view.ShowError("There's no number");
+                
                 model.expenses.Delete(id);
-               // view.closingAfterUpdate();
                 view.Refresh_allExpenses();
             }
             catch (Exception err)
@@ -336,6 +326,59 @@ namespace JoeWpfHomeBudget
         public void RefreshWithNewExpense()
         {
             view.CalledRefresh();
+        }
+
+        public void ValidUpdate_Delete(BudgetItem item)
+        {
+            if (item == null)
+            {
+                view.ShowError("The item you've been trying to update/ delete is null");
+            }
+        }
+
+        public bool changedExpenses(string amount,string description,int categoryId)
+        {
+            return (amount != string.Empty || description != string.Empty) ||
+                    (categoryId != -1 && (amount == string.Empty || description== string.Empty));
+        }
+        public bool changedCategory(string categoryName,int typeId)
+        {
+            if (categoryName != string.Empty && typeId != -1)
+                return false;
+
+            return categoryName!=string.Empty ||  typeId!=-1;
+        }
+
+        public void GetButtonChecked(string buttonName)
+        {
+            try
+            {
+                if(buttonName==null)
+                {
+                    view.ShowError("The button name is null");
+                }
+                else if (buttonName.Contains("rbt_allExpenses"))
+                {
+                    view.Refresh_allExpenses();
+                }
+                else if (buttonName.Contains("rbt_byMonth"))
+                {
+                    view.Refresh_MonthExpenses();
+                }
+                else if (buttonName.Contains("rbt_byCategory"))
+                {
+                    view.Refresh_CategoryExpenses();
+                }
+                else if(buttonName.Contains("rbt_byMonthAndCategory"))
+                {
+                    view.Refresh_MonthCategoryExpenses();
+                }
+
+            }
+            catch(Exception err)
+            {
+                view.ShowError(err.Message);
+            }
         }
     }
 

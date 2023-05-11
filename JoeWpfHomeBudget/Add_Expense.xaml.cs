@@ -63,8 +63,6 @@ namespace JoeWpfHomeBudget
             foreach (Category category in categories)
             {
                 categoryList.Items.Add(category.Description);
-               
-
             }
         }
 
@@ -98,17 +96,10 @@ namespace JoeWpfHomeBudget
             // If user did not save changes, notify user and ask for a response            
             if (!submitted && !cancelled)
             {
-                if ((amount_expense.Text != string.Empty || description.Text != string.Empty) || 
-                    (categoryList.SelectedIndex != -1 && (amount_expense.Text == string.Empty || description.Text == string.Empty)))
+                if (presenter.changedExpenses(amount_expense.Text, description.Text, categoryList.SelectedIndex))
                 {
-                    if (presenter.SaveBeforeClosing())
-                    {
-                        e.Cancel = false;
-                    }
-                    else
-                    {
-                        e.Cancel = true;
-                    }
+                    var result= MessageBox.Show("Are you sure you want to quit? All unsaved changes will be lost.", "Unsaved Changes", MessageBoxButton.YesNo, MessageBoxImage.Information);
+                    e.Cancel = (result.Equals(MessageBoxResult.Yes)) ? false : true;
                 }
             }
         }
@@ -134,7 +125,6 @@ namespace JoeWpfHomeBudget
         /// </summary>
         public void CancelExpense()
         {
-
             if (MessageBox.Show("Do you really want to cancel your Expense", "Cancel", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 cancelled = true;
