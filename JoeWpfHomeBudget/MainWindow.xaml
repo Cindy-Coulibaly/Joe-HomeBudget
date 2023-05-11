@@ -111,12 +111,10 @@
             </StackPanel>
 
 
-            <Border Background="#0081a7" CornerRadius="10" BorderThickness="2"  
+            <Border Background="#0081a7" CornerRadius="10" BorderThickness="2"
                     Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,0,200">
-                <ComboBox Background="#0081a7" x:Name="categoryList" IsEditable="True" Margin="10" FontSize="15" BorderThickness="0" 
-                          Style="{StaticResource {x:Static ToolBar.ComboBoxStyleKey}}" Width="550" Height="90" SelectionChanged="input_Changed">
-
-
+                <ComboBox Background="#0081a7" x:Name="categoryList" IsEditable="True"  FontSize="15" BorderThickness="0" 
+                          Style="{StaticResource {x:Static ToolBar.ComboBoxStyleKey}}" MinHeight="50" MinWidth="490" Width="490" Height="50" SelectionChanged="input_Changed">
                 </ComboBox>
             </Border>
 
