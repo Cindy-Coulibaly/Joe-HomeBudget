@@ -36,6 +36,7 @@ namespace JoeWpfHomeBudget
         private Boolean unsavedChanges;
         private Update_Delete_Budget_Item updateExpense;
         private Add_Expense expense;
+        private Boolean invokedGetBudgetItemsByMonth;
 
         /// <summary>
         /// initalize all component of main window
@@ -50,7 +51,9 @@ namespace JoeWpfHomeBudget
                 presenter = new Presenter(this, filePath, newDb);
                 ShowCats();
                 unsavedChanges = false;
-                rbt_allExpenses.IsChecked = true;               
+                rbt_allExpenses.IsChecked = true;
+                btn_byMonth.Visibility = Visibility.Hidden;
+                invokedGetBudgetItemsByMonth = false;
             }
             else { this.Close(); }
         }
@@ -72,7 +75,7 @@ namespace JoeWpfHomeBudget
                 updateExpense.Show();
             }
 
-            if ((bool)rbt_byMonth.IsChecked)
+            if ((bool)rbt_byMonth.IsChecked && invokedGetBudgetItemsByMonth)
             {
                 var showExpenseSelectedByMonth = listExpenses.SelectedItem as BudgetItemsByMonth;
 
@@ -100,6 +103,8 @@ namespace JoeWpfHomeBudget
                 int categoryId = cmbCategories.SelectedIndex;
 
                 presenter.GetAllBudgetItem(start,end,false,categoryId);
+                btn_byMonth.Visibility = Visibility.Visible;
+                invokedGetBudgetItemsByMonth = false;
             }
         }
         private void Delete_Click(object sender, RoutedEventArgs e)
@@ -257,6 +262,8 @@ namespace JoeWpfHomeBudget
 
         private void rbt_byMonth_Checked(object sender, RoutedEventArgs e)
         {
+            btn_byMonth.Visibility = Visibility.Hidden;
+            invokedGetBudgetItemsByMonth = true;
             menuItem_Update.IsEnabled = false;
             menuItem_Delete.IsEnabled = false;
 
