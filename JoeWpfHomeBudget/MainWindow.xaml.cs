@@ -78,13 +78,7 @@ namespace JoeWpfHomeBudget
             if ((bool)rbt_byMonth.IsChecked && invokedGetBudgetItemsByMonth)
             {
                 var showExpenseSelectedByMonth = listExpenses.SelectedItem as BudgetItemsByMonth;
-                List<BudgetItem> budgetItemsOfMonth = new List<BudgetItem>();
-
-                for(int i = 0; i < showExpenseSelectedByMonth.Details.Count; i++)
-                {
-                    budgetItemsOfMonth.Add(showExpenseSelectedByMonth.Details[i]);
-                }
-                ShowBudgetItem(budgetItemsOfMonth);
+                ShowBudgetItem(showExpenseSelectedByMonth.Details);
                 btn_byMonth.Visibility = Visibility.Visible;
                 invokedGetBudgetItemsByMonth = false;
             }
