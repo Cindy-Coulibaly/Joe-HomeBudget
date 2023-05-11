@@ -200,80 +200,37 @@ namespace JoeWpfHomeBudget
             var checkedValue = listButton.Children.OfType<RadioButton>()
                  .FirstOrDefault(r => r.IsChecked.HasValue && r.IsChecked.Value);
 
-
-            if (rbt_allExpenses.IsChecked == true)
-            {
-                rbt_allExpenses_Checked(sender, e);
-            }
-            else if (rbt_byMonthAndCategory.IsChecked == true)
-            {
-                rbt_byMonthAndCategory_Checked(sender, e);
-            }
-            else if (rbt_byMonth.IsChecked == true)
-            {
-                rbt_byMonth_Checked(sender, e);
-            }
-            else if (rbt_byCategory.IsChecked == true)
-            {
-                rbt_byCategory_Checked(sender, e);
-            }
-
-
+            presenter.GetButtonChecked(checkedValue.Name);
         }
 
         private void rbt_allExpenses_Checked(object sender, RoutedEventArgs e)
         {
-            menuItem_Update.IsEnabled = true;
-            menuItem_Delete.IsEnabled = true;
             Refresh_allExpenses();
-
         }
 
         private void rbt_byMonth_Checked(object sender, RoutedEventArgs e)
         {
-            menuItem_Update.IsEnabled = false;
-            menuItem_Delete.IsEnabled = false;
-
             Refresh_MonthExpenses();
         }
 
         private void rbt_byCategory_Checked(object sender, RoutedEventArgs e)
         {
-            menuItem_Update.IsEnabled = false;
-            menuItem_Delete.IsEnabled = false;
-
             Refresh_CategoryExpenses();
 
         }
 
         private void rbt_byMonthAndCategory_Checked(object sender, RoutedEventArgs e)
         {
-            menuItem_Update.IsEnabled = false;
-            menuItem_Delete.IsEnabled = false;
-
             Refresh_MonthCategoryExpenses();
 
         }
 
         private void Filter_Checked(object sender, RoutedEventArgs e)
         {
-            //change later 
-            if (rbt_allExpenses.IsChecked == true)
-            {
-                rbt_allExpenses_Checked(sender, e);
-            }
-            else if (rbt_byMonthAndCategory.IsChecked == true)
-            {
-                rbt_byMonthAndCategory_Checked(sender, e);
-            }
-            else if (rbt_byMonth.IsChecked == true)
-            {
-                rbt_byMonth_Checked(sender, e);
-            }
-            else if (rbt_byCategory.IsChecked == true)
-            {
-                rbt_byCategory_Checked(sender, e);
-            }
+            var checkedValue = listButton.Children.OfType<RadioButton>()
+                 .FirstOrDefault(r => r.IsChecked.HasValue && r.IsChecked.Value);
+
+            presenter.GetButtonChecked(checkedValue.Name);
         }
 
         /// <summary>
@@ -282,6 +239,9 @@ namespace JoeWpfHomeBudget
         /// <param name="items">The list of expenses of needed with the balance </param>
         public void ShowBudgetItem(List<BudgetItem> items)
         {
+            menuItem_Update.IsEnabled = true;
+            menuItem_Delete.IsEnabled = true;
+
             listExpenses.ItemsSource = items;
             listExpenses.Columns.Clear();
             var date = new DataGridTextColumn();
@@ -329,6 +289,9 @@ namespace JoeWpfHomeBudget
         /// <param name="items">The list of all the expense grouped by month and cateogry</param>
         public void ShowBudgetItemByMonthAndCategory(List<Dictionary<string, object>> items)
         {
+            menuItem_Update.IsEnabled = false;
+            menuItem_Delete.IsEnabled = false;
+
             listExpenses.ItemsSource = items;
             listExpenses.Columns.Clear();
 
@@ -370,6 +333,9 @@ namespace JoeWpfHomeBudget
         /// <param name="items">The list of months with their total amount of expenses</param>
         public void ShowBudgetItemByMonth(List<BudgetItemsByMonth> items)
         {
+            menuItem_Update.IsEnabled = false;
+            menuItem_Delete.IsEnabled = false;
+
             listExpenses.ItemsSource = items;
             listExpenses.Columns.Clear();
 
@@ -397,6 +363,9 @@ namespace JoeWpfHomeBudget
         /// <param name="items">The list of categories with their total amount of expenses</param>
         public void ShowBudgetItemByCategory(List<BudgetItemsByCategory> items)
         {
+            menuItem_Update.IsEnabled = false;
+            menuItem_Delete.IsEnabled = false;
+
             listExpenses.ItemsSource = items;
             listExpenses.Columns.Clear();
 
@@ -496,22 +465,10 @@ namespace JoeWpfHomeBudget
         /// </summary>
         public void CalledRefresh()
         {
-            if (rbt_allExpenses.IsChecked == true)
-            {
-                Refresh_allExpenses();
-            }
-            else if (rbt_byMonthAndCategory.IsChecked == true)
-            {
-                Refresh_MonthCategoryExpenses();
-            }
-            else if (rbt_byMonth.IsChecked == true)
-            {
-                Refresh_MonthExpenses();
-            }
-            else if (rbt_byCategory.IsChecked == true)
-            {
-                Refresh_CategoryExpenses();
-            }
+            var checkedValue = listButton.Children.OfType<RadioButton>()
+                 .FirstOrDefault(r => r.IsChecked.HasValue && r.IsChecked.Value);
+
+            presenter.GetButtonChecked(checkedValue.Name);
         }
     }
 }

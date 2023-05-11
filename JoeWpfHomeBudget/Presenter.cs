@@ -348,6 +348,38 @@ namespace JoeWpfHomeBudget
 
             return categoryName!=string.Empty ||  typeId!=-1;
         }
+
+        public void GetButtonChecked(string buttonName)
+        {
+            try
+            {
+                if(buttonName==null)
+                {
+                    view.ShowError("The button name is null");
+                }
+                else if (buttonName.Contains("rbt_allExpenses"))
+                {
+                    view.Refresh_allExpenses();
+                }
+                else if (buttonName.Contains("rbt_byMonth"))
+                {
+                    view.Refresh_MonthExpenses();
+                }
+                else if (buttonName.Contains("rbt_byCategory"))
+                {
+                    view.Refresh_CategoryExpenses();
+                }
+                else if(buttonName.Contains("rbt_byMonthAndCategory"))
+                {
+                    view.Refresh_MonthCategoryExpenses();
+                }
+
+            }
+            catch(Exception err)
+            {
+                view.ShowError(err.Message);
+            }
+        }
     }
 
 }
