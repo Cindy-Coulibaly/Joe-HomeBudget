@@ -36,6 +36,7 @@ namespace JoeWpfHomeBudget
         bool newDb = false;
         private Update_Delete_Budget_Item updateExpense;
         private Add_Expense expense;
+        private Boolean invokedGetBudgetItemsByMonth;
 
         /// <summary>
         /// initalize all component of main window
@@ -50,6 +51,8 @@ namespace JoeWpfHomeBudget
                 presenter = new Presenter(this, filePath, newDb);
                 ShowCats();
                 rbt_allExpenses.IsChecked = true;
+                btn_byMonth.Visibility = Visibility.Hidden;
+                invokedGetBudgetItemsByMonth = false;
             }
             else { this.Close(); }
         }
@@ -71,35 +74,12 @@ namespace JoeWpfHomeBudget
                 updateExpense.Show();
             }
 
-            if ((bool)rbt_byMonth.IsChecked)
+            if ((bool)rbt_byMonth.IsChecked && invokedGetBudgetItemsByMonth)
             {
                 var showExpenseSelectedByMonth = listExpenses.SelectedItem as BudgetItemsByMonth;
-
-                string[] month = showExpenseSelectedByMonth.Month.Split('-');                
-
-                int daysInMonth = DateTime.DaysInMonth(Convert.ToInt16(month[0]), Convert.ToInt16(month[1]));
-
-                DateTime start = DateTime.Now;
-
-                if (start.Month != Convert.ToInt16(month[1]))
-                {
-                    int monthDiff = start.Month - Convert.ToInt16(month[1]);
-
-                    start= start.AddMonths(-monthDiff);
-                }
-
-                for(int i = start.Day; i < daysInMonth; i++)
-                {
-                    start = start.AddDays(1);
-                }
-
-                start = start.AddDays(-daysInMonth);
-                start = start.AddDays(1);
-                var end = start.AddDays(daysInMonth);
-                int categoryId = cmbCategories.SelectedIndex;
-
-                presenter.GetAllBudgetItem(start,end,false,categoryId);
-                
+                ShowBudgetItem(showExpenseSelectedByMonth.Details);
+                btn_byMonth.Visibility = Visibility.Visible;
+                invokedGetBudgetItemsByMonth = false;
             }
         }
         private void Delete_Click(object sender, RoutedEventArgs e)
@@ -234,22 +214,28 @@ namespace JoeWpfHomeBudget
 
         private void rbt_allExpenses_Checked(object sender, RoutedEventArgs e)
         {
+            btn_byMonth.Visibility = Visibility.Hidden;
             Refresh_allExpenses();
         }
 
         private void rbt_byMonth_Checked(object sender, RoutedEventArgs e)
         {
+            btn_byMonth.Visibility = Visibility.Hidden;
+            invokedGetBudgetItemsByMonth = true;
+
             Refresh_MonthExpenses();
         }
 
         private void rbt_byCategory_Checked(object sender, RoutedEventArgs e)
         {
+            btn_byMonth.Visibility = Visibility.Hidden;
             Refresh_CategoryExpenses();
 
         }
 
         private void rbt_byMonthAndCategory_Checked(object sender, RoutedEventArgs e)
         {
+            btn_byMonth.Visibility = Visibility.Hidden;
             Refresh_MonthCategoryExpenses();
 
         }
