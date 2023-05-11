@@ -234,29 +234,22 @@ namespace JoeWpfHomeBudget
 
         private void rbt_allExpenses_Checked(object sender, RoutedEventArgs e)
         {
-            search_btn.IsEnabled = true;
             Refresh_allExpenses();
         }
 
         private void rbt_byMonth_Checked(object sender, RoutedEventArgs e)
         {
-            search_btn.IsEnabled = false;
-
             Refresh_MonthExpenses();
         }
 
         private void rbt_byCategory_Checked(object sender, RoutedEventArgs e)
         {
-            search_btn.IsEnabled = false;
-
             Refresh_CategoryExpenses();
 
         }
 
         private void rbt_byMonthAndCategory_Checked(object sender, RoutedEventArgs e)
         {
-            search_btn.IsEnabled = false;
-
             Refresh_MonthCategoryExpenses();
 
         }
@@ -276,6 +269,7 @@ namespace JoeWpfHomeBudget
         /// <param name="items">The list of expenses of needed with the balance </param>
         public void ShowBudgetItem(List<BudgetItem> items)
         {
+            search_btn.IsEnabled = true;
             menuItem_Update.IsEnabled = true;
             menuItem_Delete.IsEnabled = true;
 
@@ -326,6 +320,7 @@ namespace JoeWpfHomeBudget
         /// <param name="items">The list of all the expense grouped by month and cateogry</param>
         public void ShowBudgetItemByMonthAndCategory(List<Dictionary<string, object>> items)
         {
+            search_btn.IsEnabled = false;
             menuItem_Update.IsEnabled = false;
             menuItem_Delete.IsEnabled = false;
 
@@ -370,6 +365,7 @@ namespace JoeWpfHomeBudget
         /// <param name="items">The list of months with their total amount of expenses</param>
         public void ShowBudgetItemByMonth(List<BudgetItemsByMonth> items)
         {
+            search_btn.IsEnabled = false;
             menuItem_Update.IsEnabled = false;
             menuItem_Delete.IsEnabled = false;
 
@@ -400,6 +396,7 @@ namespace JoeWpfHomeBudget
         /// <param name="items">The list of categories with their total amount of expenses</param>
         public void ShowBudgetItemByCategory(List<BudgetItemsByCategory> items)
         {
+            search_btn.IsEnabled = false;
             menuItem_Update.IsEnabled = false;
             menuItem_Delete.IsEnabled = false;
 
