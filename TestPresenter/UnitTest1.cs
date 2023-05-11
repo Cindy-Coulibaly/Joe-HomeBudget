@@ -78,6 +78,21 @@ namespace TestPresenter
         {
             calleddeleteAdterUpdate = true;
         }
+
+        public void Refresh_MonthCategoryExpenses()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Refresh_MonthExpenses()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Refresh_CategoryExpenses()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class UnitTest1

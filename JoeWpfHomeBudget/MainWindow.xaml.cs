@@ -53,8 +53,7 @@ namespace JoeWpfHomeBudget
                 rbt_allExpenses.IsChecked = true;
                 btn_byMonth.Visibility = Visibility.Hidden;
                 invokedGetBudgetItemsByMonth = false;
-            }
-            else { this.Close(); }
+            }            else { this.Close(); }
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
@@ -214,6 +213,7 @@ namespace JoeWpfHomeBudget
 
         private void rbt_allExpenses_Checked(object sender, RoutedEventArgs e)
         {
+            btn_byMonth.Visibility = Visibility.Hidden;
             Refresh_allExpenses();
         }
 
@@ -227,12 +227,14 @@ namespace JoeWpfHomeBudget
 
         private void rbt_byCategory_Checked(object sender, RoutedEventArgs e)
         {
+            btn_byMonth.Visibility = Visibility.Hidden;
             Refresh_CategoryExpenses();
 
         }
 
         private void rbt_byMonthAndCategory_Checked(object sender, RoutedEventArgs e)
         {
+            btn_byMonth.Visibility = Visibility.Hidden;
             Refresh_MonthCategoryExpenses();
 
         }
