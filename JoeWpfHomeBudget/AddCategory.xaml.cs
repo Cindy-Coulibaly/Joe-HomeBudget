@@ -62,16 +62,10 @@ namespace JoeWpfHomeBudget
             // If user did not save changes, notify user and ask for a response            
             if (!_submitted)
             {
-                if (categoryName.Text != string.Empty || (categoryList.SelectedIndex != -1 && categoryName.Text == string.Empty))
+                if (_presenter.changedCategory(categoryName.Text,categoryList.SelectedIndex))
                 {
-                    if (_presenter.SaveBeforeClosing())
-                    {
-                        e.Cancel = false;                    
-                    }
-                    else
-                    {
-                        e.Cancel = true;
-                    }
+                   var result = MessageBox.Show("Are you sure you want to quit? All unsaved changes will be lost.", "Unsaved Changes", MessageBoxButton.YesNo, MessageBoxImage.Information);
+                   e.Cancel= (result.Equals(MessageBoxResult.Yes)) ? false :true;
                 }
             }
         }

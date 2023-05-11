@@ -34,14 +34,16 @@ namespace JoeWpfHomeBudget
         /// <param name="categoryId"> the expense's category Id</param>
         /// <param name="amount">the expense's amount</param>
         /// <param name="description"> the expense's description</param>
-        public Update_Delete_Budget_Item(Presenter _presenter,int id, DateTime date, int categoryId, double amount, string description)
+        public Update_Delete_Budget_Item(Presenter _presenter, BudgetItem item)
         {
             InitializeComponent();
-
-            _id = id;
             presenter = _presenter;
 
-            SetDateDefault(date, categoryId, amount, description);
+            presenter.ValidUpdate_Delete(item);
+            _id = item.ExpenseID;
+            
+
+            SetDateDefault(item.Date, item.CategoryID, item.Amount, item.ShortDescription);
             PopulateCategoryInBox();
         }
 
