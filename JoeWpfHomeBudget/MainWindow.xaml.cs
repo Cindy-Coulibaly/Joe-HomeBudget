@@ -53,8 +53,7 @@ namespace JoeWpfHomeBudget
                 rbt_allExpenses.IsChecked = true;
                 btn_byMonth.Visibility = Visibility.Hidden;
                 invokedGetBudgetItemsByMonth = false;
-            }
-            else { this.Close(); }
+            }            else { this.Close(); }
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
