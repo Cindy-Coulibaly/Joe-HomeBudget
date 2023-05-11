@@ -160,10 +160,10 @@
         <Border Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4" Grid.RowSpan="3" CornerRadius="10" BorderThickness="6"  Background="#00AFB9" Padding="8" Margin="0,59,97,0">
 
             <StackPanel>
-                <TextBlock FontWeight="SemiBold" FontSize="30">Start Date</TextBlock>
+                <TextBlock FontWeight="SemiBold" FontSize="25">Start Date</TextBlock>
                 <DatePicker SelectedDateChanged="input_Changed"   x:Name="StartDate" SelectedDateFormat="Long"
                   FirstDayOfWeek="Monday"></DatePicker>
-                <TextBlock FontWeight="SemiBold" FontSize="30">End Date</TextBlock>
+                <TextBlock FontWeight="SemiBold" FontSize="25">End Date</TextBlock>
                 <DatePicker SelectedDateChanged="input_Changed" x:Name="EndDate" SelectedDateFormat="Long"
                   DisplayDate="{x:Static sys:DateTime.Now}" 
                   FirstDayOfWeek="Monday"></DatePicker>
