@@ -78,31 +78,46 @@ namespace JoeWpfHomeBudget
             if ((bool)rbt_byMonth.IsChecked && invokedGetBudgetItemsByMonth)
             {
                 var showExpenseSelectedByMonth = listExpenses.SelectedItem as BudgetItemsByMonth;
+                List<BudgetItem> budgetItemsOfMonth = new List<BudgetItem>();
 
-                string[] month = showExpenseSelectedByMonth.Month.Split('-');                
-
-                int daysInMonth = DateTime.DaysInMonth(Convert.ToInt16(month[0]), Convert.ToInt16(month[1]));
-
-                DateTime start = DateTime.Now;
-
-                if (start.Month != Convert.ToInt16(month[1]))
+                for(int i = 0; i < showExpenseSelectedByMonth.Details.Count; i++)
                 {
-                    int monthDiff = start.Month - Convert.ToInt16(month[1]);
-
-                    start= start.AddMonths(-monthDiff);
+                    budgetItemsOfMonth.Add(showExpenseSelectedByMonth.Details[i]);
                 }
 
-                for(int i = start.Day; i < daysInMonth; i++)
-                {
-                    start = start.AddDays(1);
-                }
 
-                start = start.AddDays(-daysInMonth);
-                start = start.AddDays(1);
-                var end = start.AddDays(daysInMonth);
-                int categoryId = cmbCategories.SelectedIndex;
+                ShowBudgetItem(budgetItemsOfMonth);
 
-                presenter.GetAllBudgetItem(start,end,false,categoryId);
+
+
+                //string[] month = showExpenseSelectedByMonth.Month.Split('-');                
+
+                //int daysInMonth = DateTime.DaysInMonth(Convert.ToInt16(month[0]), Convert.ToInt16(month[1]));
+
+               
+                               
+                
+                
+                //DateTime start = DateTime.Now;
+
+                //if (start.Month != Convert.ToInt16(month[1]))
+                //{
+                //    int monthDiff = start.Month - Convert.ToInt16(month[1]);
+
+                //    start= start.AddMonths(-monthDiff);
+                //}
+
+                //for(int i = start.Day; i < daysInMonth; i++)
+                //{
+                //    start = start.AddDays(1);
+                //}
+
+                //start = start.AddDays(-daysInMonth);
+                //start = start.AddDays(1);
+                //var end = start.AddDays(daysInMonth);
+                //int categoryId = cmbCategories.SelectedIndex;
+
+                //presenter.GetAllBudgetItem(start,end,false,categoryId);
                 btn_byMonth.Visibility = Visibility.Visible;
                 invokedGetBudgetItemsByMonth = false;
             }
@@ -324,7 +339,6 @@ namespace JoeWpfHomeBudget
         {
             listExpenses.ItemsSource = items;
             listExpenses.Columns.Clear();
-
 
 
             //create the columns and bind them
