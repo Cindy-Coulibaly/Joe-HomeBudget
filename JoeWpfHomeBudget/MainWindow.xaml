@@ -96,7 +96,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="70,10,0,0" FontSize="30" 
+            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="9" FontSize="30" 
                        FontWeight="DemiBold" >Category</TextBlock>
             <StackPanel Grid.Row="0" Margin="10" HorizontalAlignment="Left">
                 <Grid>
@@ -112,17 +112,15 @@
 
 
             <Border Background="#0081a7" CornerRadius="10" BorderThickness="2" MinHeight="30" MinWidth="50"
-                    Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,0,200">
+                    Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,0,400">
                 <ComboBox Background="#0081a7" x:Name="categoryList" IsEditable="True"  FontSize="15" BorderThickness="0" 
-                          Style="{StaticResource {x:Static ToolBar.ComboBoxStyleKey}}" MinHeight="50" MinWidth="490" Width="490" Height="50" SelectionChanged="input_Changed">
+                          Style="{StaticResource {x:Static ToolBar.ComboBoxStyleKey}}" MinHeight="50" MinWidth="245" Width="245" Height="50" SelectionChanged="input_Changed">
                 </ComboBox>
             </Border>
 
             <Border Grid.Row="1" Grid.ColumnSpan="2" CornerRadius="10" BorderThickness="6" Margin="0,90,0,100" Background="#00AFB9">
                 <Button FontWeight="SemiBold"   FontSize="30" BorderThickness="0" Background="#00AFB9" Margin="2" Click="btn_AddNewCategory">Add Category</Button>
             </Border>
-
-
 
         </Grid>
         <!--#endregion-->
