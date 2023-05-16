@@ -6,7 +6,7 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:JoeWpfHomeBudget"
         mc:Ignorable="d"        
-        Title="MainWindow" MinHeight="700" MinWidth="750" Height="700" Width="750">
+        Title="MainWindow" MinHeight="720" MinWidth="750" Height="720" Width="750">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -100,13 +100,13 @@
         </StackPanel>
 
 
-        <Border MinHeight="30" MinWidth="30" x:Name="ByMonthBorderColor" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="3" CornerRadius="20" BorderThickness="2"   Background="#00AFB9" Margin="3,3,3,3">
-            <Button MinHeight="30" MinWidth="30" BorderThickness="0" FontWeight="SemiBold" FontSize="20" x:Name="Add_Expense" Click="Add_Expense_Click" Margin="6" Background="#00AFB9">Add Expense</Button>
+        <Border MinHeight="30" MinWidth="30" Height="50" x:Name="ByMonthBorderColor" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="3" CornerRadius="20" BorderThickness="2"   Background="#00AFB9" Margin="3,3,3,3">
+            <Button MinHeight="30"  MinWidth="30" BorderThickness="0" FontWeight="SemiBold" FontSize="20" x:Name="Add_Expense" Click="Add_Expense_Click" Margin="6" Background="#00AFB9">Add Expense</Button>
         </Border>
         <!--#endregion-->
 
         <!--#region Add Category -->
-        <Grid Grid.Row="3" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="5" Margin="0,69,0,0">
+        <Grid Grid.Row="3" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="6" Margin="0,69,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
@@ -114,7 +114,7 @@
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="3*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
@@ -140,8 +140,8 @@
                 </ComboBox>
             </Border>
 
-            <Border Grid.Row="1" Grid.Column="2" CornerRadius="10"   Background="#00AFB9" Margin="0,0,0,400">
-                <Button FontWeight="SemiBold"   FontSize="30" BorderThickness="0" Background="#00AFB9" Margin="2" Click="btn_AddNewCategory">Add Category</Button>
+            <Border Grid.Row="1" Grid.Column="2" CornerRadius="10" Width="50" Height="30" Background="#00AFB9" VerticalAlignment="Top">
+                <Button FontWeight="SemiBold"   FontSize="20" BorderThickness="0" Background="#00AFB9" Margin="2" Click="btn_AddNewCategory">Add</Button>
             </Border>
 
         </Grid>
@@ -169,7 +169,7 @@
         <!--#endregion-->
 
         <!--#region user input for list-->
-        <Border Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="6" Grid.RowSpan="5" CornerRadius="10" BorderThickness="6"  Background="#00AFB9" Padding="8" Margin="0,69,0,50" >
+        <Border Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="5" Grid.RowSpan="5" CornerRadius="10" BorderThickness="6"  Background="#00AFB9" Padding="8" Margin="0,69,0,50" >
 
             <StackPanel>
                 <TextBlock FontWeight="SemiBold" FontSize="15">Start Date</TextBlock>
