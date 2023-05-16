@@ -9,8 +9,8 @@
         Title="MainWindow" MinHeight="500" MinWidth="700" Height="500" Width="700">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="100"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="50"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
@@ -22,7 +22,7 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="150"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
@@ -48,7 +48,7 @@
             </TextBlock>
         </Border>
 
-        <StackPanel Grid.Row="0" Margin="10,0,0,0" HorizontalAlignment="Left">
+        <StackPanel Grid.Row="0" Grid.ColumnSpan="3" Margin="10,0,0,0" HorizontalAlignment="Left">
             <Grid>
                 <Ellipse Width="100" Height="100" Fill="#00AFB9" Grid.Row="1"/>
 
@@ -62,13 +62,14 @@
         <!--#endregion-->
 
         <!--#region Expenses add-->
-        <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="70,10,0,0" FontSize="30" 
+        <TextBlock MinHeight="20" MinWidth="20" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="9" FontSize="30" 
                        FontWeight="DemiBold" >Expenses</TextBlock>
-        <StackPanel Grid.Row="1" Margin="10" HorizontalAlignment="Left">
+        
+        <StackPanel MinHeight="45" MinWidth="45" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="1" HorizontalAlignment="Left">
             <Grid>
-                <Ellipse Width="50" Height="50" Fill="#0081a7" Grid.Row="1"/>
+                <Ellipse Width="45" Height="45" Fill="#0081a7" Grid.Row="1"/>
 
-                <Ellipse Width="50" Height="50"  Grid.Row="1">
+                <Ellipse Width="45" Height="45"  Grid.Row="1">
                     <Ellipse.Fill>
                         <ImageBrush ImageSource="./Images/expenses.png" Stretch="Fill"/>
                     </Ellipse.Fill>
@@ -77,8 +78,8 @@
         </StackPanel>
 
 
-        <Border x:Name="ByMonthBorderColor" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" CornerRadius="20" BorderThickness="2"   Background="#00AFB9" Margin="10">
-            <Button BorderThickness="0" FontWeight="SemiBold" FontSize="30" x:Name="Add_Expense" Click="Add_Expense_Click" Margin="10" Background="#00AFB9">Add Expense</Button>
+        <Border MinHeight="30" MinWidth="30" x:Name="ByMonthBorderColor" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" CornerRadius="20" BorderThickness="2"   Background="#00AFB9" Margin="3">
+            <Button MinHeight="30" MinWidth="30" BorderThickness="0" FontWeight="SemiBold" FontSize="20" x:Name="Add_Expense" Click="Add_Expense_Click" Margin="6" Background="#00AFB9">Add Expense</Button>
         </Border>
         <!--#endregion-->
 
