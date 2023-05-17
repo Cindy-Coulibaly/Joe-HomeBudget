@@ -6,11 +6,12 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:JoeWpfHomeBudget"
         mc:Ignorable="d"        
-        Title="MainWindow" MinHeight="500" MinWidth="700" Height="500" Width="700">
+        Title="MainWindow" MinHeight="720" MinWidth="750" Height="720" Width="750">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="100"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="50"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
@@ -21,21 +22,21 @@
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="43*"/>
+            <ColumnDefinition Width="21*"/>
             <ColumnDefinition Width="150"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="15*"/>
-      
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="21*"/>
+            <ColumnDefinition Width="21*"/>
+            <ColumnDefinition Width="64*"/>
+            <ColumnDefinition Width="198*"/>
+            <ColumnDefinition Width="123*"/>
+            <ColumnDefinition Width="43*"/>
+            <ColumnDefinition Width="64*"/>
 
         </Grid.ColumnDefinitions>
 
 
-        <Border Grid.RowSpan="10" Grid.ColumnSpan="15" Background="#FED9B7"/>
+        <Border Grid.RowSpan="10" Grid.ColumnSpan="10" Background="#FED9B7"/>
 
         <!--#region title-->
         <Border Grid.Column="0" 
@@ -48,7 +49,7 @@
             </TextBlock>
         </Border>
 
-        <StackPanel Grid.Row="0" Margin="10,0,0,0" HorizontalAlignment="Left">
+        <StackPanel Grid.Row="0" Grid.ColumnSpan="3" Margin="10,0,0,0" HorizontalAlignment="Left">
             <Grid>
                 <Ellipse Width="100" Height="100" Fill="#00AFB9" Grid.Row="1"/>
 
@@ -61,14 +62,36 @@
         </StackPanel>
         <!--#endregion-->
 
-        <!--#region Expenses add-->
-        <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="70,10,0,0" FontSize="30" 
-                       FontWeight="DemiBold" >Expenses</TextBlock>
-        <StackPanel Grid.Row="1" Margin="10" HorizontalAlignment="Left">
-            <Grid>
-                <Ellipse Width="50" Height="50" Fill="#0081a7" Grid.Row="1"/>
+        <!--#region Header-->
+        
+        
+        <Button Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="4" HorizontalAlignment="Left" x:Name="btn_byMonth" MinWidth="90" MinHeight="10"  FontWeight="SemiBold" FontSize="16" BorderThickness="0"  Margin="2" Background="#00AFB9"  Click="rbt_byMonth_Checked">By Month</Button>
 
-                <Ellipse Width="50" Height="50"  Grid.Row="1">
+
+
+
+        <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left"  MinWidth="100" MinHeight="50" CornerRadius="10" Width="100 " BorderThickness="6" Background="#00AFB9">
+            <Button FontWeight="SemiBold" MinWidth="90" MinHeight="10" FontSize="25" BorderThickness="0" Background="#00AFB9" Margin="2" Click="ChooseDatabase_btn">Load</Button>
+        </Border>
+
+
+
+
+        <Button x:Name="search_btn" Grid.Row="1" Grid.Column="5" Margin="64,10,67,10" FontWeight="SemiBold"   FontSize="20" BorderThickness="0" Background="#00AFB9" Click="Search_btn_Click" Grid.ColumnSpan="2">Search</Button>
+        <TextBox x:Name="txb_search" BorderThickness="5" Grid.Row="1"  Grid.Column="7"  Grid.ColumnSpan="4" FontSize="30" 
+                       FontWeight="DemiBold" ></TextBox>
+
+        <!--#endregion-->
+
+        <!--#region Expenses add-->
+        <TextBlock MinHeight="20" MinWidth="20" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Margin="9,9,9,9" FontSize="25" 
+                       FontWeight="DemiBold" >Expenses</TextBlock>
+
+        <StackPanel MinHeight="45" MinWidth="45" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="1,1,0,1" HorizontalAlignment="Left">
+            <Grid>
+                <Ellipse Width="45" Height="45" Fill="#0081a7" Grid.Row="2"/>
+
+                <Ellipse Width="45" Height="45"  Grid.Row="2">
                     <Ellipse.Fill>
                         <ImageBrush ImageSource="./Images/expenses.png" Stretch="Fill"/>
                     </Ellipse.Fill>
@@ -77,31 +100,31 @@
         </StackPanel>
 
 
-        <Border x:Name="ByMonthBorderColor" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" CornerRadius="20" BorderThickness="2"   Background="#00AFB9" Margin="10">
-            <Button BorderThickness="0" FontWeight="SemiBold" FontSize="30" x:Name="Add_Expense" Click="Add_Expense_Click" Margin="10" Background="#00AFB9">Add Expense</Button>
+        <Border MinHeight="30" MinWidth="30" Height="50" x:Name="ByMonthBorderColor" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="3" CornerRadius="20" BorderThickness="2"   Background="#00AFB9" Margin="3,3,3,3">
+            <Button MinHeight="30"  MinWidth="30" BorderThickness="0" FontWeight="SemiBold" FontSize="20" x:Name="Add_Expense" Click="Add_Expense_Click" Margin="6" Background="#00AFB9">Add Expense</Button>
         </Border>
         <!--#endregion-->
 
         <!--#region Add Category -->
-        <Grid Grid.Row="3" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="5">
+        <Grid Grid.Row="3" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="6" Margin="0,69,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
 
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="3*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="70,10,0,0" FontSize="30" 
+            <TextBlock MinHeight="20" MinWidth="20" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="50,10,0,0" FontSize="25" 
                        FontWeight="DemiBold" >Category</TextBlock>
-            <StackPanel Grid.Row="0" Margin="10" HorizontalAlignment="Left">
+            <StackPanel MinHeight="45" MinWidth="45" Grid.Row="0" Margin="2" HorizontalAlignment="Left">
                 <Grid>
-                    <Ellipse Width="50" Height="50" Fill="#0081a7" Grid.Row="1"/>
+                    <Ellipse  MinHeight="45" MinWidth="45" Width="45" Height="45" Fill="#0081a7" Grid.Row="1"/>
 
-                    <Ellipse Width="50" Height="50"  Grid.Row="1">
+                    <Ellipse MinHeight="45" MinWidth="45" Width="45" Height="45"  Grid.Row="1">
                         <Ellipse.Fill>
                             <ImageBrush ImageSource="./Images/category.png" Stretch="Fill"/>
                         </Ellipse.Fill>
@@ -110,27 +133,23 @@
             </StackPanel>
 
 
-            <Border Background="#0081a7" CornerRadius="10" BorderThickness="2"  
-                    Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,0,200">
-                <ComboBox Background="#0081a7" x:Name="categoryList" IsEditable="True" Margin="10" FontSize="15" BorderThickness="0" 
-                          Style="{StaticResource {x:Static ToolBar.ComboBoxStyleKey}}" Width="550" Height="90" SelectionChanged="input_Changed">
-
-
+            <Border Background="#0081a7" CornerRadius="10" BorderThickness="2" MinHeight="30" MinWidth="50"
+                    Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,400" Height="30">
+                <ComboBox Background="#0081a7" x:Name="categoryList" IsEditable="True"  FontSize="15" BorderThickness="0" 
+                          Style="{StaticResource {x:Static ToolBar.ComboBoxStyleKey}}" MinHeight="50" MinWidth="245" Width="245" Height="50" SelectionChanged="input_Changed">
                 </ComboBox>
             </Border>
 
-            <Border Grid.Row="1" Grid.ColumnSpan="2" CornerRadius="10" BorderThickness="6" Margin="0,110,0,80" Background="#00AFB9">
-                <Button FontWeight="SemiBold"   FontSize="30" BorderThickness="0" Background="#00AFB9" Margin="2" Click="btn_AddNewCategory">Add Category</Button>
+            <Border Grid.Row="1" Grid.Column="2" CornerRadius="10" Width="50" Height="30" Background="#00AFB9" VerticalAlignment="Top">
+                <Button FontWeight="SemiBold"   FontSize="20" BorderThickness="0" Background="#00AFB9" Margin="2" Click="btn_AddNewCategory">Add</Button>
             </Border>
-
-
 
         </Grid>
         <!--#endregion-->
 
         <!--#region list all the expenses-->
 
-        <Border Grid.Row="2" Grid.Column="6" Grid.ColumnSpan="3" Grid.RowSpan="6" >
+        <Border Grid.Row="1" Grid.Column="5" Grid.ColumnSpan="5" Grid.RowSpan="8" Margin="64,51,0,0" >
             <DataGrid Background="#F07167" BorderBrush="Black" Margin="10" x:Name="listExpenses" AutoGenerateColumns="False" MouseDoubleClick="Update_Click" IsReadOnly="True">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
@@ -145,25 +164,18 @@
                 </DataGrid.Resources>
             </DataGrid>
         </Border>
-        
-        
+
+
         <!--#endregion-->
 
-        <Button Grid.Row="1" Grid.Column="6" x:Name="btn_byMonth" FontWeight="SemiBold" FontSize="25" BorderThickness="0" Background="#00AFB9" Margin ="2,50,900,2" Click="rbt_byMonth_Checked">By Month</Button>       
-
-
-        <Border Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" CornerRadius="10" BorderThickness="6"  Background="#00AFB9">
-            <Button FontWeight="SemiBold"   FontSize="30" BorderThickness="0" Background="#00AFB9" Margin="2" Click="ChooseDatabase_btn">Load</Button>
-        </Border>
-
-
-        <Border Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4" Grid.RowSpan="3" CornerRadius="10" BorderThickness="6"  Background="#00AFB9" Padding="8" Margin="0,59,97,0">
+        <!--#region user input for list-->
+        <Border Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="5" Grid.RowSpan="4" CornerRadius="10" BorderThickness="6"  Background="#00AFB9" Padding="8" Margin="0,10,0,50" >
 
             <StackPanel>
-                <TextBlock FontWeight="SemiBold" FontSize="25">Start Date</TextBlock>
+                <TextBlock FontWeight="SemiBold" FontSize="15">Start Date</TextBlock>
                 <DatePicker SelectedDateChanged="input_Changed"   x:Name="StartDate" SelectedDateFormat="Long"
                   FirstDayOfWeek="Monday"></DatePicker>
-                <TextBlock FontWeight="SemiBold" FontSize="25">End Date</TextBlock>
+                <TextBlock FontWeight="SemiBold" FontSize="15">End Date</TextBlock>
                 <DatePicker SelectedDateChanged="input_Changed" x:Name="EndDate" SelectedDateFormat="Long"
                   DisplayDate="{x:Static sys:DateTime.Now}" 
                   FirstDayOfWeek="Monday"></DatePicker>
@@ -174,21 +186,20 @@
                     <RadioButton x:Name="rbt_byCategory" Checked="rbt_byCategory_Checked" FontWeight="SemiBold">By Category</RadioButton>
                     <RadioButton x:Name="rbt_byMonthAndCategory" Checked="rbt_byMonthAndCategory_Checked" FontWeight="SemiBold" >By Month and Category</RadioButton>
                 </StackPanel>
-                
-                <CheckBox x:Name="Filter" Content="Filters" Checked="Filter_Checked" Unchecked="Filter_Checked" Margin="0,10,0,3"/>
+
+                <CheckBox x:Name="Filter" Content="Filters" Checked="Filter_Checked" Unchecked="Filter_Checked"/>
                 <ComboBox x:Name="cmbCategories" SelectionChanged="input_Changed"/>
             </StackPanel>
 
 
         </Border>
-        <Button x:Name="search_btn" Grid.Row="1" Grid.Column="7" FontWeight="SemiBold"   FontSize="30" BorderThickness="0" Background="#00AFB9" Margin="0,50,0,0" Click="Search_btn_Click">Search</Button>
-        <TextBox x:Name="txb_search" BorderThickness="10" Grid.Row="1" Grid.Column="8" Grid.ColumnSpan="2" Margin="5,50,15,0" FontSize="30" 
-                       FontWeight="DemiBold" ></TextBox>
-        
+        <!--#endregion-->
 
-        <Border Grid.Row="8" Grid.ColumnSpan="5" CornerRadius="10" BorderThickness="6"  Background="#00AFB9">
-            <Button FontWeight="SemiBold"   FontSize="30" BorderThickness="0" Background="#00AFB9" Margin="2" Click="close_Click">Close</Button>
+        <!--#region Close button -->
+        <Border MinHeight="30" MinWidth="50" Grid.Row="9" Grid.ColumnSpan="5" CornerRadius="10" BorderThickness="6"  Background="#00AFB9" Margin="0,15,0,0">
+            <Button MinHeight="30" MinWidth="50" FontWeight="SemiBold"   FontSize="30" BorderThickness="0" Background="#00AFB9" Margin="2" Click="close_Click">Close</Button>
         </Border>
+        <!--#endregion-->
 
 
 
