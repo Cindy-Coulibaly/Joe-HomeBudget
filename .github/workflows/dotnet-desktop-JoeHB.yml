@@ -61,6 +61,8 @@ jobs:
       Test_Project_Path: TestPresenter/TestPresenter.csproj     # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
       Wap_Project_Directory: ./WapProjJoe    # Replace with the Wap project directory relative to the solution, i.e. MyWpfApp.Package.
       Wap_Project_Path: ./WapProjJoe/WapProjJoe.wapproj                 # Replace with the path to your Wap project, i.e. MyWpf.App.Package\MyWpfApp.Package.wapproj.
+      Test_DLL: TestPresenter\bin\${{ matrix.targetPlatform }}\${{ matrix.configuration }}\net6.0-windows\HomeBudget.dll
+
 
     steps:
     - name: Checkout
@@ -99,12 +101,12 @@ jobs:
 
     # Create the app package by building and packaging the Windows Application Packaging project
     - name: Create the app package
-      run: msbuild $env:Wap_Project_Path /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle /p:PackageCertificateKeyFile=GitHubActionsWorkflow.pfx /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
+      run: msbuild $env:Solution_Path /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppxBundle=$env:AppxBundle /p:PackageCertificateKeyFile=GitHubActionsWorkflow.pfx /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
       env:
-        Appx_Bundle: Always
-        Appx_Bundle_Platforms: x86|x64
-        Appx_Package_Build_Mode: StoreUpload
-        Configuration: ${{ matrix.configuration }}
+        Appx_Bundle: Never
+        BuildMode: SideLoadOnly
+        Configuration: ${{ matrix.Configuration }}
+        TargetPlatform: ${{ matrix.targetplatform }}
 
     # Remove the pfx
     - name: Remove the pfx
@@ -116,3 +118,15 @@ jobs:
       with:
         name: MSIX Package
         path: ${{ env.Wap_Project_Directory }}\AppPackages
+        
+    # Added - Setup vstest
+    - name: Setup vstest
+      uses: darenm/Setup-VSTest@v1
+      
+    # Added - Run unit tests
+    - name: Execute unit tests
+      run: vstest.console.exe $env:Test_DLL
+      
+      
+      
+    
