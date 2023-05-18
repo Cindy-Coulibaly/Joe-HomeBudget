@@ -61,7 +61,7 @@ jobs:
       Test_Project_Path: TestPresenter/TestPresenter.csproj     # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
       Wap_Project_Directory: ./WapProjJoe    # Replace with the Wap project directory relative to the solution, i.e. MyWpfApp.Package.
       Wap_Project_Path: ./WapProjJoe/WapProjJoe.wapproj                 # Replace with the path to your Wap project, i.e. MyWpf.App.Package\MyWpfApp.Package.wapproj.
-      Test_DLL: TestPresenter/bin/${{ matrix.targetPlatform }}/${{ matrix.configuration }}/net6.0-windows/HomeBudget.dll
+      Test_DLL: TestPresenter.csprog\bin\${{ matrix.targetPlatform }}\${{ matrix.configuration }}\net6.0-windows\HomeBudget.dll
 
 
     steps:
