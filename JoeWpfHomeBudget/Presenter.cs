@@ -328,6 +328,10 @@ namespace JoeWpfHomeBudget
             view.CalledRefresh();
         }
 
+
+        /// <summary>
+        /// check if the item hasn't been update or deleted
+        /// </summary>
         public void ValidUpdate_Delete(BudgetItem item)
         {
             if (item == null)
@@ -336,11 +340,26 @@ namespace JoeWpfHomeBudget
             }
         }
 
+
+        /// <summary>
+        /// check if the expense has been changed
+        /// </summary>
+        /// <param name="amount">the expense's amount</param>
+        /// <param name="description">the expense's description</param>
+        /// <param name="categoryId">the category's description</param>
+        /// <returns>true if the Expense has been changed, false otherwise</returns>
         public bool changedExpenses(string amount,string description,int categoryId)
         {
             return (amount != string.Empty || description != string.Empty) ||
                     (categoryId != -1 && (amount == string.Empty || description== string.Empty));
         }
+
+        /// <summary>
+        /// check if the category has been changed
+        /// </summary>
+        /// <param name="categoryName">The cathegory name</param>
+        /// <param name="typeId">the type's Id</param>
+        /// <returns>true if the cathegory has been changed, false otherwise</returns>
         public bool changedCategory(string categoryName,int typeId)
         {
             if (categoryName != string.Empty && typeId != -1)
@@ -349,6 +368,10 @@ namespace JoeWpfHomeBudget
             return categoryName!=string.Empty ||  typeId!=-1;
         }
 
+        /// <summary>
+        /// check if any of the buttons has been checked
+        /// </summary>
+        /// <param name="buttonName"></param>
         public void GetButtonChecked(string buttonName)
         {
             try

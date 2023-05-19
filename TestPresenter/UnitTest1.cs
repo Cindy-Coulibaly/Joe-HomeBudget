@@ -18,6 +18,9 @@ namespace TestPresenter
         public bool calledShowBudgetItemByCategory;
         public bool calledcalledRefresh;
         public bool calleddeleteAdterUpdate;
+        public bool calledRefresh_MonthCategoryExpenses;
+        public bool calledRefresh_MonthExpenses;
+        public bool calledRefresh_CategoryExpenses;
 
         public void ShowError(string msg)
         {
@@ -81,17 +84,17 @@ namespace TestPresenter
 
         public void Refresh_MonthCategoryExpenses()
         {
-            throw new NotImplementedException();
+            calledRefresh_MonthCategoryExpenses= true;
         }
 
         public void Refresh_MonthExpenses()
         {
-            throw new NotImplementedException();
+            calledRefresh_MonthExpenses = true;
         }
 
         public void Refresh_CategoryExpenses()
         {
-            throw new NotImplementedException();
+            calledRefresh_CategoryExpenses = true;
         }
     }
 
@@ -646,6 +649,7 @@ namespace TestPresenter
             Assert.True(view.calledShowError);
         }
 
+        [Fact]
         public void Test_RefreshWithNewExpense_Success()
         {
             //Arrange
@@ -660,6 +664,109 @@ namespace TestPresenter
             //Assert
             Assert.True(view.calledcalledRefresh);
         }
+
+        [Fact]
+        public void ValidUpdate_Delete_Success()
+        {
+            //Arrange
+            string dummyFile = "./dummyFile.db";
+            bool newDb = false;
+            TestView view = new TestView();
+            Presenter p = new Presenter(view, dummyFile, newDb);
+            BudgetItem item = new BudgetItem();
+
+            //Act
+            p.ValidUpdate_Delete(item);
+
+            //Assert
+            Assert.False(view.calledShowError);
+        }
+
+        [Fact]
+        public void ValidUpdate_Delete_Invalid()
+        {
+            //Arrange
+            string dummyFile = "./dummyFile.db";
+            bool newDb = false;
+            TestView view = new TestView();
+            Presenter p = new Presenter(view, dummyFile, newDb);
+            BudgetItem item = null;
+
+            //Act
+            p.ValidUpdate_Delete(item);
+
+            //Assert
+            Assert.True(view.calledShowError);
+        }
+
+        [Fact]
+        public void GetButtonChecked_isnull()
+        {
+            //Arrange
+            string dummyFile = "./dummyFile.db";
+            bool newDb = false;
+            TestView view = new TestView();
+            Presenter p = new Presenter(view, dummyFile, newDb);
+            string name = null;
+
+            //Act
+            p.GetButtonChecked(name);
+
+            //Assert
+            Assert.True(view.calledShowError);
+        }
+
+        [Fact]
+        public void GetButtonChecked_rbt_allExpenses()
+        {
+            //Arrange
+            string dummyFile = "./dummyFile.db";
+            bool newDb = false;
+            TestView view = new TestView();
+            Presenter p = new Presenter(view, dummyFile, newDb);
+            string name = "rbt_allExpenses";
+
+            //Act
+            p.GetButtonChecked(name);
+
+            //Assert
+            Assert.True(view.calledRefresh_allExpenses);
+        }
+
+        [Fact]
+        public void GetButtonChecked_rbt_byMonth()
+        {
+            //Arrange
+            string dummyFile = "./dummyFile.db";
+            bool newDb = false;
+            TestView view = new TestView();
+            Presenter p = new Presenter(view, dummyFile, newDb);
+            string name = "rbt_byMonth";
+
+            //Act
+            p.GetButtonChecked(name);
+
+            //Assert
+            Assert.True(view.calledRefresh_MonthExpenses);
+        }
+
+        [Fact]
+        public void GetButtonChecked_rbt_byCategory()
+        {
+            //Arrange
+            string dummyFile = "./dummyFile.db";
+            bool newDb = false;
+            TestView view = new TestView();
+            Presenter p = new Presenter(view, dummyFile, newDb);
+            string name = "rbt_byCategory";
+
+            //Act
+            p.GetButtonChecked(name);
+
+            //Assert
+            Assert.True(view.calledRefresh_CategoryExpenses);
+        }
+
 
 
     }

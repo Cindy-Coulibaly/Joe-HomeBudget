@@ -490,7 +490,7 @@ namespace JoeWpfHomeBudget
             presenter.GetButtonChecked(checkedValue.Name);
         }
 
-        public void Search_btn_Click(object sender, RoutedEventArgs e)
+        private void Search_btn_Click(object sender, RoutedEventArgs e)
         {
             int startingPoint = 0;
             if (listExpenses.SelectedItem != null) { startingPoint = listExpenses.SelectedIndex + 1; }
