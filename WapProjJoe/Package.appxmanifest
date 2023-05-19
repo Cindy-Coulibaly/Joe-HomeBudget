@@ -9,7 +9,7 @@
   <Identity
     Name="fa601f28-461d-47ed-9847-1ed032ac47af"
     Publisher="CN=Joe"
-    Version="1.0.0.0" />
+    Version="1.1.1.0" />
 
   <Properties>
     <DisplayName>JoeHomeBudget_Package</DisplayName>
